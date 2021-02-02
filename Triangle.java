@@ -22,14 +22,13 @@ class Triangle
         return longestSide;
     }
 
-    String mytoString(Triangle newTriangle){
-        int longestSide = newTriangle.getLongestSide();
-        String newString = new String("The longest side of the triangle is " + longestSide);
-        return newString;
+    public String toString(){
+        return "The longest side of the triangle is " + longestSide;
     }
 
     public static void main(String[] args){
         Triangle myTriangle = new Triangle(2, 3, 5);
-        System.out.println(myTriangle.mytoString(myTriangle));
+        int longestSide = myTriangle.getLongestSide();
+        System.out.println(myTriangle.toString());
     }
 }
