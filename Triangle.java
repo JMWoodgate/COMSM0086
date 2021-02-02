@@ -1,4 +1,4 @@
-class Triangle
+class Triangle extends TwoDimensionalShape
 {
     int longestSide, side1, side2, side3;
 
@@ -26,9 +26,11 @@ class Triangle
         return "The longest side of the triangle is " + longestSide;
     }
 
-    public static void main(String[] args){
-        Triangle myTriangle = new Triangle(2, 3, 5);
-        int longestSide = myTriangle.getLongestSide();
-        System.out.println(myTriangle.toString());
+    public double calculateArea() {
+        return -1;
+    }
+
+    public int calculatePerimeterLength() {
+        return -1;
     }
 }
