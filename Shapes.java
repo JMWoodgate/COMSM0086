@@ -18,13 +18,21 @@ class Shapes
         myCircle.calculateArea();
         System.out.println(myCircle);
 
+        Colour firstColour = Colour.RED;
+        Colour secondColour = Colour.YELLOW;
+
         TwoDimensionalShape myShape = new Triangle(9, 11, 10);
         System.out.println(myShape);
 
         myShape = new Rectangle(13, 12);
-        System.out.println(myShape);
+        myShape.setColour(firstColour);
+        System.out.println(myShape.getColour());
 
         myShape = new Circle(14);
-        System.out.println(myShape);
+        myShape.setColour(secondColour);
+        System.out.println(myShape.getColour());
+
+
+
     }
 }
