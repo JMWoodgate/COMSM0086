@@ -3,12 +3,13 @@ class Shapes
 
     public static void main(String[] args){
 
-        Triangle myTriangle = new Triangle(6, 6, 6);
+        Triangle myTriangle = new Triangle(4, 9, 8);
         int longestSide = myTriangle.getLongestSide();
         System.out.println(myTriangle.toString());
 
-        myTriangle.calculateArea();
         System.out.println(myTriangle);
+        System.out.println("Area: " + myTriangle.calculateArea());
+        System.out.println("Perimeter: " + myTriangle.calculatePerimeterLength());
 
         Rectangle myRectangle = new Rectangle(4, 7);
         myRectangle.calculateArea();
@@ -31,8 +32,5 @@ class Shapes
         myShape = new Circle(14);
         myShape.setColour(secondColour);
         System.out.println(myShape.getColour());
-
-        System.out.println("Area: " + myTriangle.calculateArea());
-        System.out.println("Perimeter: " + myTriangle.calculatePerimeterLength());
     }
 }

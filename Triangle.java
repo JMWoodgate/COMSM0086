@@ -1,3 +1,4 @@
+import java.lang.Math;
 
 class Triangle extends TwoDimensionalShape
 {
@@ -28,9 +29,10 @@ class Triangle extends TwoDimensionalShape
     }
 
     public double calculateArea() {
-        int area, s;
-        s = (side1 * side2 * side3) / 2;
-        area = sqrt(s * side1 * side2 * side3);
+        double area, s;
+        s = (side1 + side2 + side3);
+        s /= 2;
+        area = Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
         return area;
     }
 
