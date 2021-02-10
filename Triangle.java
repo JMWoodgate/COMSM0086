@@ -2,10 +2,10 @@ import java.lang.Math;
 
 class Triangle extends TwoDimensionalShape implements MultiVariantShape
 {
-    int longestSide, side1, side2, side3;
+    long longestSide, side1, side2, side3;
     private TriangleVariant variant;
 
-    public Triangle(int a, int b, int c){
+    public Triangle(long a, long b, long c){
         side1 = a;
         side2 = b;
         side3 = c;
@@ -39,8 +39,8 @@ class Triangle extends TwoDimensionalShape implements MultiVariantShape
         return variant;
     }
 
-    private boolean isFlat(int a, int b, int c){
-        int longest = getLongestSide();
+    private boolean isFlat(long a, long b, long c){
+        long longest = getLongestSide();
         if(longest == a){
             if(longest == b + c){
                 return true;
@@ -59,7 +59,7 @@ class Triangle extends TwoDimensionalShape implements MultiVariantShape
         return false;
     }
 
-    private boolean isRightAngled(int a, int b, int c){
+    private boolean isRightAngled(long a, long b, long c){
         if((a * a) + (b * b) == (c * c)){
             return true;
         }
@@ -72,35 +72,35 @@ class Triangle extends TwoDimensionalShape implements MultiVariantShape
         return false;
     }
 
-    private boolean isIllegal(int a, int b, int c){
+    private boolean isIllegal(long a, long b, long c){
         if(a + b <= c || a + c <= b || b + c <= a){
             return true;
         }
         return false;
     }
 
-    private boolean isScalene(int a, int b, int c){
+    private boolean isScalene(long a, long b, long c){
         if(a != b || b != c || c != a){
             return true;
         }
         return false;
     }
 
-    private boolean isIsoceles(int a, int b, int c){
+    private boolean isIsoceles(long a, long b, long c){
         if(a == b || b == c || c == a){
             return true;
         }
         return false;
     }
 
-    private boolean isEquilateral(int a, int b, int c){
+    private boolean isEquilateral(long a, long b, long c){
         if(a == b && b == c){
             return true;
         }
         return false;
     }
 
-    public int getLongestSide(){
+    public long getLongestSide(){
         if(side1 >= side2 && side1 >= side3){
             longestSide = side1;
         }
@@ -126,7 +126,7 @@ class Triangle extends TwoDimensionalShape implements MultiVariantShape
     }
 
     public int calculatePerimeterLength() {
-        int perimeter = side1 + side2 + side3;
+        int perimeter = (int)side1 + (int)side2 + (int)side3;
         return perimeter;
     }
 }
