@@ -12,6 +12,9 @@ class Triangle extends TwoDimensionalShape
         if(isIllegal(side1, side2, side3)){
             variant = TriangleVariant.ILLEGAL;
         }
+        else if(isFlat(side1, side2, side3)){
+            variant = TriangleVariant.FLAT;
+        }
         else if(isRightAngled(side1, side2, side3)){
             variant = TriangleVariant.RIGHT;
         }
@@ -29,6 +32,30 @@ class Triangle extends TwoDimensionalShape
         }
     }
 
+    TriangleVariant getVariant(){
+        return variant;
+    }
+
+    private boolean isFlat(int a, int b, int c){
+        int longest = getLongestSide();
+        if(longest == a){
+            if(longest == b + c){
+                return true;
+            }
+        }
+        else if(longest == b){
+            if(longest == a + c){
+                return true;
+            }
+        }
+        else if(longest == c){
+            if(longest == b + a){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean isRightAngled(int a, int b, int c){
         if((a * a) + (b * b) == (c * c)){
             return true;
@@ -37,7 +64,7 @@ class Triangle extends TwoDimensionalShape
     }
 
     private boolean isIllegal(int a, int b, int c){
-        if(a + b < c || a + c < b || b + c > a){
+        if(a + b <= c || a + c <= b || b + c <= a){
             return true;
         }
         return false;

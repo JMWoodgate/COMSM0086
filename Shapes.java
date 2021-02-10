@@ -3,13 +3,14 @@ class Shapes
 
     public static void main(String[] args){
 
-        Triangle myTriangle = new Triangle(4, 9, 8);
+        Triangle myTriangle = new Triangle(4, 8, 9);
         int longestSide = myTriangle.getLongestSide();
         System.out.println(myTriangle.toString());
 
         System.out.println(myTriangle);
         System.out.println("Area: " + myTriangle.calculateArea());
         System.out.println("Perimeter: " + myTriangle.calculatePerimeterLength());
+        System.out.println(myTriangle.getVariant());
 
         Rectangle myRectangle = new Rectangle(4, 7);
         myRectangle.calculateArea();
