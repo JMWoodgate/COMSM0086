@@ -3,9 +3,16 @@ class Shapes
 
     public static void main(String[] args){
 
-        Triangle myTriangle = new Triangle(4, 8, 9);
+        Triangle myTriangle = new Triangle(4, 2, 2);
         int longestSide = myTriangle.getLongestSide();
         System.out.println(myTriangle.toString());
+
+        if(myTriangle instanceof MultiVariantShape) {
+            System.out.println("This shape has multiple variants");
+        }
+        else {
+            System.out.println("This shape has only one variant");
+        }
 
         System.out.println(myTriangle);
         System.out.println("Area: " + myTriangle.calculateArea());

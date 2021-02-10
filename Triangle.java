@@ -1,6 +1,6 @@
 import java.lang.Math;
 
-class Triangle extends TwoDimensionalShape
+class Triangle extends TwoDimensionalShape implements MultiVariantShape
 {
     int longestSide, side1, side2, side3;
     private TriangleVariant variant;
@@ -9,11 +9,11 @@ class Triangle extends TwoDimensionalShape
         side1 = a;
         side2 = b;
         side3 = c;
-        if(isIllegal(side1, side2, side3)){
-            variant = TriangleVariant.ILLEGAL;
-        }
-        else if(isFlat(side1, side2, side3)){
+        if(isFlat(side1, side2, side3)){
             variant = TriangleVariant.FLAT;
+        }
+        else if(isIllegal(side1, side2, side3)){
+            variant = TriangleVariant.ILLEGAL;
         }
         else if(isRightAngled(side1, side2, side3)){
             variant = TriangleVariant.RIGHT;
@@ -32,7 +32,7 @@ class Triangle extends TwoDimensionalShape
         }
     }
 
-    TriangleVariant getVariant(){
+    public TriangleVariant getVariant(){
         return variant;
     }
 
