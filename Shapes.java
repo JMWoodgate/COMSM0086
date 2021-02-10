@@ -3,7 +3,7 @@ class Shapes
     public static void main(String[] args){
 
         Triangle myTriangle = new Triangle(2, 3, 13);
-        int longestSide = myTriangle.getLongestSide();
+        long longestSide = myTriangle.getLongestSide();
         System.out.println(myTriangle.toString());
 
         if(myTriangle instanceof MultiVariantShape) {
@@ -39,5 +39,23 @@ class Shapes
         myShape = new Circle(14);
         myShape.setColour(secondColour);
         System.out.println(myShape.getColour());
+
+        TwoDimensionalShape[] shapeArray = new TwoDimensionalShape[100];
+        int cnt = 0;
+        for (TwoDimensionalShape shape : shapeArray){
+            double ranNum = Math.random();
+            if(ranNum <= 0.3){
+                shape = new Triangle(3, 2, 5);
+                cnt++;
+            }
+            else if(ranNum <= 0.6){
+                shape = new Rectangle(4, 6);
+            }
+           else if(ranNum <= 1.0){
+                shape = new Circle(2);
+            }
+            System.out.println(shape);
+        }
+        System.out.println(cnt + " triangles");
     }
 }
