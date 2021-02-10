@@ -9,14 +9,17 @@ class Triangle extends TwoDimensionalShape implements MultiVariantShape
         side1 = a;
         side2 = b;
         side3 = c;
-        if(isFlat(side1, side2, side3)){
-            variant = TriangleVariant.FLAT;
-        }
-        else if(isIllegal(side1, side2, side3)){
+        if(side1 == 0 || side2 == 0 || side3 == 0){
             variant = TriangleVariant.ILLEGAL;
         }
         else if(isRightAngled(side1, side2, side3)){
             variant = TriangleVariant.RIGHT;
+        }
+        else if(isFlat(side1, side2, side3)){
+            variant = TriangleVariant.FLAT;
+        }
+        else if(isIllegal(side1, side2, side3)){
+            variant = TriangleVariant.ILLEGAL;
         }
         else if(isEquilateral(side1, side2, side3)){
             variant = TriangleVariant.EQUILATERAL;
@@ -58,6 +61,12 @@ class Triangle extends TwoDimensionalShape implements MultiVariantShape
 
     private boolean isRightAngled(int a, int b, int c){
         if((a * a) + (b * b) == (c * c)){
+            return true;
+        }
+        else if((c * c) + (b * b) == (a * a)){
+            return true;
+        }
+        else if((c * c) + (a * a) == (b * b)){
             return true;
         }
         return false;

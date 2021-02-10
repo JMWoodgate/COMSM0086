@@ -2,7 +2,7 @@ class Shapes
 {
     public static void main(String[] args){
 
-        Triangle myTriangle = new Triangle(4, 2, 2);
+        Triangle myTriangle = new Triangle(2, 3, 13);
         int longestSide = myTriangle.getLongestSide();
         System.out.println(myTriangle.toString());
 

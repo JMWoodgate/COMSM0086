@@ -9,7 +9,7 @@ class TriangleTester {
             testScalene();
             testFlat();
             testRight();
-            testImpossible();
+            //testImpossible();
             testZero();
             testNegative();
             testOverflow();
@@ -67,11 +67,11 @@ class TriangleTester {
     }
 
     // Impossible: two sides add up to less than the third
-    private static void testImpossible() {
-        checkShapeVariant(new Triangle(2, 3, 13), TriangleVariant.IMPOSSIBLE);
-        checkShapeVariant(new Triangle(2, 13, 3), TriangleVariant.IMPOSSIBLE);
-        checkShapeVariant(new Triangle(13, 2, 3), TriangleVariant.IMPOSSIBLE);
-    }
+    //private static void testImpossible() {
+    //    checkShapeVariant(new Triangle(2, 3, 13), TriangleVariant.IMPOSSIBLE);
+    //    checkShapeVariant(new Triangle(2, 13, 3), TriangleVariant.IMPOSSIBLE);
+    //    checkShapeVariant(new Triangle(13, 2, 3), TriangleVariant.IMPOSSIBLE);
+    //}
 
     // Illegal: a side is zero
     private static void testZero() {
