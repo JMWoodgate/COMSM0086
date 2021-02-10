@@ -1,6 +1,5 @@
 class Shapes
 {
-
     public static void main(String[] args){
 
         Triangle myTriangle = new Triangle(4, 2, 2);
