@@ -3,7 +3,7 @@ class Shapes
 
     public static void main(String[] args){
 
-        Triangle myTriangle = new Triangle(2, 5, 3);
+        Triangle myTriangle = new Triangle(6, 6, 6);
         int longestSide = myTriangle.getLongestSide();
         System.out.println(myTriangle.toString());
 
@@ -32,7 +32,7 @@ class Shapes
         myShape.setColour(secondColour);
         System.out.println(myShape.getColour());
 
-
-
+        System.out.println("Area: " + myTriangle.calculateArea());
+        System.out.println("Perimeter: " + myTriangle.calculatePerimeterLength());
     }
 }

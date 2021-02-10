@@ -1,3 +1,4 @@
+
 class Triangle extends TwoDimensionalShape
 {
     int longestSide, side1, side2, side3;
@@ -9,7 +10,7 @@ class Triangle extends TwoDimensionalShape
         side3 = c;
     }
 
-    int getLongestSide(){
+    public int getLongestSide(){
         if(side1 >= side2 && side1 >= side3){
             longestSide = side1;
         }
@@ -27,10 +28,14 @@ class Triangle extends TwoDimensionalShape
     }
 
     public double calculateArea() {
-        return -1;
+        int area, s;
+        s = (side1 * side2 * side3) / 2;
+        area = sqrt(s * side1 * side2 * side3);
+        return area;
     }
 
     public int calculatePerimeterLength() {
-        return -1;
+        int perimeter = side1 + side2 + side3;
+        return perimeter;
     }
 }
