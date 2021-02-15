@@ -95,4 +95,33 @@ class OXOModel
     {
         return gameDrawn;
     }
+
+    public boolean expandBoard()
+    {
+        if(isGameDrawn()){
+            int rows, cols;
+            OXOPlayer newCells[][];
+            rows = getNumberOfRows();
+            cols = getNumberOfColumns();
+            rows++;
+            cols++;
+            newCells = new OXOPlayer[rows][cols];
+            assert(copyCells(cells, newCells));
+            cells = newCells;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean copyCells(OXOPlayer oldCells[][], OXOPlayer newCells[][])
+    {
+        int j, i;
+
+        for(j = 0; j < oldCells.length; j++){
+            for(i = 0; i < oldCells[0].length; i++){
+                newCells[j][i] = oldCells[j][i];
+            }
+        }
+        return true;
+    }
 }
