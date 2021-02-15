@@ -1,15 +1,112 @@
-class Triangle
+import java.lang.Math;
+
+class Triangle extends TwoDimensionalShape implements MultiVariantShape
 {
-    int longestSide, side1, side2, side3;
+    long longestSide, side1, side2, side3;
+    private TriangleVariant variant;
+    static int population = 0;
 
-
-    public Triangle(int a, int b, int c){
+    public Triangle(long a, long b, long c){
         side1 = a;
         side2 = b;
         side3 = c;
+        Triangle.population++;
+        if(side1 <= 0 || side2 <= 0 || side3 <= 0){
+            variant = TriangleVariant.ILLEGAL;
+        }
+        else if(isRightAngled(side1, side2, side3)){
+            variant = TriangleVariant.RIGHT;
+        }
+        else if(isFlat(side1, side2, side3)){
+            variant = TriangleVariant.FLAT;
+        }
+        else if(isImpossible(side1, side2, side3)){
+            variant = TriangleVariant.IMPOSSIBLE;
+        }
+        else if(isEquilateral(side1, side2, side3)){
+            variant = TriangleVariant.EQUILATERAL;
+        }
+        else if(isIsoceles(side1, side2, side3)){
+            variant = TriangleVariant.ISOSCELES;
+        }
+        else if(isScalene(side1, side2, side3)){
+            variant = TriangleVariant.SCALENE;
+        }
+        else{
+            variant = TriangleVariant.IMPOSSIBLE;
+        }
     }
 
-    int getLongestSide(){
+    public int getPopulation(){
+        return Triangle.population;
+    }
+
+    public TriangleVariant getVariant(){
+        return variant;
+    }
+
+    private boolean isFlat(long a, long b, long c){
+        long longest = getLongestSide();
+        if(longest == a){
+            if(longest == b + c){
+                return true;
+            }
+        }
+        else if(longest == b){
+            if(longest == a + c){
+                return true;
+            }
+        }
+        else if(longest == c){
+            if(longest == b + a){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isRightAngled(long a, long b, long c){
+        if((a * a) + (b * b) == (c * c)){
+            return true;
+        }
+        else if((c * c) + (b * b) == (a * a)){
+            return true;
+        }
+        else if((c * c) + (a * a) == (b * b)){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isImpossible(long a, long b, long c){
+        if(a + b <= c || a + c <= b || b + c <= a){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isScalene(long a, long b, long c){
+        if(a != b || b != c || c != a){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isIsoceles(long a, long b, long c){
+        if(a == b || b == c || c == a){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isEquilateral(long a, long b, long c){
+        if(a == b && b == c){
+            return true;
+        }
+        return false;
+    }
+
+    public long getLongestSide(){
         if(side1 >= side2 && side1 >= side3){
             longestSide = side1;
         }
@@ -22,14 +119,20 @@ class Triangle
         return longestSide;
     }
 
-    String mytoString(Triangle newTriangle){
-        int longestSide = newTriangle.getLongestSide();
-        String newString = new String("The longest side of the triangle is " + longestSide);
-        return newString;
+    public String toString(){
+        return "The longest side of the triangle is " + longestSide;
     }
 
-    public static void main(String[] args){
-        Triangle myTriangle = new Triangle(2, 3, 5);
-        System.out.println(myTriangle.mytoString(myTriangle));
+    public double calculateArea() {
+        double area, s;
+        s = (side1 + side2 + side3);
+        s /= 2;
+        area = Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
+        return area;
+    }
+
+    public int calculatePerimeterLength() {
+        int perimeter = (int)side1 + (int)side2 + (int)side3;
+        return perimeter;
     }
 }
