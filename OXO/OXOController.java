@@ -21,11 +21,11 @@ class OXOController
         int y2 = (letterToNum(y1) - 1);
         gameModel.setCellOwner(y2, x, currentPlayer);
 
-        if(gameModel.getWinner()==null){
+        if(!checkGameWon(gameModel)){
             changeCurrentPlayer(currentPlayer);
         }
         else{
-            return;
+            gameModel.setWinner(currentPlayer);
         }
     }
 
@@ -34,32 +34,23 @@ class OXOController
         int rowNum = model.getNumberOfRows();
         int colNum = model.getNumberOfColumns();
 
-        for(int j = 0; j < rowNum; j++){
-            if(!checkRowWon(model, j)){
-                for(int i = 0; i < colNum; i++){
-                    if(checkColWon(model, i)){
-                        return true;
-                    }
-                }
+        for(int i = 0; i < rowNum; i++){
+            if(checkRowColWon(model, i)){
+                return true;
             }
         }
-        return true;
-    }
-
-    private boolean checkColWon(OXOModel model, int colNum)
-    {
-        for(int i = 0; i < colNum - 1; i++){
-            if (gameModel.getCellOwner(i, colNum) != gameModel.getCellOwner(i + 1, colNum)){
-                return false;
+        for(int i = 0; i < colNum; i++){
+            if(checkRowColWon(model, i)){
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
-    private boolean checkRowWon(OXOModel model, int rowNum)
+    private boolean checkRowColWon(OXOModel model, int rowColNum)
     {
-        for(int i = 0; i < rowNum - 1; i++){
-            if (gameModel.getCellOwner(rowNum, i) != gameModel.getCellOwner(rowNum, i + 1)){
+        for(int i = 0; i < rowColNum - 1; i++){
+            if (gameModel.getCellOwner(i, rowColNum) != gameModel.getCellOwner(i + 1, rowColNum)){
                 return false;
             }
         }
