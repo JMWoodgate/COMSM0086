@@ -90,6 +90,16 @@ class OXOModel
         cells.get(rowNumber).set(colNumber, player);
     }
 
+    public boolean isEmptyCell(int rowNumber, int colNumber)
+    {
+        if(cells.get(rowNumber).get(colNumber) == null){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public void setWinThreshold(int winThresh)
     {
         winThreshold = winThresh;

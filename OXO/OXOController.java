@@ -35,22 +35,50 @@ class OXOController
         int colNum = model.getNumberOfColumns();
 
         for(int i = 0; i < rowNum; i++){
-            if(checkRowColWon(model, i)){
+            if(checkRowWon(model, i)){
                 return true;
             }
         }
         for(int i = 0; i < colNum; i++){
-            if(checkRowColWon(model, i)){
+            if(checkColWon(model, i)){
                 return true;
             }
         }
         return false;
     }
 
-    private boolean checkRowColWon(OXOModel model, int rowColNum)
+    private boolean checkRowWon(OXOModel model, int rowNum)
     {
-        for(int i = 0; i < rowColNum - 1; i++){
-            if (gameModel.getCellOwner(i, rowColNum) != gameModel.getCellOwner(i + 1, rowColNum)){
+        int colNum = model.getNumberOfColumns();
+
+        for(int i = 0; i < colNum - 1; i++){
+            if(model.isEmptyCell(rowNum, i) == true){
+                return false;
+            }
+            else if(model.isEmptyCell(rowNum, i + 1) == true){
+                return false;
+            }
+            else if (model.getCellOwner(rowNum, i).getPlayingLetter() !=
+                    model.getCellOwner(rowNum, i + 1).getPlayingLetter()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkColWon(OXOModel model, int colNum)
+    {
+        int rowNum = model.getNumberOfRows();
+
+        for(int i = 0; i < rowNum - 1; i++){
+            if(model.isEmptyCell(i, colNum) == true){
+                return false;
+            }
+            if(model.isEmptyCell(i + 1, colNum) == true){
+                return false;
+            }
+            else if (model.getCellOwner(i, colNum).getPlayingLetter() !=
+                    model.getCellOwner(i + 1, colNum).getPlayingLetter()){
                 return false;
             }
         }
