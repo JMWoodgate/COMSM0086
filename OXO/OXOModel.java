@@ -21,7 +21,7 @@ class OXOModel
         for(int i=0; i<rowNum; i++){
             ArrayList<OXOPlayer> row = new ArrayList<>();
             for(int j=0; j<colNum; j++){
-                row.add(currentPlayer);
+                row.add(null);
             }
             cells.add(row);
         }
