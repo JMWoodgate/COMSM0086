@@ -47,6 +47,23 @@ class OXOController
         return false;
     }
 
+    private boolean checkDiagonalWon(OXOModel model, int rowNum, int colNum)
+    {
+        for(int i = 0; i < rowNum; i++){
+            if(model.isEmptyCell(i, colNum) == true){
+                return false;
+            }
+            else if(model.isEmptyCell(i + 1, colNum + 1) == true){
+                return false;
+            }
+            else if (model.getCellOwner(i, colNum).getPlayingLetter() !=
+                    model.getCellOwner(i + 1, colNum + 1).getPlayingLetter()){
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean checkRowWon(OXOModel model, int rowNum)
     {
         int colNum = model.getNumberOfColumns();
