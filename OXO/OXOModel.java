@@ -2,18 +2,32 @@ import java.util.*;
 
 class OXOModel
 {
-    private OXOPlayer cells[][];
+    private ArrayList<ArrayList<OXOPlayer>> cells;
     private OXOPlayer players[];
     private OXOPlayer currentPlayer;
     private OXOPlayer winner;
     private boolean gameDrawn;
     private int winThreshold;
+    public int rowNum;
+    public int colNum;
 
     public OXOModel(int numberOfRows, int numberOfColumns, int winThresh)
     {
         winThreshold = winThresh;
-        cells = new OXOPlayer[numberOfRows][numberOfColumns];
+        rowNum = numberOfRows;
+        colNum = numberOfColumns;
+        cells = new ArrayList<ArrayList<OXOPlayer>>();
+
+        for(int i=0; i<rowNum; i++){
+            ArrayList<OXOPlayer> row = new ArrayList<>();
+            for(int j=0; j<colNum; j++){
+                row.add(currentPlayer);
+            }
+            cells.add(row);
+        }
+
         players = new OXOPlayer[2];
+
     }
 
     public int getNumberOfPlayers()
@@ -58,22 +72,22 @@ class OXOModel
 
     public int getNumberOfRows()
     {
-        return cells.length;
+        return rowNum;
     }
 
     public int getNumberOfColumns()
     {
-        return cells[0].length;
+        return colNum;
     }
 
     public OXOPlayer getCellOwner(int rowNumber, int colNumber)
     {
-        return cells[rowNumber][colNumber];
+        return cells.get(rowNumber).get(colNumber);
     }
 
     public void setCellOwner(int rowNumber, int colNumber, OXOPlayer player)
     {
-        cells[rowNumber][colNumber] = player;
+        cells.get(rowNumber).set(colNumber, player);
     }
 
     public void setWinThreshold(int winThresh)
@@ -96,32 +110,4 @@ class OXOModel
         return gameDrawn;
     }
 
-    public boolean expandBoard()
-    {
-        if(isGameDrawn()){
-            int rows, cols;
-            OXOPlayer newCells[][];
-            rows = getNumberOfRows();
-            cols = getNumberOfColumns();
-            rows++;
-            cols++;
-            newCells = new OXOPlayer[rows][cols];
-            assert(copyCells(cells, newCells));
-            cells = newCells;
-            return true;
-        }
-        return false;
-    }
-
-    public boolean copyCells(OXOPlayer oldCells[][], OXOPlayer newCells[][])
-    {
-        int j, i;
-
-        for(j = 0; j < oldCells.length; j++){
-            for(i = 0; i < oldCells[0].length; i++){
-                newCells[j][i] = oldCells[j][i];
-            }
-        }
-        return true;
-    }
 }
