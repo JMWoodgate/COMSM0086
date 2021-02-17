@@ -31,15 +31,17 @@ class OXOModel
 
     public boolean expandBoard()
     {
+        System.out.println("Entered expandBoard");
         rowNum++;
+        System.out.println("new rowNum " + rowNum);
         colNum++;
-        winThresh++;
+        System.out.println("new colNum " + colNum);
+        winThreshold++;
+        System.out.println("new winThreshold " + winThreshold);
 
-        for(int i = 0; i < rowNum; i++){
-            cells.add(new ArrayList<OXOPlayer>());
-            for(int j = 0; j < colNum; j++){
-                cells.get(i).add(null);
-            }
+        cells.add(new ArrayList<OXOPlayer>());
+        for(int j = 0; j < colNum; j++){
+            cells.get(rowNum).add(null);
         }
         return true;
     }
