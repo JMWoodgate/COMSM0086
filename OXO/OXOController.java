@@ -26,7 +26,7 @@ class OXOController
 
         if(!checkGameWon(gameModel)){
             if(checkGameDrawn(gameModel, row, col)){
-                gameModel.expandBoard();
+                assert(gameModel.expandBoard());
             }
             changeCurrentPlayer(currentPlayer);
         }
@@ -44,7 +44,7 @@ class OXOController
                 }
             }
         }
-        model.setGameDrawn();
+        //model.setGameDrawn();
         return true;
     }
 

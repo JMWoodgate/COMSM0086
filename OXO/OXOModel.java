@@ -18,15 +18,30 @@ class OXOModel
         colNum = numberOfColumns;
         cells = new ArrayList<ArrayList<OXOPlayer>>();
 
-        for(int i=0; i<rowNum; i++){
+        for(int i = 0; i < rowNum; i++){
             cells.add(new ArrayList<OXOPlayer>());
-            for(int j=0; j<colNum; j++){
+            for(int j = 0; j < colNum; j++){
                 cells.get(i).add(null);
             }
         }
 
         players = new OXOPlayer[2];
 
+    }
+
+    public boolean expandBoard()
+    {
+        rowNum++;
+        colNum++;
+        winThresh++;
+
+        for(int i = 0; i < rowNum; i++){
+            cells.add(new ArrayList<OXOPlayer>());
+            for(int j = 0; j < colNum; j++){
+                cells.get(i).add(null);
+            }
+        }
+        return true;
     }
 
     public int getNumberOfPlayers()
