@@ -45,19 +45,15 @@ class OXOController
             }
         }
         if(checkDiagonalWon(model, 0, 0, 1, 1)){
-            System.out.println("0 0 won");
             return true;
         }
         if(checkDiagonalWon(model, 0, (colNum - 1), 1, -1)){
-            System.out.println("0 col won");
             return true;
         }
         if(checkDiagonalWon(model, (rowNum - 1), 0, -1, 1)){
-            System.out.println("row 0 won");
             return true;
         }
         if(checkDiagonalWon(model, (rowNum - 1), (colNum - 1), -1, -1)){
-            System.out.println("row col won");
             return true;
         }
         return false;
@@ -68,8 +64,7 @@ class OXOController
         int rowMax = model.getNumberOfRows();
         int colMax = model.getNumberOfColumns();
 
-        while(rowNum <=  rowMax - 1 && rowNum >= 0 && colNum <= colMax - 1 && colNum >= 0){
-            System.out.println("row " + rowNum + " col " + colNum);
+        while(rowNum <  rowMax && rowNum >= 0 && colNum < colMax && colNum >= 0){
             if(model.isEmptyCell(rowNum, colNum) == true){
                 return false;
             }
