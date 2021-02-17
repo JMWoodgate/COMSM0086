@@ -92,6 +92,7 @@ class OXOModel
 
     public boolean isEmptyCell(int rowNumber, int colNumber)
     {
+        System.out.println("check emptycell row " + rowNumber + " col " + colNumber);
         if(cells.get(rowNumber).get(colNumber) == null){
             return true;
         }
