@@ -14,6 +14,9 @@ class OXOController
 
     public void handleIncomingCommand(String command) throws OXOMoveException
     {
+        int row = gameModel.getNumberOfRows();
+        int col = gameModel.getNumberOfColumns();
+
         OXOPlayer currentPlayer = gameModel.getCurrentPlayer();
         int x = (int)command.charAt(1);
         x = (Character.getNumericValue(x)) - 1;
@@ -22,11 +25,27 @@ class OXOController
         gameModel.setCellOwner(y2, x, currentPlayer);
 
         if(!checkGameWon(gameModel)){
+            if(checkGameDrawn(gameModel, row, col)){
+                gameModel.expandBoard();
+            }
             changeCurrentPlayer(currentPlayer);
         }
         else{
             gameModel.setWinner(currentPlayer);
         }
+    }
+
+    private boolean checkGameDrawn(OXOModel model, int rowNum, int colNum)
+    {
+        for(int j = 0; j < rowNum; j++){
+            for(int i = 0; i < colNum; i++){
+                if(model.isEmptyCell(j, i)){
+                    return false;
+                }
+            }
+        }
+        model.setGameDrawn();
+        return true;
     }
 
     private boolean checkGameWon(OXOModel model)
@@ -59,7 +78,8 @@ class OXOController
         return false;
     }
 
-    private boolean checkDiagonalWon(OXOModel model, int rowNum, int colNum, int rowDir, int colDir)
+    private boolean checkDiagonalWon(OXOModel model, int rowNum,
+                                     int colNum, int rowDir, int colDir)
     {
         int rowMax = model.getNumberOfRows();
         int colMax = model.getNumberOfColumns();

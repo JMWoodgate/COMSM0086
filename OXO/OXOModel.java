@@ -19,11 +19,10 @@ class OXOModel
         cells = new ArrayList<ArrayList<OXOPlayer>>();
 
         for(int i=0; i<rowNum; i++){
-            ArrayList<OXOPlayer> row = new ArrayList<>();
+            cells.add(new ArrayList<OXOPlayer>());
             for(int j=0; j<colNum; j++){
-                row.add(null);
+                cells.get(i).add(null);
             }
-            cells.add(row);
         }
 
         players = new OXOPlayer[2];
