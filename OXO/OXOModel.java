@@ -40,7 +40,6 @@ class OXOModel
 
         rowNum++;
         colNum++;
-        winThreshold++;
 
         return true;
     }
