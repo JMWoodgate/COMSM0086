@@ -26,7 +26,7 @@ class OXOController
 
         if(!checkGameWon(gameModel)){
             if(checkGameDrawn(gameModel, row, col)){
-                gameModel.expandBoard();
+                model.setGameDrawn();
             }
             changeCurrentPlayer(currentPlayer);
         }
