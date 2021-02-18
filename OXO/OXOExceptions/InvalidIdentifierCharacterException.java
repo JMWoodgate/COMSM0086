@@ -2,4 +2,14 @@ public class InvalidIdentifierCharacterException extends InvalidIdentifierExcept
 {
     char character;
     RowOrColumn type;
+
+    public InvalidIdentifierCharacterException()
+    {
+
+    }
+
+    public String toString()
+    {
+        return "Invalid character identified";
+    }
 }
