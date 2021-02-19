@@ -14,6 +14,11 @@ public class OutsideCellRangeException extends CellDoesNotExistException
 
     public String toString()
     {
-        return (type + " " + position + " identifier is a valid character, but it is out of range (i.e. too big or too small)");
+        if(type == RowOrColumn.ROW){
+            return (type + " " + (char)position + " is a valid character, but it is out of range (i.e. too big or too small)");
+        }
+        else{
+            return (type + " " + position + " is a valid character, but it is out of range (i.e. too big or too small)");
+        }
     }
 }

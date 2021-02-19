@@ -12,6 +12,6 @@ public class InvalidLengthException extends InvalidIdentifierException
 
     public String toString()
     {
-        return ("Identifier consists of " + length + "characters but should be two");
+        return ("Identifier consists of " + length + " characters but should be two");
     }
 }

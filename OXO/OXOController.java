@@ -6,7 +6,6 @@ class OXOController
 
     public OXOController(OXOModel model)
     {
-        System.out.println("entered OXOController");
         OXOPlayer firstPlayer = new OXOPlayer('X');
         gameModel = model;
         gameModel.setCurrentPlayer(firstPlayer);
@@ -15,14 +14,12 @@ class OXOController
 
     public void handleIncomingCommand(String command) throws OXOMoveException
     {
-        System.out.println("entered handleIncomingCommand");
         int rowMax = gameModel.getNumberOfRows();
         int colMax = gameModel.getNumberOfColumns();
 
         OXOPlayer currentPlayer = gameModel.getCurrentPlayer();
 
         validateCommandLength(command);
-        System.out.println("passed length exception");
 
 
         int x = (int)command.charAt(1);
@@ -30,15 +27,13 @@ class OXOController
         char y1 = command.charAt(0);
 
         validateCharacter(y1, RowOrColumn.ROW);
-        System.out.println("passed character exception");
+        validateCharacter((char)x, RowOrColumn.COLUMN);
 
         int y2 = (letterToNum(y1) - 1);
 
-        validateCellRange(y2, x, rowMax, colMax);
-        System.out.println("passed cell range exception");
+        validateCellRange(y2, y1, x, rowMax, colMax);
 
-        validateCellEmpty(gameModel, y2, x);
-        System.out.println("passed empty cell exception");
+        validateCellEmpty(gameModel, y2, y1, x);
 
         gameModel.setCellOwner(y2, x, currentPlayer);
 
@@ -53,10 +48,10 @@ class OXOController
         }
     }
 
-    private void validateCellEmpty(OXOModel model, int row, int col) throws CellAlreadyTakenException
+    private void validateCellEmpty(OXOModel model, int row, char rowChar, int col) throws CellAlreadyTakenException
     {
         if(!gameModel.isEmptyCell(row, col)){
-            throw new CellAlreadyTakenException(row, col);
+            throw new CellAlreadyTakenException(rowChar, col + 1);
         }
     }
 
@@ -74,23 +69,23 @@ class OXOController
         int length = command.length();
         InvalidLengthException e;
 
-        if(length >= 2){
+        if(length > 2){
             throw new InvalidLengthException(length);
         }
     }
 
-    private void validateCellRange(int row, int col, int rowMax, int colMax) throws OutsideCellRangeException
+    private void validateCellRange(int rowInt, char rowChar, int col, int rowMax, int colMax) throws OutsideCellRangeException
     {
         RowOrColumn type;
         OutsideCellRangeException e;
 
-        if(row > rowMax){
+        if(rowInt >= rowMax){
             type = RowOrColumn.ROW;
-            throw new OutsideCellRangeException(row, type);
+            throw new OutsideCellRangeException(rowChar, type);
         }
-        if(col > colMax){
+        if(col >= colMax){
             type = RowOrColumn.COLUMN;
-            throw new OutsideCellRangeException(row, type);
+            throw new OutsideCellRangeException(col + 1, type);
         }
     }
 

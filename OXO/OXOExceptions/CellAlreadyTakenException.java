@@ -14,6 +14,6 @@ public class CellAlreadyTakenException extends OXOMoveException
 
     public String toString()
     {
-        return ("Cell " + rowNumber + columnNumber + " exists, but it has already been claimed by a player");
+        return ("Cell " + (char)rowNumber + columnNumber + " exists, but it has already been claimed by a player");
     }
 }
