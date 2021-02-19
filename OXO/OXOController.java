@@ -70,6 +70,9 @@ class OXOController
                 System.out.println("not digit " + character + " conversion " + colConversion);
                 throw new InvalidIdentifierCharacterException(colConversion, type);
             }
+            else if(Character.isLetter(colConversion)){
+                throw new InvalidIdentifierCharacterException(colConversion, type);
+            }
         }
     }
 

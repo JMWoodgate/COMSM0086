@@ -15,10 +15,10 @@ public class InvalidIdentifierCharacterException extends InvalidIdentifierExcept
     public String toString()
     {
         if(type == RowOrColumn.ROW){
-            return ("Invalid character: " + character + " " + type + " is not a letter");
+            return ("Invalid character in " + type + ": " + character + " is not a letter");
         }
         else{
-            return ("Invalid character: " + character + " " + type + " is not a number");
+            return ("Invalid character in " + type + ": " + character + " is not a number");
         }
 
     }
