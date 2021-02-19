@@ -14,24 +14,78 @@ class OXOController
 
     public void handleIncomingCommand(String command) throws OXOMoveException
     {
-        int row = gameModel.getNumberOfRows();
-        int col = gameModel.getNumberOfColumns();
+        int rowMax = gameModel.getNumberOfRows();
+        int colMax = gameModel.getNumberOfColumns();
 
         OXOPlayer currentPlayer = gameModel.getCurrentPlayer();
+
+        validateCommandLength(command);
+
         int x = (int)command.charAt(1);
         x = (Character.getNumericValue(x)) - 1;
         char y1 = command.charAt(0);
+        validateCharacter(y1, RowOrColumn.ROW);
         int y2 = (letterToNum(y1) - 1);
+
+        validateCellRange(y2, x, rowMax, colMax);
+        validateCellEmpty(gameModel, y2, x);
+
         gameModel.setCellOwner(y2, x, currentPlayer);
 
         if(!checkGameWon(gameModel)){
-            if(checkGameDrawn(gameModel, row, col)){
+            if(checkGameDrawn(gameModel, rowMax, colMax)){
                 gameModel.setGameDrawn();
             }
             changeCurrentPlayer(currentPlayer);
         }
         else{
             gameModel.setWinner(currentPlayer);
+        }
+    }
+
+    private void validateCellEmpty(OXOModel model, int row, int col) throws CellAlreadyTakenException
+    {
+        Exception e;
+        if(!gameModel.isEmptyCell(row, col)){
+            throw new CellAlreadyTakenException(row, col);
+            System.out.println(e.CellAlreadyTakenException);
+        }
+    }
+
+    private void validateCharacter(char character, RowOrColumn type) throws InvalidIdentifierCharacterException
+    {
+        Exception e;
+        if(!Character.isLetter(character)){
+            throw new InvalidIdentifierCharacterException(character, type);
+            System.out.println(e.InvalidIdentifierCharacterException);
+        }
+    }
+
+    private void validateCommandLength(String command) throws InvalidLengthException
+    {
+        int length = command.length();
+        Exception e;
+
+        if(length > 2){
+            throw new InvalidLengthException(length);
+            System.out.println(e.InvalidLengthException);
+        }
+    }
+
+    private void validateCellRange(int row, int col, int rowMax, int colMax) throws OutsideCellRangeException
+    {
+        RowOrColumn type;
+        Exception e;
+
+        if(row > rowMax){
+            type = RowOrColumn.ROW;
+            throw new OutsideCellRangeException(row, type);
+            System.out.println(e.OutsideCellRangeException);
+        }
+        if(col > colMax){
+            type = RowOrColumn.COLUMN;
+            throw new OutsideCellRangeException(row, type);
+            System.out.println(e.OutsideCellRangeException);
         }
     }
 
@@ -166,8 +220,10 @@ class OXOController
     private int letterToNum(char letter)
     {
         char compare = 'a';
+        char lower = Character.toLowerCase(letter);
+
         for(int i = 1; i < 27; i++){
-            if(letter == compare){
+            if(lower == compare){
                 return i;
             }
             compare++;

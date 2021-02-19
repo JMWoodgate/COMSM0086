@@ -17,7 +17,7 @@ public class OXOMoveException extends Exception
 
     public String toString()
     {
-        return "Invalid move";
+        return ("Invalid move " + rowNumber + columnNumber);
     }
     
     protected int getRow()
