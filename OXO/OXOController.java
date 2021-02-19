@@ -6,6 +6,7 @@ class OXOController
 
     public OXOController(OXOModel model)
     {
+        System.out.println("entered OXOController");
         OXOPlayer firstPlayer = new OXOPlayer('X');
         gameModel = model;
         gameModel.setCurrentPlayer(firstPlayer);
@@ -14,21 +15,46 @@ class OXOController
 
     public void handleIncomingCommand(String command) throws OXOMoveException
     {
+        System.out.println("entered handleIncomingCommand");
         int rowMax = gameModel.getNumberOfRows();
         int colMax = gameModel.getNumberOfColumns();
 
         OXOPlayer currentPlayer = gameModel.getCurrentPlayer();
 
-        validateCommandLength(command);
+        try{
+            validateCommandLength(command);
+        } catch(InvalidLengthException il){
+            System.out.println(il.toString());
+        }
+        System.out.println("passed length exception");
+
 
         int x = (int)command.charAt(1);
         x = (Character.getNumericValue(x)) - 1;
         char y1 = command.charAt(0);
-        validateCharacter(y1, RowOrColumn.ROW);
+
+        try{
+            validateCharacter(y1, RowOrColumn.ROW);
+        } catch(InvalidIdentifierCharacterException iic){
+            System.out.println(iic.toString());
+        }
+        System.out.println("passed character exception");
+
         int y2 = (letterToNum(y1) - 1);
 
-        validateCellRange(y2, x, rowMax, colMax);
-        validateCellEmpty(gameModel, y2, x);
+        try{
+            validateCellRange(y2, x, rowMax, colMax);
+        } catch(OutsideCellRangeException ocr){
+            System.out.println(ocr.toString());
+        }
+        System.out.println("passed cell range exception");
+
+        try{
+            validateCellEmpty(gameModel, y2, x);
+        } catch(CellAlreadyTakenException cat){
+            System.out.println(cat.toString());
+        }
+        System.out.println("passed empty cell exception");
 
         gameModel.setCellOwner(y2, x, currentPlayer);
 
@@ -45,47 +71,42 @@ class OXOController
 
     private void validateCellEmpty(OXOModel model, int row, int col) throws CellAlreadyTakenException
     {
-        Exception e;
         if(!gameModel.isEmptyCell(row, col)){
             throw new CellAlreadyTakenException(row, col);
-            System.out.println(e.CellAlreadyTakenException);
         }
     }
 
     private void validateCharacter(char character, RowOrColumn type) throws InvalidIdentifierCharacterException
     {
-        Exception e;
+        InvalidIdentifierCharacterException e;
+
         if(!Character.isLetter(character)){
             throw new InvalidIdentifierCharacterException(character, type);
-            System.out.println(e.InvalidIdentifierCharacterException);
         }
     }
 
     private void validateCommandLength(String command) throws InvalidLengthException
     {
         int length = command.length();
-        Exception e;
+        InvalidLengthException e;
 
-        if(length > 2){
+        if(length >= 2){
             throw new InvalidLengthException(length);
-            System.out.println(e.InvalidLengthException);
         }
     }
 
     private void validateCellRange(int row, int col, int rowMax, int colMax) throws OutsideCellRangeException
     {
         RowOrColumn type;
-        Exception e;
+        OutsideCellRangeException e;
 
         if(row > rowMax){
             type = RowOrColumn.ROW;
             throw new OutsideCellRangeException(row, type);
-            System.out.println(e.OutsideCellRangeException);
         }
         if(col > colMax){
             type = RowOrColumn.COLUMN;
             throw new OutsideCellRangeException(row, type);
-            System.out.println(e.OutsideCellRangeException);
         }
     }
 
