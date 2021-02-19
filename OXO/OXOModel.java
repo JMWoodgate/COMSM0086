@@ -13,6 +13,7 @@ class OXOModel
 
     public OXOModel(int numberOfRows, int numberOfColumns, int winThresh)
     {
+        System.out.println("entered OXOModel");
         winThreshold = winThresh;
         rowNum = numberOfRows;
         colNum = numberOfColumns;
@@ -101,6 +102,7 @@ class OXOModel
 
     public void setCellOwner(int rowNumber, int colNumber, OXOPlayer player)
     {
+        System.out.println("Entered setCellOwner");
         cells.get(rowNumber).set(colNumber, player);
     }
 

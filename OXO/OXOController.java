@@ -21,11 +21,7 @@ class OXOController
 
         OXOPlayer currentPlayer = gameModel.getCurrentPlayer();
 
-        try{
-            validateCommandLength(command);
-        } catch(InvalidLengthException il){
-            System.out.println(il.toString());
-        }
+        validateCommandLength(command);
         System.out.println("passed length exception");
 
 
@@ -33,27 +29,15 @@ class OXOController
         x = (Character.getNumericValue(x)) - 1;
         char y1 = command.charAt(0);
 
-        try{
-            validateCharacter(y1, RowOrColumn.ROW);
-        } catch(InvalidIdentifierCharacterException iic){
-            System.out.println(iic.toString());
-        }
+        validateCharacter(y1, RowOrColumn.ROW);
         System.out.println("passed character exception");
 
         int y2 = (letterToNum(y1) - 1);
 
-        try{
-            validateCellRange(y2, x, rowMax, colMax);
-        } catch(OutsideCellRangeException ocr){
-            System.out.println(ocr.toString());
-        }
+        validateCellRange(y2, x, rowMax, colMax);
         System.out.println("passed cell range exception");
 
-        try{
-            validateCellEmpty(gameModel, y2, x);
-        } catch(CellAlreadyTakenException cat){
-            System.out.println(cat.toString());
-        }
+        validateCellEmpty(gameModel, y2, x);
         System.out.println("passed empty cell exception");
 
         gameModel.setCellOwner(y2, x, currentPlayer);
