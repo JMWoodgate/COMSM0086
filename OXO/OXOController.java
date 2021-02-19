@@ -16,25 +16,20 @@ class OXOController
     {
         int rowMax = gameModel.getNumberOfRows();
         int colMax = gameModel.getNumberOfColumns();
-
         OXOPlayer currentPlayer = gameModel.getCurrentPlayer();
 
         validateCommandLength(command);
-
 
         int x = (int)command.charAt(1);
         x = (Character.getNumericValue(x)) - 1;
         char y1 = command.charAt(0);
 
-        System.out.println("y1 " + y1);
         validateCharacter(y1, RowOrColumn.ROW, '0');
-        System.out.println("char x " + (char)x + " int x " + (int)x);
         validateCharacter((char)(x + '0'), RowOrColumn.COLUMN, command.charAt(1));
 
         int y2 = (letterToNum(y1) - 1);
 
         validateCellRange(y2, y1, x, rowMax, colMax);
-
         validateCellEmpty(gameModel, y2, y1, x);
 
         gameModel.setCellOwner(y2, x, currentPlayer);
@@ -43,6 +38,7 @@ class OXOController
             if(checkGameDrawn(gameModel, rowMax, colMax)){
                 gameModel.setGameDrawn();
             }
+            //gameModel.setCellOwner(y2, x, currentPlayer);
             changeCurrentPlayer(currentPlayer);
         }
         else{
@@ -61,13 +57,11 @@ class OXOController
     {
         if(type == RowOrColumn.ROW){
             if(!Character.isLetter(character)){
-                System.out.println(character + " isn;t a letter");
                 throw new InvalidIdentifierCharacterException(character, type);
             }
         }
         else {
             if(!Character.isDigit(character)){
-                System.out.println("not digit " + character + " conversion " + colConversion);
                 throw new InvalidIdentifierCharacterException(colConversion, type);
             }
             else if(Character.isLetter(colConversion)){
@@ -85,7 +79,8 @@ class OXOController
         }
     }
 
-    private void validateCellRange(int rowInt, char rowChar, int col, int rowMax, int colMax) throws OutsideCellRangeException
+    private void validateCellRange(int rowInt, char rowChar, int col,
+                                   int rowMax, int colMax) throws OutsideCellRangeException
     {
         RowOrColumn type;
 
