@@ -26,8 +26,10 @@ class OXOController
         x = (Character.getNumericValue(x)) - 1;
         char y1 = command.charAt(0);
 
-        validateCharacter(y1, RowOrColumn.ROW);
-        validateCharacter((char)x, RowOrColumn.COLUMN);
+        System.out.println("y1 " + y1);
+        validateCharacter(y1, RowOrColumn.ROW, '0');
+        System.out.println("char x " + (char)x + " int x " + (int)x);
+        validateCharacter((char)(x + '0'), RowOrColumn.COLUMN, command.charAt(1));
 
         int y2 = (letterToNum(y1) - 1);
 
@@ -55,19 +57,25 @@ class OXOController
         }
     }
 
-    private void validateCharacter(char character, RowOrColumn type) throws InvalidIdentifierCharacterException
+    private void validateCharacter(char character, RowOrColumn type, char colConversion) throws InvalidIdentifierCharacterException
     {
-        InvalidIdentifierCharacterException e;
-
-        if(!Character.isLetter(character)){
-            throw new InvalidIdentifierCharacterException(character, type);
+        if(type == RowOrColumn.ROW){
+            if(!Character.isLetter(character)){
+                System.out.println(character + " isn;t a letter");
+                throw new InvalidIdentifierCharacterException(character, type);
+            }
+        }
+        else {
+            if(!Character.isDigit(character)){
+                System.out.println("not digit " + character + " conversion " + colConversion);
+                throw new InvalidIdentifierCharacterException(colConversion, type);
+            }
         }
     }
 
     private void validateCommandLength(String command) throws InvalidLengthException
     {
         int length = command.length();
-        InvalidLengthException e;
 
         if(length > 2){
             throw new InvalidLengthException(length);
@@ -77,7 +85,6 @@ class OXOController
     private void validateCellRange(int rowInt, char rowChar, int col, int rowMax, int colMax) throws OutsideCellRangeException
     {
         RowOrColumn type;
-        OutsideCellRangeException e;
 
         if(rowInt >= rowMax){
             type = RowOrColumn.ROW;
@@ -221,7 +228,6 @@ class OXOController
     {
         char compare = 'a';
         char lower = Character.toLowerCase(letter);
-
         for(int i = 1; i < 27; i++){
             if(lower == compare){
                 return i;
