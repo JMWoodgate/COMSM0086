@@ -6,9 +6,7 @@ class OXOController
 
     public OXOController(OXOModel model)
     {
-        //OXOPlayer firstPlayer = new OXOPlayer('X');
         gameModel = model;
-        //gameModel.setCurrentPlayer(firstPlayer);
         gameModel.initPlayerArray();
         OXOPlayer firstPlayer = gameModel.getPlayerByNumber(0);
         gameModel.setCurrentPlayer(firstPlayer);
@@ -210,20 +208,9 @@ class OXOController
 
     private void changeCurrentPlayer(OXOModel model, OXOPlayer currentPlayer)
     {
-        //if('X' == currentPlayer.getPlayingLetter()){
-          //  OXOPlayer nextPlayer = new OXOPlayer('O');
-            //gameModel.setCurrentPlayer(nextPlayer);
-        //}
-        //else{
-          //  OXOPlayer nextPlayer = new OXOPlayer('X');
-            //gameModel.setCurrentPlayer(nextPlayer);
-        //}
-
         int numPlayers = model.getNumberOfPlayers();
         int currentPlayerNum = model.getIndexOfPlayer(currentPlayer);
-        System.out.println("currentPlayerNum in change.. " + currentPlayerNum);
         int nextPlayerNum = currentPlayerNum + 1;
-        System.out.println("nextPlayerNum in change.. " + nextPlayerNum);
         if(nextPlayerNum == numPlayers){
             nextPlayerNum = 0;
         }

@@ -47,17 +47,14 @@ class OXOModel
     public void initPlayerArray()
     {
         char newLetter = 'A';
-        System.out.println("Entered initPlayerArray");
         OXOPlayer firstPlayer = new OXOPlayer('X');
         players.set(0, firstPlayer);
         OXOPlayer secondPlayer = new OXOPlayer('O');
         players.set(1, secondPlayer);
-        System.out.println("Added first two players");
 
         for(int i = 2; i < numPlayers; i++){
             OXOPlayer newPlayer = new OXOPlayer(newLetter);
             players.add(i, newPlayer);
-            System.out.println("Added player " + newLetter + " at index " + i);
             newLetter++;
             if(newLetter == 'X' || newLetter == 'O'){
                 newLetter++;
@@ -86,17 +83,14 @@ class OXOModel
             comparisonPlayer = players.get(i);
             comparisonChar = comparisonPlayer.getPlayingLetter();
             if(comparisonChar == playerLetter){
-                System.out.println("found player, index " + i);
                 return i;
             }
         }
-        System.out.println("Didn't find player " + playerLetter + " in getIndex");
         return 0;
     }
 
     public OXOPlayer getPlayerByNumber(int number)
     {
-        System.out.println("getting player by number " + number);
         return players.get(number);
     }
 
