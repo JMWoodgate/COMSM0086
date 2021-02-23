@@ -31,16 +31,18 @@ class OXOController
         validateCellRange(y2, y1, x, rowMax, colMax);
         validateCellEmpty(gameModel, y2, y1, x);
 
-        gameModel.setCellOwner(y2, x, currentPlayer);
-
         if(!checkGameWon(gameModel)){
+            gameModel.setCellOwner(y2, x, currentPlayer);
+        }
+
+        if(checkGameWon(gameModel)){
+            gameModel.setWinner(currentPlayer);
+        }
+        else{
             if(checkGameDrawn(gameModel, rowMax, colMax)){
                 gameModel.setGameDrawn();
             }
             changeCurrentPlayer(currentPlayer);
-        }
-        else{
-            gameModel.setWinner(currentPlayer);
         }
     }
 
