@@ -13,9 +13,10 @@ public class OXOGame extends Frame implements WindowListener
     public OXOGame(int width, int height)
     {
         super("OXO Board");
-        OXOModel model = new OXOModel(4,4,4,5);
+        OXOModel model = new OXOModel(4,4,4);
         model.addPlayer(new OXOPlayer('X'));
         model.addPlayer(new OXOPlayer('O'));
+        model.addPlayer(new OXOPlayer('A'));
         OXOController controller = new OXOController(model);
         TextField inputBox = new TextField("");
         inputBox.setFont(font);

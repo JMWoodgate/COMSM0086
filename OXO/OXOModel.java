@@ -10,15 +10,14 @@ class OXOModel
     private int winThreshold;
     public int rowNum;
     public int colNum;
-    public int numPlayers;
+    public int numPlayers = 0;
 
-    public OXOModel(int numberOfRows, int numberOfColumns, int winThresh, int numberOfPlayers)
+    public OXOModel(int numberOfRows, int numberOfColumns, int winThresh)
     {
         winThreshold = winThresh;
         rowNum = numberOfRows;
         colNum = numberOfColumns;
-        numPlayers = numberOfPlayers;
-        players = new ArrayList<OXOPlayer>(numPlayers);
+        players = new ArrayList<OXOPlayer>();
         cells = new ArrayList<ArrayList<OXOPlayer>>();
 
         for(int i = 0; i < rowNum; i++){
@@ -44,24 +43,6 @@ class OXOModel
         return true;
     }
 
-    public void initPlayerArray()
-    {
-        char newLetter = 'A';
-        OXOPlayer firstPlayer = new OXOPlayer('X');
-        players.set(0, firstPlayer);
-        OXOPlayer secondPlayer = new OXOPlayer('O');
-        players.set(1, secondPlayer);
-
-        for(int i = 2; i < numPlayers; i++){
-            OXOPlayer newPlayer = new OXOPlayer(newLetter);
-            players.add(i, newPlayer);
-            newLetter++;
-            if(newLetter == 'X' || newLetter == 'O'){
-                newLetter++;
-            }
-        }
-    }
-
     public int getNumberOfPlayers()
     {
         return numPlayers;
@@ -71,6 +52,7 @@ class OXOModel
     {
         char newPlayer = player.getPlayingLetter();
         players.add(new OXOPlayer(newPlayer));
+        numPlayers++;
     }
 
     public int getIndexOfPlayer(OXOPlayer player)

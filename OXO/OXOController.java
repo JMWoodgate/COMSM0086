@@ -7,7 +7,6 @@ class OXOController
     public OXOController(OXOModel model)
     {
         gameModel = model;
-        gameModel.initPlayerArray();
         OXOPlayer firstPlayer = gameModel.getPlayerByNumber(0);
         gameModel.setCurrentPlayer(firstPlayer);
     }
