@@ -9,7 +9,6 @@ class OXOController
         OXOPlayer firstPlayer = new OXOPlayer('X');
         gameModel = model;
         gameModel.setCurrentPlayer(firstPlayer);
-        initWinThreshold(gameModel);
     }
 
     public void handleIncomingCommand(String command) throws OXOMoveException
@@ -38,7 +37,6 @@ class OXOController
             if(checkGameDrawn(gameModel, rowMax, colMax)){
                 gameModel.setGameDrawn();
             }
-            //gameModel.setCellOwner(y2, x, currentPlayer);
             changeCurrentPlayer(currentPlayer);
         }
         else{
@@ -141,6 +139,8 @@ class OXOController
     {
         int rowMax = model.getNumberOfRows();
         int colMax = model.getNumberOfColumns();
+        int win = model.getWinThreshold();
+        int cnt = 1;
 
         while(rowNum <  rowMax && rowNum >= 0 && colNum < colMax && colNum >= 0){
             if(model.isEmptyCell(rowNum, colNum) == true){
@@ -156,17 +156,21 @@ class OXOController
                     return false;
                 }
             }
+            cnt++;
+            if(cnt == win){
+                return true;
+            }
             rowNum += rowDir;
             colNum += colDir;
         }
-        return true;
+        return false;
     }
 
     private boolean checkRowWon(OXOModel model, int rowNum)
     {
-        int colNum = model.getNumberOfColumns();
+        int win = model.getWinThreshold();
 
-        for(int i = 0; i < colNum - 1; i++){
+        for(int i = 0; i < win - 1; i++){
             if(model.isEmptyCell(rowNum, i) == true){
                 return false;
             }
@@ -183,9 +187,9 @@ class OXOController
 
     private boolean checkColWon(OXOModel model, int colNum)
     {
-        int rowNum = model.getNumberOfRows();
+        int win = model.getWinThreshold();
 
-        for(int i = 0; i < rowNum - 1; i++){
+        for(int i = 0; i < win - 1; i++){
             if(model.isEmptyCell(i, colNum) == true){
                 return false;
             }
@@ -198,16 +202,6 @@ class OXOController
             }
         }
         return true;
-    }
-
-    private void initWinThreshold(OXOModel model)
-    {
-        if(model.getNumberOfRows() < model.getNumberOfColumns()){
-            model.setWinThreshold(model.getNumberOfRows());
-        }
-        else{
-            model.setWinThreshold(model.getNumberOfColumns());
-        }
     }
 
     private void changeCurrentPlayer(OXOPlayer currentPlayer)
