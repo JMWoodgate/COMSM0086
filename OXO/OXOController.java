@@ -21,20 +21,19 @@ class OXOController
 
         int x = (int)command.charAt(1);
         x = (Character.getNumericValue(x)) - 1;
-        char y1 = command.charAt(0);
+        char yChar = command.charAt(0);
 
-        validateCharacter(y1, RowOrColumn.ROW, '0');
+        validateCharacter(yChar, RowOrColumn.ROW, '0');
         validateCharacter((char)(x + '0'), RowOrColumn.COLUMN, command.charAt(1));
 
-        int y2 = (letterToNum(y1) - 1);
+        int yNum = (letterToNum(yChar) - 1);
 
-        validateCellRange(y2, y1, x, rowMax, colMax);
-        validateCellEmpty(gameModel, y2, y1, x);
+        validateCellRange(yNum, yChar, x, rowMax, colMax);
+        validateCellEmpty(gameModel, yNum, yChar, x);
 
         if(!checkGameWon(gameModel)){
-            gameModel.setCellOwner(y2, x, currentPlayer);
+            gameModel.setCellOwner(yNum, x, currentPlayer);
         }
-
         if(checkGameWon(gameModel)){
             gameModel.setWinner(currentPlayer);
         }
