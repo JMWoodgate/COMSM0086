@@ -73,7 +73,7 @@ class OXOController
     {
         int length = command.length();
 
-        if(length > 2){
+        if(length != 2){
             throw new InvalidLengthException(length);
         }
     }
