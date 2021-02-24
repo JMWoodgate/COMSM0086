@@ -45,14 +45,17 @@ class OXOController
         }
     }
 
-    private void validateCellEmpty(OXOModel model, int row, char rowChar, int col) throws CellAlreadyTakenException
+
+    private void validateCellEmpty(OXOModel model, int row, char rowChar, int col)
+            throws CellAlreadyTakenException
     {
         if(!gameModel.isEmptyCell(row, col)){
             throw new CellAlreadyTakenException(rowChar, col + 1);
         }
     }
 
-    private void validateCharacter(char character, RowOrColumn type, char colConversion) throws InvalidIdentifierCharacterException
+    private void validateCharacter(char character, RowOrColumn type, char colConversion)
+            throws InvalidIdentifierCharacterException
     {
         if(type == RowOrColumn.ROW){
             if(!Character.isLetter(character)){
@@ -220,6 +223,7 @@ class OXOController
         int numPlayers = model.getNumberOfPlayers();
         int currentPlayerNum = model.getIndexOfPlayer(currentPlayer);
         int nextPlayerNum = currentPlayerNum + 1;
+
         if(nextPlayerNum == numPlayers){
             nextPlayerNum = 0;
         }

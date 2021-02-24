@@ -28,6 +28,16 @@ class OXOModel
         }
     }
 
+    public void addRow(int rowMax, int colMax){
+        ArrayList<OXOPlayer> newRow = new ArrayList<OXOPlayer>();
+        for(int i = 0; i < colMax; i++){
+            newRow.add(null);
+        }
+        cells.add(rowMax, newRow);
+        rowNum++;
+        colNum++;
+    }
+
     public boolean expandBoard()
     {
         for(int i = 0; i <= rowNum; i++){
@@ -108,6 +118,7 @@ class OXOModel
 
     public OXOPlayer getCellOwner(int rowNumber, int colNumber)
     {
+        System.out.println("getting owner of cell row " + rowNumber + " col " + colNumber);
         return cells.get(rowNumber).get(colNumber);
     }
 
