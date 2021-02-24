@@ -45,7 +45,6 @@ class OXOController
         }
     }
 
-
     private void validateCellEmpty(OXOModel model, int row, char rowChar, int col)
             throws CellAlreadyTakenException
     {

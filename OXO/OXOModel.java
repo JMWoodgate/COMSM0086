@@ -118,7 +118,6 @@ class OXOModel
 
     public OXOPlayer getCellOwner(int rowNumber, int colNumber)
     {
-        System.out.println("getting owner of cell row " + rowNumber + " col " + colNumber);
         return cells.get(rowNumber).get(colNumber);
     }
 
