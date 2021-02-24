@@ -1,6 +1,6 @@
 package OXOExceptions;
 
-public class InvalidIdentifierException extends CellDoesNotExistException
+public abstract class InvalidIdentifierException extends CellDoesNotExistException
 {
     private int rowNumber;
     private int columnNumber;
@@ -17,8 +17,4 @@ public class InvalidIdentifierException extends CellDoesNotExistException
         columnNumber = column;
     }
 
-    public String toString()
-    {
-        return (rowNumber + columnNumber + " are invalid identifiers");
-    }
 }

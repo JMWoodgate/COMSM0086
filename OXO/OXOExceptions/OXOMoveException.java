@@ -1,6 +1,6 @@
 package OXOExceptions;
 
-public class OXOMoveException extends Exception
+public abstract class OXOMoveException extends Exception
 {
     private int rowNumber;
     private int columnNumber;
@@ -13,11 +13,6 @@ public class OXOMoveException extends Exception
     {
         rowNumber = row;
         columnNumber = column;
-    }
-
-    public String toString()
-    {
-        return ("Invalid move " + rowNumber + columnNumber);
     }
     
     protected int getRow()

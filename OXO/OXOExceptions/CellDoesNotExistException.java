@@ -1,6 +1,6 @@
 package OXOExceptions;
 
-public class CellDoesNotExistException extends OXOMoveException
+public abstract class CellDoesNotExistException extends OXOMoveException
 {
     private int rowNumber;
     private int columnNumber;
@@ -15,10 +15,5 @@ public class CellDoesNotExistException extends OXOMoveException
         super(row, column);
         rowNumber = row;
         columnNumber = column;
-    }
-
-    public String toString()
-    {
-        return ("Cell " + rowNumber + columnNumber + " does not exist");
     }
 }
