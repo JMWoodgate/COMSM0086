@@ -98,12 +98,12 @@ class OXOModel
 
     public int getNumberOfRows()
     {
-        return rowNum;
+        return cells.size();
     }
 
     public int getNumberOfColumns()
     {
-        return colNum;
+        return cells.get(0).size();
     }
 
     public OXOPlayer getCellOwner(int rowNumber, int colNumber)

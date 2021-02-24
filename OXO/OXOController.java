@@ -109,29 +109,39 @@ class OXOController
     {
         int rowNum = model.getNumberOfRows();
         int colNum = model.getNumberOfColumns();
+        int win = model.getWinThreshold();
 
-        for(int i = 0; i < rowNum; i++){
-            if(checkRowWon(model, i)){
+        if(colNum >= win){
+            for(int i = 0; i < rowNum; i++){
+                if(checkRowWon(model, i)){
+                    return true;
+                }
+            }
+        }
+
+        if(rowNum >= win){
+            for(int i = 0; i < colNum; i++){
+                if(checkColWon(model, i)){
+                    return true;
+                }
+            }
+        }
+
+        if(colNum >= win || rowNum >= win){
+            if(checkDiagonalWon(model, 0, 0, 1, 1)){
+                return true;
+            }
+            if(checkDiagonalWon(model, 0, (colNum - 1), 1, -1)){
+                return true;
+            }
+            if(checkDiagonalWon(model, (rowNum - 1), 0, -1, 1)){
+                return true;
+            }
+            if(checkDiagonalWon(model, (rowNum - 1), (colNum - 1), -1, -1)){
                 return true;
             }
         }
-        for(int i = 0; i < colNum; i++){
-            if(checkColWon(model, i)){
-                return true;
-            }
-        }
-        if(checkDiagonalWon(model, 0, 0, 1, 1)){
-            return true;
-        }
-        if(checkDiagonalWon(model, 0, (colNum - 1), 1, -1)){
-            return true;
-        }
-        if(checkDiagonalWon(model, (rowNum - 1), 0, -1, 1)){
-            return true;
-        }
-        if(checkDiagonalWon(model, (rowNum - 1), (colNum - 1), -1, -1)){
-            return true;
-        }
+
         return false;
     }
 
