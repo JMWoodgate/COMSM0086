@@ -28,6 +28,7 @@ class OXOModel
         }
     }
 
+    //this functions was used for testing
     public void addRow(int rowMax, int colMax){
         ArrayList<OXOPlayer> newRow = new ArrayList<OXOPlayer>();
         for(int i = 0; i < colMax; i++){
@@ -36,21 +37,6 @@ class OXOModel
         cells.add(rowMax, newRow);
         rowNum++;
         colNum++;
-    }
-
-    public boolean expandBoard()
-    {
-        for(int i = 0; i <= rowNum; i++){
-            cells.add(rowNum, new ArrayList<OXOPlayer>());
-            for(int j = 0; j <= colNum; j++){
-                cells.get(i).add(null);
-            }
-        }
-
-        rowNum++;
-        colNum++;
-
-        return true;
     }
 
     public int getNumberOfPlayers()

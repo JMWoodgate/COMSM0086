@@ -120,7 +120,6 @@ class OXOController
                 }
             }
         }
-
         if(rowNum >= win){
             for(int i = 0; i < colNum; i++){
                 if(checkColWon(model, i)){
@@ -128,7 +127,6 @@ class OXOController
                 }
             }
         }
-
         if(colNum >= win || rowNum >= win){
             if(checkDiagonalWon(model, 0, 0, 1, 1)){
                 return true;
@@ -143,7 +141,6 @@ class OXOController
                 return true;
             }
         }
-
         return false;
     }
 
