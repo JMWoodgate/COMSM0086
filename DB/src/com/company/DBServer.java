@@ -5,12 +5,14 @@ import java.util.*;
 
 class DBServer
 {
+
     public DBServer(int portNumber)
     {
     }
 
-    public static LinkedList readFile(File fileToOpen) {
-        LinkedList fileStorage = null;
+    public static LinkedList<String> readFile(File fileToOpen) throws IOException
+    {
+        LinkedList<String> fileStorage = null;
         if (fileToOpen.exists()) {
             FileReader reader = null;
             try {
@@ -18,41 +20,38 @@ class DBServer
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            BufferedReader buffReader = new BufferedReader(reader);
-            String currentLine = null;
-            try {
-                currentLine = buffReader.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
+            BufferedReader buffReader = null;
+            if (reader != null) {
+                buffReader = new BufferedReader(reader);
             }
-            fileStorage = new LinkedList();
+            assert buffReader != null;
+            String currentLine = buffReader.readLine();
+
+            fileStorage = new LinkedList<>();
 
             while (currentLine != null) {
                 fileStorage.add(currentLine);
                 fileStorage.add("\n");
-                try {
-                    //can put this in a while loop, and store a new row each time until reaching the end of the file
-                    currentLine = buffReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                currentLine = buffReader.readLine();
             }
-            try {
-                buffReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            buffReader.close();
         }
         return fileStorage;
     }
 
     public static void main(String[] args)
     {
-        DBServer server = new DBServer(8888);
+        //DBServer server = new DBServer(8888);
         String name = ".." + File.separator + "Testfiles" + File.separator + "contact-details.tab";
         File fileToOpen = new File(name);
+        LinkedList<String> fileStorage = null;
 
-        LinkedList fileStorage = readFile(fileToOpen);
+        try{
+            fileStorage = readFile(fileToOpen);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         System.out.println(fileStorage);
     }
