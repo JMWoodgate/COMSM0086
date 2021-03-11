@@ -5,9 +5,11 @@ import java.util.*;
 
 class DBServer
 {
+    private int portNumber;
 
     public DBServer(int portNumber)
     {
+        this.portNumber = portNumber;
     }
 
     public static LinkedList<String> readFile(File fileToOpen) throws IOException
@@ -31,7 +33,6 @@ class DBServer
 
             while (currentLine != null) {
                 fileStorage.add(currentLine);
-                fileStorage.add("\n");
                 currentLine = buffReader.readLine();
             }
             buffReader.close();
