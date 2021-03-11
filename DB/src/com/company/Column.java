@@ -1,21 +1,30 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class Column {
 
-    private final String columnName;
+    private String columnNames;
     private final int numberOfColumns;
+    private int columnIndex;
 
-    public Column(String columnName, int numberOfColumns){
-        this.columnName = columnName;
+    public Column(String columnNames,
+                  int numberOfColumns, int columnIndex){
+        this.columnNames = columnNames;
         this.numberOfColumns = numberOfColumns;
+        this.columnIndex = columnIndex;
     }
 
-    public void add(Column newColumn) {
-
+    public void setColumnIndex(int index){
+        columnIndex = index;
     }
 
-    public String getColumnName(){
-        return columnName;
+    public int getColumnIndex(){
+        return columnIndex;
+    }
+
+    public String getColumnNames(){
+        return columnNames;
     }
 
     public int getNumberOfColumns(){

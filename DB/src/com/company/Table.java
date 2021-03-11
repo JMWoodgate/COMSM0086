@@ -1,19 +1,24 @@
 package com.company;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class Table {
 
     private String tableName;
     private int numberOfRows;
     private int numberOfColumns;
-    public ArrayList<Column<Row>> table;
+    private ArrayList<Row> rows;
+    private ArrayList<Column> columns;
+    private ArrayList<String> fileStorage;
 
-    public Table(String tableName, int numberOfRows, int numberOfColumns){
+    public Table(String tableName, ArrayList<String> fileStorage){
         this.tableName = tableName;
-        this.numberOfRows = numberOfRows;
-        this.numberOfColumns = numberOfColumns;
+        this.fileStorage = fileStorage;
+
+        numberOfRows = getNumberOfRows(fileStorage);
+        numberOfColumns = getNumberOfColumns(fileStorage.get(0));
 
         ArrayList<Row> rows = new ArrayList<Row>();
         ArrayList<Column> columns = new ArrayList<Column>();
@@ -24,22 +29,29 @@ public class Table {
         for(int i = 0; i < numberOfColumns; i++) {
             columns.add(null);
         }
+    }
 
-        table = new ArrayList<Column<Row>>();
-
-        for(int i = 0; i < numberOfColumns; i++){
-            table.add(new Column<Row>(null));
-            for(int j = 0; j < numberOfRows; j++){
-                table.get(i).add(new Row(null));
-            }
+    public void fillTable(File fileToOpen){
+        ArrayList<String> fileStorage = null;
+        FileIO fileIO = new FileIO();
+        try{
+            fileStorage = fileIO.readFile(fileToOpen);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    private String[] parseString(String rowToParse){
+        String[] listOfWords = rowToParse.split("\t");
+        return listOfWords;
     }
 
     public String getTableName(){
         return tableName;
     }
 
-    public int getNumberOfRows() {
+    public int getNumberOfRows(ArrayList<String> fileStorage) {
+        numberOfRows = fileStorage.size();
         return numberOfRows;
     }
 
@@ -47,7 +59,9 @@ public class Table {
         this.numberOfRows = numberOfRows;
     }
 
-    public int getNumberOfColumns() {
+    public int getNumberOfColumns(String firstLine) {
+        String[] parsedString = parseString(firstLine);
+        numberOfColumns = parsedString.length;
         return numberOfColumns;
     }
 

@@ -1,17 +1,18 @@
 package com.company;
+import java.util.ArrayList;
 
 public class Row {
 
-    private final int primaryKey;
-    private final int numberOfRows;
+    private ArrayList<String> elements;
+    private int numberOfRows;
 
-    public Row(int primaryKey, int numberOfRows){
-        this.primaryKey = primaryKey;
+    public Row(ArrayList<String> elements, int numberOfRows){
+        this.elements = elements;
         this.numberOfRows = numberOfRows;
     }
 
-    public int getPrimaryKey(){
-        return primaryKey;
+    public ArrayList<String> getElements(){
+        return elements;
     }
 
     public int getNumberOfRows(){
