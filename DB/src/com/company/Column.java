@@ -4,14 +4,11 @@ import java.util.ArrayList;
 
 public class Column {
 
-    private String columnNames;
-    private final int numberOfColumns;
+    private String columnName;
     private int columnIndex;
 
-    public Column(String columnNames,
-                  int numberOfColumns, int columnIndex){
-        this.columnNames = columnNames;
-        this.numberOfColumns = numberOfColumns;
+    public Column(String columnName, int columnIndex){
+        this.columnName = columnName;
         this.columnIndex = columnIndex;
     }
 
@@ -23,11 +20,8 @@ public class Column {
         return columnIndex;
     }
 
-    public String getColumnNames(){
-        return columnNames;
+    public String getColumnName(){
+        return columnName;
     }
 
-    public int getNumberOfColumns(){
-        return numberOfColumns;
-    }
 }

@@ -11,7 +11,7 @@ public class FileIO {
 
     public static ArrayList<String> readFile(File fileToOpen) throws IOException
     {
-        ArrayList<String> fileStorage = null;
+        ArrayList<String> dataFromFile = null;
         String currentLine;
 
         //opening file and assigning a buffered reader
@@ -27,16 +27,16 @@ public class FileIO {
                 buffReader = new BufferedReader(reader);
             }
             assert buffReader != null;
-            fileStorage = new ArrayList<>();
+            dataFromFile = new ArrayList<>();
 
             //reading from the file line by line, and storing each line in an ArrayList
             do {
                 currentLine = buffReader.readLine();
-                fileStorage.add(currentLine);
+                dataFromFile.add(currentLine);
             } while (currentLine != null);
 
             buffReader.close();
         }
-        return fileStorage;
+        return dataFromFile;
     }
 }

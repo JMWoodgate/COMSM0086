@@ -4,19 +4,15 @@ import java.util.ArrayList;
 public class Row {
 
     private ArrayList<String> elements;
-    private int numberOfRows;
+    private int numberOfColumns;
 
-    public Row(ArrayList<String> elements, int numberOfRows){
+    public Row(ArrayList<String> elements, int numberOfColumns){
         this.elements = elements;
-        this.numberOfRows = numberOfRows;
+        this.numberOfColumns = numberOfColumns;
     }
 
     public ArrayList<String> getElements(){
         return elements;
-    }
-
-    public int getNumberOfRows(){
-        return numberOfRows;
     }
 
 }

@@ -19,16 +19,10 @@ class DBServer
         //DBServer server = new DBServer(8888);
         String name = ".." + File.separator + "Testfiles" + File.separator + "contact-details.tab";
         File fileToOpen = new File(name);
-        ArrayList<String> fileStorage = null;
 
         FileIO fileIO = new FileIO();
 
-        try{
-            fileStorage = fileIO.readFile(fileToOpen);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Table newTable = new Table(name, fileToOpen);
 
-        System.out.println(fileStorage);
     }
 }
