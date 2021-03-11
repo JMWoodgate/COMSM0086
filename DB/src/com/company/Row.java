@@ -17,4 +17,5 @@ public class Row {
     public int getNumberOfRows(){
         return numberOfRows;
     }
+
 }

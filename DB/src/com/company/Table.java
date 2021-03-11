@@ -8,6 +8,7 @@ public class Table {
     private String tableName;
     private int numberOfRows;
     private int numberOfColumns;
+    public ArrayList<Column<Row>> table;
 
     public Table(String tableName, int numberOfRows, int numberOfColumns){
         this.tableName = tableName;
@@ -22,6 +23,15 @@ public class Table {
 
         for(int i = 0; i < numberOfColumns; i++) {
             columns.add(null);
+        }
+
+        table = new ArrayList<Column<Row>>();
+
+        for(int i = 0; i < numberOfColumns; i++){
+            table.add(new Column<Row>(null));
+            for(int j = 0; j < numberOfRows; j++){
+                table.get(i).add(new Row(null));
+            }
         }
     }
 

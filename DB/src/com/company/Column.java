@@ -10,6 +10,10 @@ public class Column {
         this.numberOfColumns = numberOfColumns;
     }
 
+    public void add(Column newColumn) {
+
+    }
+
     public String getColumnName(){
         return columnName;
     }
