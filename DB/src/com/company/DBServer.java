@@ -12,9 +12,9 @@ class DBServer
         this.portNumber = portNumber;
     }
 
-    public static LinkedList<String> readFile(File fileToOpen) throws IOException
+    public static ArrayList<String> readFile(File fileToOpen) throws IOException
     {
-        LinkedList<String> fileStorage = null;
+        ArrayList<String> fileStorage = null;
         if (fileToOpen.exists()) {
             FileReader reader = null;
             try {
@@ -29,7 +29,7 @@ class DBServer
             assert buffReader != null;
             String currentLine = buffReader.readLine();
 
-            fileStorage = new LinkedList<>();
+            fileStorage = new ArrayList<>();
 
             while (currentLine != null) {
                 fileStorage.add(currentLine);
@@ -45,7 +45,7 @@ class DBServer
         //DBServer server = new DBServer(8888);
         String name = ".." + File.separator + "Testfiles" + File.separator + "contact-details.tab";
         File fileToOpen = new File(name);
-        LinkedList<String> fileStorage = null;
+        ArrayList<String> fileStorage = null;
 
         try{
             fileStorage = readFile(fileToOpen);
