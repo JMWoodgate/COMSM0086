@@ -4,16 +4,23 @@ import java.util.ArrayList;
 
 public class Test {
 
-    private Row testRow;
-
     public Test(){
+        testTable();
         testRow();
+        testColumn();
+    }
+
+    private void testTable(){
+        ArrayList<String> testData = new ArrayList<>();
+        testData.add("id name  address");
+        testData.add("1 Hi  place");
+        Table testTable = new Table("myTable", testData);
     }
 
     private void testRow(){
         ArrayList<String> elements = new ArrayList<>();
         elements.add("1  At  y@382");
-        testRow = new Row(elements, 3);
+        Row testRow = new Row(elements, 3);
         assert(testRow.getElements().equals(elements));
         assert(testRow.getPrimaryKey().equals("1"));
         assert(testRow.getElement(1).equals("At"));
@@ -24,5 +31,16 @@ public class Test {
         assert(!testRow.setElement("T", -4));
         assert(testRow.setElement("6", 0));
         assert(testRow.getElement(1).equals("6"));
+    }
+
+    private void testColumn(){
+        Column testColumn = new Column("id", 0);
+        assert(testColumn.getColumnIndex()==0);
+        testColumn.setColumnIndex(1);
+        assert(testColumn.getColumnIndex()==1);
+        assert(testColumn.getColumnName().equals("id"));
+        assert(testColumn.setColumnName("hi"));
+        assert(testColumn.getColumnName().equals("hi"));
+        assert(!testColumn.setColumnName(null));
     }
 }

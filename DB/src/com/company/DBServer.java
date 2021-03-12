@@ -23,8 +23,14 @@ class DBServer
         File fileToOpen = new File(name);
 
         FileIO fileIO = new FileIO();
+        ArrayList<String> dataFromFile = new ArrayList<>();
+        try{
+            dataFromFile = fileIO.readFile(fileToOpen);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        Table newTable = new Table(name, fileToOpen);
+        Table newTable = new Table(name, dataFromFile);
         System.out.println(newTable.getRows().get(0).getElements());
         System.out.println(newTable.getColumns().get(0).getColumnName());
 

@@ -20,6 +20,16 @@ public class Column {
         return columnIndex;
     }
 
+    public boolean setColumnName(String newName){
+        if(newName!=null){
+            columnName = newName;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public String getColumnName(){
         return columnName;
     }

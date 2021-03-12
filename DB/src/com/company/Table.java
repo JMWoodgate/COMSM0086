@@ -14,15 +14,9 @@ public class Table {
     private ArrayList<Column> columns;
     private ArrayList<String> dataFromFile;
 
-    public Table(String tableName, File fileToOpen){
+    public Table(String tableName, ArrayList<String> dataFromFile){
         this.tableName = tableName;
-        //read file
-        FileIO fileIO = new FileIO();
-        try{
-            dataFromFile = fileIO.readFile(fileToOpen);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.dataFromFile = dataFromFile;
         //get number of rows and columns
         numberOfRows = getNumberOfRows(dataFromFile);
         numberOfColumns = getNumberOfColumns(dataFromFile.get(0));
@@ -30,9 +24,9 @@ public class Table {
         fillTable(dataFromFile);
     }
 
-    public void fillTable(ArrayList<String> fileStorage){
+    public void fillTable(ArrayList<String> dataFromFile){
         //getting column names, then storing in an array of columns
-        ArrayList<String> columnNames = parseString(fileStorage.get(0));
+        ArrayList<String> columnNames = parseString(dataFromFile.get(0));
         columns = new ArrayList<>();
         for(int i = 0; i < numberOfColumns; i++) {
             columns.add(new Column(columnNames.get(i), i));
@@ -41,7 +35,7 @@ public class Table {
         //storing data in array of rows
         rows = new ArrayList<>();
         for(int i = 1; i < numberOfRows; i++){
-            ArrayList<String> currentRow = parseString(fileStorage.get(i));
+            ArrayList<String> currentRow = parseString(dataFromFile.get(i));
             rows.add(new Row(currentRow, numberOfColumns));
         }
     }
@@ -67,9 +61,9 @@ public class Table {
         return tableName;
     }
 
-    public int getNumberOfRows(ArrayList<String> fileStorage) {
+    public int getNumberOfRows(ArrayList<String> dataFromFile) {
         //minus one because the top line is column headers
-        numberOfRows = fileStorage.size() - 1;
+        numberOfRows = dataFromFile.size() - 1;
         return numberOfRows;
     }
 
