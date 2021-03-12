@@ -12,11 +12,9 @@ public class Table {
     private int numberOfColumns;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
-    private ArrayList<String> dataFromFile;
 
     public Table(String tableName, ArrayList<String> dataFromFile){
         this.tableName = tableName;
-        this.dataFromFile = dataFromFile;
         numberOfRows = initNumberOfRows(dataFromFile);
         numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
         fillTable(dataFromFile);
@@ -36,6 +34,12 @@ public class Table {
             ArrayList<String> currentRow = parseString(dataFromFile.get(i));
             rows.add(new Row(currentRow, numberOfColumns));
         }
+    }
+
+    public String getElement(int rowNumber, int columnNumber){
+        assert(rowNumber >= 0 && rowNumber <= numberOfRows);
+        assert(columnNumber >= 0 && columnNumber <= numberOfColumns);
+        return rows.get(rowNumber).getElement(columnNumber);
     }
 
     public String getSpecificColumn(int index){

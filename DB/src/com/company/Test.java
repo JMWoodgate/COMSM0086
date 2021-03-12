@@ -12,25 +12,33 @@ public class Test {
 
     private void testTable(){
         ArrayList<String> testData = new ArrayList<>();
-        testData.add("id name  address");
-        testData.add("1 Hi  place");
-        testData.add("2 Bye  nowhere");
+        testData.add("id\tname\taddress");
+        testData.add("1\tHi\tplace");
+        testData.add("2\tBye\tnowhere");
+        testData.add(null);
         Table testTable = new Table("myTable", testData);
         assert(testTable.getNumberOfColumns()==3);
         assert(testTable.getNumberOfRows()==2);
-        assert(testTable.getSpecificRow(0).equals(testData.get(1)));
+        ArrayList<String> parsedTest = new ArrayList<>();
+        parsedTest.add("1");
+        parsedTest.add("Hi");
+        parsedTest.add("place");
+        assert(testTable.getSpecificRow(0).equals(parsedTest));
         assert(testTable.getSpecificColumn(0).equals("id"));
         assert(testTable.getTableName().equals("myTable"));
         assert(testTable.setTableName("new"));
         assert(testTable.getTableName().equals("new"));
         assert(!testTable.setTableName(null));
+        assert(testTable.getElement(0,0).equals("1"));
+        assert(testTable.getElement(1,2).equals("nowhere"));
     }
 
     private void testRow(){
         ArrayList<String> elements = new ArrayList<>();
-        elements.add("1  At  y@382");
+        elements.add("1\tAt\ty@382");
         Row testRow = new Row(elements, 3);
         assert(testRow.getElements().equals(elements));
+        System.out.println("test get key " + testRow.getPrimaryKey());
         assert(testRow.getPrimaryKey().equals("1"));
         assert(testRow.getElement(1).equals("At"));
         assert(testRow.setElement("Them", 1));

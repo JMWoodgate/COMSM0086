@@ -1,5 +1,6 @@
 package com.company;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Row {
 
@@ -16,6 +17,7 @@ public class Row {
     }
 
     public String getPrimaryKey(){
+
         return elements.get(0);
     }
 
@@ -32,5 +34,14 @@ public class Row {
         else{
             return false;
         }
+    }
+
+    private ArrayList<String> parseString(String rowToParse){
+        //parsing into list of words
+        String[] listOfWords = rowToParse.split("\t");
+        //converting into ArrayList
+        ArrayList<String> arrayToList;
+        arrayToList = new ArrayList<String>(Arrays.asList(listOfWords));
+        return arrayToList;
     }
 }

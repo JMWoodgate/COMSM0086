@@ -33,7 +33,8 @@ class DBServer
         Table newTable = new Table(name, dataFromFile);
         System.out.println(newTable.getRows().get(0).getElements());
         System.out.println(newTable.getColumns().get(0).getColumnName());
-
+        System.out.println("rownum " + newTable.getNumberOfRows());
+        System.out.println("colnum " + newTable.getNumberOfColumns());
         Test testing = new Test();
     }
 }
