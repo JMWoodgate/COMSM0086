@@ -10,4 +10,8 @@ public class Database {
     public Database(String databaseName){
         this.databaseName = databaseName;
     }
+
+    public void addTable(Table newTable){
+        tables.add(newTable);
+    }
 }
