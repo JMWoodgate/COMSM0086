@@ -18,7 +18,12 @@ public class Test {
         Table testTable = new Table("myTable", testData);
         assert(testTable.getNumberOfColumns()==3);
         assert(testTable.getNumberOfRows()==2);
-
+        assert(testTable.getSpecificRow(0).equals(testData.get(1)));
+        assert(testTable.getSpecificColumn(0).equals("id"));
+        assert(testTable.getTableName().equals("myTable"));
+        assert(testTable.setTableName("new"));
+        assert(testTable.getTableName().equals("new"));
+        assert(!testTable.setTableName(null));
     }
 
     private void testRow(){

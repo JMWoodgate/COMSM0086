@@ -17,14 +17,12 @@ public class Table {
     public Table(String tableName, ArrayList<String> dataFromFile){
         this.tableName = tableName;
         this.dataFromFile = dataFromFile;
-        //get number of rows and columns
         numberOfRows = initNumberOfRows(dataFromFile);
         numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
-        //fill table with data read from file
         fillTable(dataFromFile);
     }
 
-    public void fillTable(ArrayList<String> dataFromFile){
+    private void fillTable(ArrayList<String> dataFromFile){
         //getting column names, then storing in an array of columns
         ArrayList<String> columnNames = parseString(dataFromFile.get(0));
         columns = new ArrayList<>();
@@ -34,10 +32,20 @@ public class Table {
 
         //storing data in array of rows
         rows = new ArrayList<>();
-        for(int i = 1; i < numberOfRows; i++){
+        for(int i = 1; i <= numberOfRows; i++){
             ArrayList<String> currentRow = parseString(dataFromFile.get(i));
             rows.add(new Row(currentRow, numberOfColumns));
         }
+    }
+
+    public String getSpecificColumn(int index){
+        assert(index <= numberOfColumns && index >= 0);
+        return columns.get(index).getColumnName();
+    }
+
+    public ArrayList<String> getSpecificRow(int index){
+        assert(index <= numberOfRows && index >= 0);
+        return rows.get(index).getElements();
     }
 
     public ArrayList<Row> getRows(){
@@ -61,9 +69,20 @@ public class Table {
         return tableName;
     }
 
+    public boolean setTableName(String newTableName){
+        if(newTableName!=null){
+            tableName = newTableName;
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
     private int initNumberOfRows(ArrayList<String> dataFromFile) {
-        //minus one because the top line is column headers
-        numberOfRows = dataFromFile.size() - 1;
+        //minus two because the top line is column headers
+        numberOfRows = dataFromFile.size() - 2;
         return numberOfRows;
     }
 
