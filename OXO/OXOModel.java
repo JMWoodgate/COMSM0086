@@ -1,5 +1,3 @@
-import java.util.*;
-
 class OXOModel
 {
     private ArrayList<ArrayList<OXOPlayer>> cells;
