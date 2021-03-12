@@ -18,8 +18,8 @@ public class Table {
         this.tableName = tableName;
         this.dataFromFile = dataFromFile;
         //get number of rows and columns
-        numberOfRows = getNumberOfRows(dataFromFile);
-        numberOfColumns = getNumberOfColumns(dataFromFile.get(0));
+        numberOfRows = initNumberOfRows(dataFromFile);
+        numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
         //fill table with data read from file
         fillTable(dataFromFile);
     }
@@ -61,9 +61,13 @@ public class Table {
         return tableName;
     }
 
-    public int getNumberOfRows(ArrayList<String> dataFromFile) {
+    private int initNumberOfRows(ArrayList<String> dataFromFile) {
         //minus one because the top line is column headers
         numberOfRows = dataFromFile.size() - 1;
+        return numberOfRows;
+    }
+
+    public int getNumberOfRows(){
         return numberOfRows;
     }
 
@@ -71,9 +75,14 @@ public class Table {
         this.numberOfRows = numberOfRows;
     }
 
-    public int getNumberOfColumns(String firstLine) {
+    private int initNumberOfColumns(String firstLine) {
+        assert(firstLine!=null);
         ArrayList<String> parsedString = parseString(firstLine);
         numberOfColumns = parsedString.size();
+        return numberOfColumns;
+    }
+
+    public int getNumberOfColumns(){
         return numberOfColumns;
     }
 

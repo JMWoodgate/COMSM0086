@@ -14,7 +14,11 @@ public class Test {
         ArrayList<String> testData = new ArrayList<>();
         testData.add("id name  address");
         testData.add("1 Hi  place");
+        testData.add("2 Bye  nowhere");
         Table testTable = new Table("myTable", testData);
+        assert(testTable.getNumberOfColumns()==3);
+        assert(testTable.getNumberOfRows()==2);
+
     }
 
     private void testRow(){
