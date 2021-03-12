@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Table {
 
@@ -29,24 +28,30 @@ public class Table {
         numberOfColumns = getNumberOfColumns(dataFromFile.get(0));
         //fill table with data read from file
         fillTable(dataFromFile);
-        ArrayList<Row> rows = new ArrayList<Row>();
-        ArrayList<Column> columns = new ArrayList<Column>();
     }
 
     public void fillTable(ArrayList<String> fileStorage){
         //getting column names, then storing in an array of columns
         ArrayList<String> columnNames = parseString(fileStorage.get(0));
-        columns = new ArrayList<Column>();
+        columns = new ArrayList<>();
         for(int i = 0; i < numberOfColumns; i++) {
             columns.add(new Column(columnNames.get(i), i));
         }
 
         //storing data in array of rows
-        rows = new ArrayList<Row>();
+        rows = new ArrayList<>();
         for(int i = 1; i < numberOfRows; i++){
             ArrayList<String> currentRow = parseString(fileStorage.get(i));
             rows.add(new Row(currentRow, numberOfColumns));
         }
+    }
+
+    public ArrayList<Row> getRows(){
+        return rows;
+    }
+
+    public ArrayList<Column> getColumns(){
+        return columns;
     }
 
     private ArrayList<String> parseString(String rowToParse){
@@ -54,7 +59,7 @@ public class Table {
         String[] listOfWords = rowToParse.split("\t");
         //converting into ArrayList
         ArrayList<String> arrayToList;
-        arrayToList = new ArrayList(Arrays.asList(listOfWords));
+        arrayToList = new ArrayList<String>(Arrays.asList(listOfWords));
         return arrayToList;
     }
 
@@ -63,6 +68,7 @@ public class Table {
     }
 
     public int getNumberOfRows(ArrayList<String> fileStorage) {
+        //minus one because the top line is column headers
         numberOfRows = fileStorage.size() - 1;
         return numberOfRows;
     }

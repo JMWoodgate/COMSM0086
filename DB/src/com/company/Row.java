@@ -15,4 +15,16 @@ public class Row {
         return elements;
     }
 
+    public String getPrimaryKey(){
+        return elements.get(0);
+    }
+
+    public String getElement(int columnIndex){
+        return elements.get(columnIndex);
+    }
+
+    public boolean setElement(String newElement, int columnIndex){
+        elements.set(columnIndex, newElement);
+        return true;
+    }
 }
