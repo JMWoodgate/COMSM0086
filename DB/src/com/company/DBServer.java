@@ -27,5 +27,7 @@ class DBServer
         Table newTable = new Table(name, fileToOpen);
         System.out.println(newTable.getRows().get(0).getElements());
         System.out.println(newTable.getColumns().get(0).getColumnName());
+
+        Test testing = new Test();
     }
 }

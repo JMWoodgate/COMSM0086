@@ -24,7 +24,13 @@ public class Row {
     }
 
     public boolean setElement(String newElement, int columnIndex){
-        elements.set(columnIndex, newElement);
-        return true;
+        if(newElement!=null && columnIndex<numberOfColumns
+        && columnIndex>=0){
+            elements.set(columnIndex, newElement);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
