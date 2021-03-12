@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.DBExceptions.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,49 +9,77 @@ import java.util.Arrays;
 
 public class Table {
 
+    private final String databaseName;
     private String tableName;
     private int numberOfRows;
     private int numberOfColumns;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
 
-    public Table(String tableName, ArrayList<String> dataFromFile){
+    public Table(String databaseName, String tableName,
+                 ArrayList<String> dataFromFile) throws DBException {
+        this.databaseName = databaseName;
         this.tableName = tableName;
         numberOfRows = initNumberOfRows(dataFromFile);
         numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
         fillTable(dataFromFile);
     }
 
-    private void fillTable(ArrayList<String> dataFromFile){
-        //getting column names, then storing in an array of columns
-        ArrayList<String> columnNames = parseString(dataFromFile.get(0));
-        columns = new ArrayList<>();
-        for(int i = 0; i < numberOfColumns; i++) {
-            columns.add(new Column(columnNames.get(i), i));
+    private void fillTable(ArrayList<String> dataFromFile)
+            throws EmptyData{
+        if(dataFromFile!=null) {
+            //getting column names, then storing in an array of columns
+            ArrayList<String> columnNames = parseString(dataFromFile.get(0));
+            columns = new ArrayList<>();
+            for (int i = 0; i < numberOfColumns; i++) {
+                columns.add(new Column(tableName, columnNames.get(i), i));
+            }
+
+            //storing data in array of rows
+            rows = new ArrayList<>();
+            for (int i = 1; i <= numberOfRows; i++) {
+                ArrayList<String> currentRow = parseString(dataFromFile.get(i));
+                rows.add(new Row(tableName, currentRow, numberOfColumns));
+            }
         }
-
-        //storing data in array of rows
-        rows = new ArrayList<>();
-        for(int i = 1; i <= numberOfRows; i++){
-            ArrayList<String> currentRow = parseString(dataFromFile.get(i));
-            rows.add(new Row(currentRow, numberOfColumns));
+        else{
+            throw new EmptyData(tableName);
         }
     }
 
-    public String getElement(int rowNumber, int columnNumber){
-        assert(rowNumber >= 0 && rowNumber <= numberOfRows);
-        assert(columnNumber >= 0 && columnNumber <= numberOfColumns);
-        return rows.get(rowNumber).getElement(columnNumber);
+    public String getElement(int rowNumber, int columnNumber)
+            throws IndexOutOfBounds{
+        if(rowNumber >= 0 && rowNumber <= numberOfRows) {
+            if(columnNumber >= 0 && columnNumber <= numberOfColumns){
+                return rows.get(rowNumber).getElement(columnNumber);
+            }
+            else{
+                throw new IndexOutOfBounds(StorageType.COLUMN, columnNumber);
+            }
+        }
+        else{
+            throw new IndexOutOfBounds(StorageType.ROW, rowNumber);
+        }
     }
 
-    public String getSpecificColumn(int index){
-        assert(index <= numberOfColumns && index >= 0);
-        return columns.get(index).getColumnName();
+    public String getSpecificColumn(int index)
+            throws IndexOutOfBounds{
+        if(index <= numberOfColumns && index >= 0) {
+            return columns.get(index).getColumnName();
+        }
+        else{
+            throw new IndexOutOfBounds(StorageType.COLUMN, index);
+        }
     }
 
-    public ArrayList<String> getSpecificRow(int index){
-        assert(index <= numberOfRows && index >= 0);
-        return rows.get(index).getElements();
+    public ArrayList<String> getSpecificRow(int index)
+            throws IndexOutOfBounds{
+        if(index <= numberOfRows && index >= 0) {
+            return rows.get(index).getElements();
+        }
+        else{
+            throw new IndexOutOfBounds(StorageType.ROW, index);
+        }
     }
 
     public ArrayList<Row> getRows(){
@@ -61,9 +91,7 @@ public class Table {
     }
 
     private ArrayList<String> parseString(String rowToParse){
-        //parsing into list of words
         String[] listOfWords = rowToParse.split("\t");
-        //converting into ArrayList
         ArrayList<String> arrayToList;
         arrayToList = new ArrayList<String>(Arrays.asList(listOfWords));
         return arrayToList;
@@ -73,21 +101,27 @@ public class Table {
         return tableName;
     }
 
-    public boolean setTableName(String newTableName){
+    public boolean setTableName(String newTableName)
+            throws EmptyName {
         if(newTableName!=null){
             tableName = newTableName;
             return true;
         }
         else{
-            return false;
+            throw new EmptyName(StorageType.TABLE, databaseName);
         }
-
     }
 
-    private int initNumberOfRows(ArrayList<String> dataFromFile) {
-        //minus two because the top line is column headers
-        numberOfRows = dataFromFile.size() - 2;
-        return numberOfRows;
+    private int initNumberOfRows(ArrayList<String> dataFromFile)
+            throws EmptyData {
+        if(dataFromFile!=null) {
+            //minus two because the top line is column headers
+            numberOfRows = dataFromFile.size() - 2;
+            return numberOfRows;
+        }
+        else{
+            throw new EmptyData(tableName);
+        }
     }
 
     public int getNumberOfRows(){
@@ -98,11 +132,16 @@ public class Table {
         this.numberOfRows = numberOfRows;
     }
 
-    private int initNumberOfColumns(String firstLine) {
-        assert(firstLine!=null);
-        ArrayList<String> parsedString = parseString(firstLine);
-        numberOfColumns = parsedString.size();
-        return numberOfColumns;
+    private int initNumberOfColumns(String firstLine)
+            throws EmptyName {
+        if(firstLine!=null) {
+            ArrayList<String> parsedString = parseString(firstLine);
+            numberOfColumns = parsedString.size();
+            return numberOfColumns;
+        }
+        else{
+            throw new EmptyName(StorageType.COLUMN, tableName);
+        }
     }
 
     public int getNumberOfColumns(){

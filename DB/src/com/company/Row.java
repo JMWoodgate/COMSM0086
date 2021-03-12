@@ -1,13 +1,19 @@
 package com.company;
+import com.company.DBExceptions.DBException;
+import com.company.DBExceptions.EmptyName;
+import com.company.DBExceptions.IndexOutOfBounds;
+import com.company.DBExceptions.StorageType;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Row {
 
-    private ArrayList<String> elements;
-    private int numberOfColumns;
+    private final String tableName;
+    private final ArrayList<String> elements;
+    private final int numberOfColumns;
 
-    public Row(ArrayList<String> elements, int numberOfColumns){
+    public Row(String tableName, ArrayList<String> elements, int numberOfColumns){
+        this.tableName = tableName;
         this.elements = elements;
         this.numberOfColumns = numberOfColumns;
     }
@@ -21,27 +27,30 @@ public class Row {
         return elements.get(0);
     }
 
-    public String getElement(int columnIndex){
-        return elements.get(columnIndex);
-    }
-
-    public boolean setElement(String newElement, int columnIndex){
-        if(newElement!=null && columnIndex<numberOfColumns
-        && columnIndex>=0){
-            elements.set(columnIndex, newElement);
-            return true;
+    public String getElement(int columnIndex)
+            throws IndexOutOfBounds {
+        if(columnIndex <= numberOfColumns && columnIndex >= 0) {
+            return elements.get(columnIndex);
         }
         else{
-            return false;
+            throw new IndexOutOfBounds(StorageType.COLUMN, columnIndex);
         }
     }
 
-    private ArrayList<String> parseString(String rowToParse){
-        //parsing into list of words
-        String[] listOfWords = rowToParse.split("\t");
-        //converting into ArrayList
-        ArrayList<String> arrayToList;
-        arrayToList = new ArrayList<String>(Arrays.asList(listOfWords));
-        return arrayToList;
+    public boolean setElement(String newElement, int columnIndex)
+            throws DBException {
+        if(columnIndex<numberOfColumns
+        && columnIndex>=0){
+            if(newElement!=null) {
+                elements.set(columnIndex, newElement);
+                return true;
+            }
+            else{
+                throw new EmptyName(StorageType.COLUMN, tableName);
+            }
+        }
+        else{
+            throw new IndexOutOfBounds(StorageType.COLUMN, columnIndex);
+        }
     }
 }

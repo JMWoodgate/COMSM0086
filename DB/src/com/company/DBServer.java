@@ -1,4 +1,6 @@
 package com.company;
+import com.company.DBExceptions.DBException;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -30,11 +32,20 @@ class DBServer
             e.printStackTrace();
         }
 
-        Table newTable = new Table(name, dataFromFile);
+        Table newTable = null;
+        try {
+            newTable = new Table("newTable", name, dataFromFile);
+        } catch (DBException e) {
+            e.printStackTrace();
+        }
         System.out.println(newTable.getRows().get(0).getElements());
         System.out.println(newTable.getColumns().get(0).getColumnName());
         System.out.println("rownum " + newTable.getNumberOfRows());
         System.out.println("colnum " + newTable.getNumberOfColumns());
-        Test testing = new Test();
+        try {
+            Test testing = new Test();
+        } catch (DBException e) {
+            e.printStackTrace();
+        }
     }
 }
