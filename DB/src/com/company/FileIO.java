@@ -20,10 +20,12 @@ public class FileIO {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         if(fileToOpen.exists()){
             writeToOpenFile(bufferedWriter, table);
+            bufferedWriter.close();
         }
         else{
             if(fileToOpen.createNewFile()) {
                 writeToOpenFile(bufferedWriter, table);
+                bufferedWriter.close();
             }
             else{
                 throw new IOException();
@@ -35,8 +37,18 @@ public class FileIO {
             throws IOException {
         ArrayList<String> columns = table.getColumns();
         ArrayList<ArrayList<String>> rows = table.getRows();
-        bufferedWriter.write(Arrays.toString(new ArrayList[]{columns}));
+        bufferedWriter.write(formatString(columns));
+        bufferedWriter.write("\n");
         bufferedWriter.write(Arrays.deepToString(new ArrayList[]{rows}));
+        bufferedWriter.write("\n");
+        bufferedWriter.flush();
+    }
+
+    private String formatString(ArrayList<String> stringToFormat){
+        System.out.println("unformatted string: " + stringToFormat);
+        String formatString = Arrays.toString(new ArrayList[]{stringToFormat});
+        System.out.println("formatted string: " + formatString);
+        return formatString;
     }
 
     public Database readFolder(String folderName) throws FileException {
