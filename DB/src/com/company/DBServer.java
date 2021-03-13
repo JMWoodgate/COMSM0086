@@ -21,9 +21,13 @@ class DBServer
         + "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
                 File.separator + "Testfiles" + File.separator;
 
-        FileIO fileIO = new FileIO(folderName);
-
-        Database database = new Database(folderName);
+        try {
+            FileIO fileIO = new FileIO(folderName);
+            Database database = fileIO.readFolder(folderName);
+            database.printDatabase();
+        } catch(DBException e){
+            e.printStackTrace();
+        }
 
         try {
             Test testing = new Test();

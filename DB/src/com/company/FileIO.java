@@ -1,8 +1,6 @@
 package com.company;
 
-import com.company.DBExceptions.DBException;
-import com.company.DBExceptions.EmptyData;
-import com.company.DBExceptions.FileException;
+import com.company.DBExceptions.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -46,6 +44,7 @@ public class FileIO {
                     Table newTable = null;
                     try {
                         //sending the data we read to our new table
+                        fileName = removeExtension(fileName);
                         newTable = new Table(folderName, fileName, dataFromFile);
                     } catch (DBException e) {
                         e.printStackTrace();
@@ -56,6 +55,18 @@ public class FileIO {
             }
         }
         return newDatabase;
+    }
+
+    private String removeExtension(String fileNameWithExtension)
+        throws EmptyName {
+        if(fileNameWithExtension==null){
+            throw new EmptyName(StorageType.FILE, folderName);
+        }
+        else{
+            String[] listOfWords = fileNameWithExtension.split(".tab");
+            return listOfWords[0];
+        }
+
     }
 
     public ArrayList<String> readFile(File fileToOpen) throws IOException
