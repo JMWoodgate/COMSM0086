@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Database {
 
-    private String databaseName;
+    private final String databaseName;
     private ArrayList<Table> tables;
     private int numberOfTables = 0;
 

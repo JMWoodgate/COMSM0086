@@ -39,15 +39,21 @@ public class FileIO {
         ArrayList<ArrayList<String>> rows = table.getRows();
         bufferedWriter.write(formatString(columns));
         bufferedWriter.write("\n");
-        bufferedWriter.write(Arrays.deepToString(new ArrayList[]{rows}));
-        bufferedWriter.write("\n");
+        for (ArrayList<String> row : rows) {
+            bufferedWriter.write(formatString(row));
+            bufferedWriter.write("\n");
+        }
         bufferedWriter.flush();
     }
 
     private String formatString(ArrayList<String> stringToFormat){
-        System.out.println("unformatted string: " + stringToFormat);
-        String formatString = Arrays.toString(new ArrayList[]{stringToFormat});
-        System.out.println("formatted string: " + formatString);
+        String formatString;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : stringToFormat) {
+            stringBuilder.append(s);
+            stringBuilder.append("\t");
+        }
+        formatString = stringBuilder.toString();
         return formatString;
     }
 
