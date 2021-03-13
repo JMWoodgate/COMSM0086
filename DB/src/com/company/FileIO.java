@@ -4,6 +4,7 @@ import com.company.DBExceptions.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FileIO {
 
@@ -11,6 +12,31 @@ public class FileIO {
 
     public FileIO(String folderName){
         this.folderName = folderName;
+    }
+
+    public void writeFile(String fileName, Table table) throws IOException {
+        File fileToOpen = new File(fileName + ".tab");
+        FileWriter fileWriter = new FileWriter(fileToOpen);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        if(fileToOpen.exists()){
+            writeToOpenFile(bufferedWriter, table);
+        }
+        else{
+            if(fileToOpen.createNewFile()) {
+                writeToOpenFile(bufferedWriter, table);
+            }
+            else{
+                throw new IOException();
+            }
+        }
+    }
+
+    private void writeToOpenFile(BufferedWriter bufferedWriter, Table table)
+            throws IOException {
+        ArrayList<String> columns = table.getColumns();
+        ArrayList<ArrayList<String>> rows = table.getRows();
+        bufferedWriter.write(Arrays.toString(new ArrayList[]{columns}));
+        bufferedWriter.write(Arrays.deepToString(new ArrayList[]{rows}));
     }
 
     public Database readFolder(String folderName) throws FileException {

@@ -90,12 +90,20 @@ public class Table {
         }
     }
 
-    public ArrayList<Row> getRows(){
-        return rows;
+    public ArrayList<ArrayList<String>> getRows(){
+        ArrayList<ArrayList<String>> rowString = new ArrayList<>();
+        for(int i = 0; i < numberOfRows; i++){
+            rowString.add(rows.get(i).getElements());
+        }
+        return rowString;
     }
 
-    public ArrayList<Column> getColumns(){
-        return columns;
+    public ArrayList<String> getColumns(){
+        ArrayList<String> columnString = new ArrayList<>();
+        for(int i = 0; i < numberOfColumns; i++){
+            columnString.add(columns.get(i).getColumnName());
+        }
+        return columnString;
     }
 
     private ArrayList<String> parseString(String rowToParse){
