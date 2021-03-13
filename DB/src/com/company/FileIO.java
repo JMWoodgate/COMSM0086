@@ -1,6 +1,8 @@
 package com.company;
 
 import com.company.DBExceptions.DBException;
+import com.company.DBExceptions.EmptyData;
+import com.company.DBExceptions.FileException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,13 +15,16 @@ public class FileIO {
         this.folderName = folderName;
     }
 
-    public void readFolder(String folderName){
+    public Database readFolder(String folderName) throws FileException {
         File folder = new File(folderName);
         //creating a list of files that are within the folder
         File[] listOfFiles = folder.listFiles();
         Database newDatabase = new Database(folderName);
 
         //checking the list isn't empty
+        if(listOfFiles == null){
+            throw new EmptyData(folderName);
+        }
         if(listOfFiles.length > 0) {
             //iterating through the list of files
             for(int i = 0; i < listOfFiles.length; i++) {
@@ -50,6 +55,7 @@ public class FileIO {
                 }
             }
         }
+        return newDatabase;
     }
 
     public ArrayList<String> readFile(File fileToOpen) throws IOException

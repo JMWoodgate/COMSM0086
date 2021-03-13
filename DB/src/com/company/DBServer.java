@@ -14,16 +14,16 @@ class DBServer
         this.portNumber = portNumber;
     }
 
-
-
     public static void main(String[] args)
     {
         //DBServer server = new DBServer(8888);
         String folderName = File.separator + "Users" + File.separator + "jessw" + File.separator
         + "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
-                File.separator + "Testfiles";
+                File.separator + "Testfiles" + File.separator;
 
         FileIO fileIO = new FileIO(folderName);
+
+        Database database = new Database(folderName);
 
         try {
             Test testing = new Test();

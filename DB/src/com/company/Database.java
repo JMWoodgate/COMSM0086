@@ -14,4 +14,10 @@ public class Database {
     public void addTable(Table newTable){
         tables.add(newTable);
     }
+
+    public void printDatabase(){
+        for(int i = 0; i < tables.size(); i++){
+            tables.get(i).printTable();
+        }
+    }
 }

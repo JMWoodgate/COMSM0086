@@ -3,8 +3,6 @@ package com.company;
 import com.company.DBExceptions.EmptyName;
 import com.company.DBExceptions.StorageType;
 
-import java.util.ArrayList;
-
 public class Column {
 
     private String tableName;
@@ -25,10 +23,9 @@ public class Column {
         return columnIndex;
     }
 
-    public boolean setColumnName(String newName) throws EmptyName {
+    public void setColumnName(String newName) throws EmptyName {
         if(newName!=null){
             columnName = newName;
-            return true;
         }
         else{
             throw new EmptyName(StorageType.COLUMN, tableName);

@@ -8,6 +8,6 @@ public class EmptyData extends FileException{
     }
 
     public String toString(){
-        return "No data stored from file " + fileName;
+        return "No data stored from " + fileName;
     }
 }

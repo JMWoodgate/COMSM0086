@@ -2,8 +2,6 @@ package com.company;
 
 import com.company.DBExceptions.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,6 +42,16 @@ public class Table {
         }
         else{
             throw new EmptyData(tableName);
+        }
+    }
+
+    public void printTable(){
+        for(int i = 0; i < numberOfColumns; i++){
+            System.out.print(columns.get(i).getColumnName() + " ");
+        }
+        System.out.println();
+        for(int i = 0; i < numberOfRows; i++){
+            System.out.println(rows.get(i).getElements());
         }
     }
 
@@ -93,7 +101,7 @@ public class Table {
     private ArrayList<String> parseString(String rowToParse){
         String[] listOfWords = rowToParse.split("\t");
         ArrayList<String> arrayToList;
-        arrayToList = new ArrayList<String>(Arrays.asList(listOfWords));
+        arrayToList = new ArrayList<>(Arrays.asList(listOfWords));
         return arrayToList;
     }
 

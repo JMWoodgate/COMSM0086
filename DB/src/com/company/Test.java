@@ -50,7 +50,6 @@ public class Test {
         elements.add("place");
         Row testRow = new Row(tableName, elements, 3);
         assert(testRow.getElements().equals(elements));
-        System.out.println("test get key " + testRow.getPrimaryKey());
         assert(testRow.getPrimaryKey().equals("1"));
         assert(testRow.getElement(1).equals("Hi"));
         assert(testRow.setElement("Them", 1));
