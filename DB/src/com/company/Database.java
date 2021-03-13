@@ -15,6 +15,18 @@ public class Database {
         tables = new ArrayList<Table>();
     }
 
+    public ArrayList<Table> getTables(){
+        return tables;
+    }
+
+    public ArrayList<String> getTableNames(){
+        ArrayList<String> listOfTableNames = new ArrayList<>();
+        for(int i = 0; i < numberOfTables; i++){
+            listOfTableNames.add(tables.get(i).getTableName());
+        }
+        return listOfTableNames;
+    }
+
     public void addTable(Table newTable)
         throws EmptyData{
         if(newTable!=null) {

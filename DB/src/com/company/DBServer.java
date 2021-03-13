@@ -25,7 +25,12 @@ class DBServer
             FileIO fileIO = new FileIO(folderName);
             Database database = fileIO.readFolder(folderName);
             database.printDatabase();
-        } catch(DBException e){
+            for(int i = 0; i < database.getNumberOfTables(); i++){
+                ArrayList<String> listOfTableNames = database.getTableNames();
+                ArrayList<Table> tables = database.getTables();
+                fileIO.writeFile(listOfTableNames.get(i), tables.get(i));
+            }
+        } catch(DBException | IOException e){
             e.printStackTrace();
         }
 
