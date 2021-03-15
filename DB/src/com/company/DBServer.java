@@ -61,14 +61,14 @@ class DBServer
         socketWriter.write("[OK] Thanks for your message: " + incomingCommand);
         socketWriter.write("\n" + ((char)4) + "\n");
 
+    }
+
+    public static void main(String[] args) {
         try {
             Test testing = new Test();
         } catch (DBException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
         DBServer server = new DBServer(8888);
     }
 }

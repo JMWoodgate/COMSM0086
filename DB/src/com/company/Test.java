@@ -8,6 +8,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testTokenizer();
             testTable();
             testRow();
             testColumn();
@@ -15,6 +16,14 @@ public class Test {
         catch(DBException e){
             System.out.println("DBException " + e);
         }
+    }
+
+    private void testTokenizer() throws DBException {
+        String testCommand = "FROM parties SELECT *;";
+        ArrayList<String> tokenizedCommand = new ArrayList<>();
+        Tokenizer testTokenizer = new Tokenizer(testCommand);
+        tokenizedCommand = testTokenizer.tokenizeCommand(testCommand);
+        System.out.println(tokenizedCommand);
     }
 
     private void testTable() throws DBException {
