@@ -14,23 +14,25 @@ public class FileIO {
         this.folderName = folderName;
     }
 
-    public void writeFile(String fileName, Table table) throws IOException {
-        File fileToOpen = new File(fileName + ".tab");
-        FileWriter fileWriter = new FileWriter(fileToOpen);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        if(fileToOpen.exists()){
-            writeToOpenFile(bufferedWriter, table);
-            bufferedWriter.close();
-        }
-        else{
-            if(fileToOpen.createNewFile()) {
-                writeToOpenFile(bufferedWriter, table);
-                bufferedWriter.close();
-            }
-            else{
+    public void writeFile(String folderName, String fileName, Table table) throws IOException {
+        File folderToOpen = new File(folderName);
+        if(!folderToOpen.exists()){
+            final boolean mkdir = folderToOpen.mkdir();
+            if(!mkdir){
                 throw new IOException();
             }
         }
+        File fileToOpen = new File(folderToOpen, fileName + ".tab");
+        FileWriter fileWriter = new FileWriter(fileToOpen);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        if(!fileToOpen.exists()){
+            final boolean newFile = fileToOpen.createNewFile();
+            if(!newFile){
+                throw new IOException();
+            }
+        }
+        writeToOpenFile(bufferedWriter, table);
+        bufferedWriter.close();
     }
 
     private void writeToOpenFile(BufferedWriter bufferedWriter, Table table)
