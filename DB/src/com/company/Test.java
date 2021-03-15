@@ -22,8 +22,7 @@ public class Test {
         String testCommand = "FROM parties SELECT *;";
         ArrayList<String> tokenizedCommand = new ArrayList<>();
         Tokenizer testTokenizer = new Tokenizer(testCommand);
-        tokenizedCommand = testTokenizer.tokenizeCommand(testCommand);
-        System.out.println(tokenizedCommand);
+
     }
 
     private void testTable() throws DBException {
