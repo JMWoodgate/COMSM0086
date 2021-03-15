@@ -45,7 +45,31 @@ public class Table {
         }
     }
 
+    public String getTable(){
+        String table = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        FileIO fileIO = new FileIO(null);
+        stringBuilder.append("Table name: " + tableName + "\n");
+        stringBuilder.append("From database: " + databaseName + "\n");
+
+        for(int i = 0; i < numberOfColumns; i++){
+            stringBuilder.append(columns.get(i).getColumnName() + "\t");
+        }
+        stringBuilder.append("\n");
+        for(int j = 0; j < numberOfRows; j++){
+            ArrayList<String> currentRow = rows.get(j).getElements();
+            String formattedRow = fileIO.formatString(currentRow);
+            stringBuilder.append(formattedRow);
+            stringBuilder.append("\n");
+        }
+        stringBuilder.append("\n");
+        table = stringBuilder.toString();
+        return table;
+    }
+
     public void printTable(){
+        System.out.println("Table name: " + tableName);
+        System.out.println("From database: " + databaseName);
         for(int i = 0; i < numberOfColumns; i++){
             System.out.print(columns.get(i).getColumnName() + " ");
         }
@@ -53,6 +77,7 @@ public class Table {
         for(int i = 0; i < numberOfRows; i++){
             System.out.println(rows.get(i).getElements());
         }
+        System.out.println();
     }
 
     public String getElement(int rowNumber, int columnNumber)

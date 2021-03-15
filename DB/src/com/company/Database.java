@@ -42,6 +42,16 @@ public class Database {
         return numberOfTables;
     }
 
+    public String getDatabase() {
+        String database = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Table table : tables) {
+            stringBuilder.append(table.getTable());
+        }
+        database = stringBuilder.toString();
+        return database;
+    }
+
     public void printDatabase(){
         for(int i = 0; i < tables.size(); i++){
             tables.get(i).printTable();

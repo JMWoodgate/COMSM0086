@@ -48,7 +48,7 @@ public class FileIO {
         bufferedWriter.flush();
     }
 
-    private String formatString(ArrayList<String> stringToFormat){
+    public String formatString(ArrayList<String> stringToFormat){
         String formatString;
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : stringToFormat) {
