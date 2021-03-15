@@ -7,16 +7,16 @@ import java.util.regex.Matcher;
 
 public class Tokenizer {
 
-    String command;
-    ArrayList<String> tokenizedCommand;
+    private String command;
+    private ArrayList<String> tokenizedCommand;
 
     public Tokenizer(String command){
         this.command = command;
         tokenizedCommand = tokenizeCommand(command);
     }
 
-    public String nextToken(int currentIndex){
-        return tokenizedCommand.get(currentIndex + 1);
+    public String nextToken(int nextIndex){
+        return tokenizedCommand.get(nextIndex);
     }
 
     public ArrayList<String> getTokenizedCommand() {
