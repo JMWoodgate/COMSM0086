@@ -6,13 +6,14 @@ import com.company.DBExceptions.EmptyData;
 
 import java.util.ArrayList;
 
-public class Value extends Parser{
+public class Value {
 
     private int intLiteral;
-    private boolean boolLiteral;
+    private boolean booleanLiteral;
     private float floatLiteral;
-    private ArrayList<String> tokenizedCommand;
-    private int index;
+    private String stringLiteral;
+    private final ArrayList<String> tokenizedCommand;
+    private final int index;
     private LiteralType type;
 
     public Value(ArrayList<String> tokenizedCommand, int index) throws DBException {
@@ -20,65 +21,104 @@ public class Value extends Parser{
         this.index = index;
         if(tokenizedCommand!=null){
             setLiteralType();
-
         }
-        throw new EmptyData("Command");
+        else {
+            throw new EmptyData("Command");
+        }
     }
 
     public LiteralType getLiteralType() {
         return type;
     }
 
+    public boolean getBooleanLiteral(){
+        return booleanLiteral;
+    }
+
+    public float getFloatLiteral(){
+        return floatLiteral;
+    }
+
+    public int getIntLiteral(){
+        return intLiteral;
+    }
+
+    public String getStringLiteral(){
+        return stringLiteral;
+    }
+
     private void setLiteralType() throws DBException{
-        if(floatLiteral(tokenizedCommand.get(index))){
-            type = LiteralType.FLOAT;
-        }
-        else if(integerLiteral(tokenizedCommand.get(index))){
+        if(integerLiteral(tokenizedCommand.get(index))){
             type = LiteralType.INTEGER;
         }
-        else{
-            boolLiteral(tokenizedCommand.get(index));
+        else if(floatLiteral(tokenizedCommand.get(index))){
+            type = LiteralType.FLOAT;
+        }
+        else if(boolLiteral(tokenizedCommand.get(index))){
             type = LiteralType.BOOLEAN;
+        }
+        else{
+            type = LiteralType.STRING;
+            //if the token isn't an int, float, or boolean, it is a stringLiteral
+            stringLiteral = tokenizedCommand.get(index);
         }
     }
 
     private boolean floatLiteral(String token) throws DBException {
         if (token != null) {
             try {
+                //getting the float value from the string
                 floatLiteral = Float.parseFloat(token);
                 return true;
             } catch (NumberFormatException e) {
+                //if we can't get a float from the string, return false
                 return false;
             }
         }
-        throw new EmptyData("Command in floatLiteral");
+        else {
+            throw new EmptyData("Command in floatLiteral");
+        }
     }
 
     private boolean integerLiteral(String token) throws DBException {
         if(token!=null){
             try{
+                //getting the integer value from the string
                 intLiteral = Integer.parseInt(token);
                 return true;
             } catch (NumberFormatException e) {
+                //if we can't get an integer from the string, return false
                 return false;
             }
         }
-        throw new EmptyData("Command in integerLiteral");
+        else {
+            throw new EmptyData("Command in integerLiteral");
+        }
     }
 
     private boolean boolLiteral(String token) throws DBException{
         if(token!=null){
             if(token.equals("true")){
+                //if the string is true, setting the boolean variable to true
+                booleanLiteral = true;
+                //returning true because the token is a boolean value
                 return true;
             }
             else if(token.equals("false")){
-                return false;
+                //if the string is true, setting the boolean variable to false
+                booleanLiteral = false;
+                //returning true because the token is a boolean value
+                return true;
             }
             else{
-                throw new CommandException(token, index, "bool, int or float literal");
+                //otherwise return false because it is not a boolean value
+                return false;
             }
         }
-        throw new EmptyData("Command in boolLiteral");
+        else {
+            //catching null pointers
+            throw new EmptyData("Command in boolLiteral");
+        }
     }
 
 }

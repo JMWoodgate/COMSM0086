@@ -1,7 +1,9 @@
 package com.company;
 
 import com.company.DBExceptions.DBException;
+import com.company.Parsing.LiteralType;
 import com.company.Parsing.Parser;
+import com.company.Parsing.Value;
 
 import java.util.ArrayList;
 
@@ -9,6 +11,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testValue();
             testParser();
             testTokenizer();
             testTable();
@@ -17,6 +20,30 @@ public class Test {
         }
         catch(DBException e){
             System.out.println("DBException " + e);
+        }
+    }
+
+    private void testValue()throws DBException {
+        try {
+            ArrayList<String> elements = new ArrayList<>();
+            elements.add("1");
+            elements.add("true");
+            elements.add("place");
+            elements.add("3.122");
+            Value testValue1 = new Value(elements, 0);
+            assert (testValue1.getLiteralType() == LiteralType.INTEGER);
+            assert (testValue1.getIntLiteral() == 1);
+            Value testValue2 = new Value(elements, 1);
+            assert (testValue2.getLiteralType() == LiteralType.BOOLEAN);
+            assert (testValue2.getBooleanLiteral() == true);
+            Value testValue3 = new Value(elements, 2);
+            assert (testValue3.getLiteralType() == LiteralType.STRING);
+            assert (testValue3.getStringLiteral() == "place");
+            Value testValue4 = new Value(elements, 3);
+            assert (testValue4.getLiteralType() == LiteralType.FLOAT);
+            assert (testValue4.getFloatLiteral() <= 3.122 || testValue4.getFloatLiteral() >= 3.122);
+        }catch(DBException e){
+            e.printStackTrace();
         }
     }
 
