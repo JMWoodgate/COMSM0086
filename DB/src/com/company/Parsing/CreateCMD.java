@@ -31,7 +31,10 @@ public class CreateCMD extends Parser implements DBCommand {
         switch(nextCommand){
             case ("database"):
                 type = StorageType.DATABASE;
-                //need to call Create Database
+                if(!createDatabase()){
+                    throw new CommandException(
+                            command.get(index), index, "create database");
+                }
                 break;
             case ("table"):
                 type = StorageType.TABLE;

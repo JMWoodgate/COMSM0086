@@ -24,7 +24,7 @@ public class Test {
 
     private void testCreateCMD() throws DBException{
         try{
-            String command = "CREATE database ;";
+            String command = "CREATE database politics ;";
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             CreateCMD testCreate = new CreateCMD(tokenizedCommand, 0);
