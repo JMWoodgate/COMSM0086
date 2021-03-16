@@ -1,10 +1,7 @@
 package com.company;
 
 import com.company.DBExceptions.DBException;
-import com.company.Parsing.LiteralType;
-import com.company.Parsing.Parser;
-import com.company.Parsing.UseCMD;
-import com.company.Parsing.Value;
+import com.company.Parsing.*;
 
 import java.util.ArrayList;
 
@@ -25,10 +22,27 @@ public class Test {
         }
     }
 
+    private void testCreateCMD() throws DBException{
+        try{
+            String command = "CREATE database ;";
+            Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            CreateCMD testCreate = new CreateCMD(tokenizedCommand, 0);
+            assert(testCreate.getIndex()==1);
+        }
+        catch(DBException e){
+            e.printStackTrace();
+        }
+    }
+
     private void testUseCMD()throws DBException{
         try{
             String command = "USE elections ;";
             Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            UseCMD testUse = new UseCMD(tokenizedCommand, 0);
+            assert(testUse.getDatabaseName().equals("elections"));
+            assert(testUse.getIndex()==1);
         }
         catch(DBException e){
             e.printStackTrace();

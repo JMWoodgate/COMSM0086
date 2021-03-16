@@ -17,7 +17,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\src\com\company\Parsing\CreateCMD.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\src\com\company\Parsing\Parser.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\src\com\company\Parsing\UseCMD.java">
           <value>
             <Attribute>
               <option name="separator" value=";" />

@@ -67,7 +67,29 @@ public class Parser {
         }
     }
 
-    protected void setIndex(int newIndex){
+    protected boolean isAlphaNumerical(String token){
+        for(int i = 0; i < token.length(); i++){
+            if(!Character.isLetterOrDigit(token.charAt(i))){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public ArrayList<String> getTokenizedCommand() throws EmptyData {
+        if(tokenizedCommand!=null){
+            return tokenizedCommand;
+        }
+        else{
+            throw new EmptyData("tokenized command");
+        }
+    }
+
+    public int getIndex(){
+        return index;
+    }
+
+    public void setIndex(int newIndex){
         index = newIndex;
     }
 
