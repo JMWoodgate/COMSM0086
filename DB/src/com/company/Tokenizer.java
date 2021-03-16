@@ -3,6 +3,7 @@ package com.company;
 import com.company.DBExceptions.EmptyData;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -13,7 +14,6 @@ public class Tokenizer {
 
     public Tokenizer(String command) throws EmptyData {
         tokenizedCommand = tokenizeCommand(command);
-        int commandCount = numberOfCommands(tokenizedCommand);
     }
 
     public String nextToken(int nextIndex){
@@ -25,19 +25,15 @@ public class Tokenizer {
     }
 
     private ArrayList<String> tokenizeCommand(String command) throws EmptyData {
+        command = command.toLowerCase();
         //turning command into an array list
-        if(command!=null) {
-            ArrayList<String> tokenizedCommand = new ArrayList<>();
-            StringTokenizer tokenizer = new StringTokenizer(command, " \t\n\r\f();", true);
-            while (tokenizer.hasMoreElements()) {
-                tokenizedCommand.add(tokenizer.nextToken());
-            }
-            tokenizedCommand = cleanCommandList(tokenizedCommand);
-            return tokenizedCommand;
+        ArrayList<String> tokenizedCommand = new ArrayList<>();
+        StringTokenizer tokenizer = new StringTokenizer(command, " \t\n\r\f();=<>!*", true);
+        while (tokenizer.hasMoreElements()) {
+            tokenizedCommand.add(tokenizer.nextToken());
         }
-        else{
-            throw new EmptyData("Command");
-        }
+        tokenizedCommand = cleanCommandList(tokenizedCommand);
+        return tokenizedCommand;
     }
 
     //getting rid of empty strings in tokenized command list
@@ -61,17 +57,6 @@ public class Tokenizer {
             return tokenizedCommand;
         }
         throw new EmptyData("Command");
-    }
-
-    //checking how many commands have been entered on one line
-    private int numberOfCommands(ArrayList<String> tokenizedCommand){
-        int numberOfCommands = 0;
-        for (String s : tokenizedCommand) {
-            if (s.equals(";")) {
-                numberOfCommands++;
-            }
-        }
-        return numberOfCommands;
     }
 
 }

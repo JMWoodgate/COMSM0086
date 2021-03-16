@@ -3,6 +3,7 @@ package com.company;
 import com.company.DBExceptions.DBException;
 import com.company.Parsing.LiteralType;
 import com.company.Parsing.Parser;
+import com.company.Parsing.UseCMD;
 import com.company.Parsing.Value;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testUseCMD();
             testValue();
             testParser();
             testTokenizer();
@@ -20,6 +22,16 @@ public class Test {
         }
         catch(DBException e){
             System.out.println("DBException " + e);
+        }
+    }
+
+    private void testUseCMD()throws DBException{
+        try{
+            String command = "USE elections ;";
+            Parser testParser = new Parser(command);
+        }
+        catch(DBException e){
+            e.printStackTrace();
         }
     }
 
