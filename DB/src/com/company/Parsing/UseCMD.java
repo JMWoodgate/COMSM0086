@@ -33,15 +33,6 @@ public class UseCMD extends Parser implements DBCommand{
         return true;
     }
 
-    public String getDatabaseName() throws EmptyData {
-        if(databaseName!=null) {
-            return databaseName;
-        }
-        else{
-            throw new EmptyData("getDatabaseName");
-        }
-    }
-
     public int getIndex(){
         return index;
     }

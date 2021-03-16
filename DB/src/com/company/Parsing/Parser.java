@@ -13,6 +13,8 @@ public class Parser {
     private Tokenizer tokenizer;
     private ArrayList<String> tokenizedCommand;
     private int commandSize;
+    private String tableName;
+    private String databaseName;
 
     public Parser(String command) throws DBException {
         try {
@@ -87,6 +89,20 @@ public class Parser {
 
     public int getIndex(){
         return index;
+    }
+
+    public String getDatabaseName() throws EmptyData {
+        if(databaseName!=null) {
+            return databaseName;
+        }
+        throw new EmptyData("database name");
+    }
+
+    public String getTableName() throws EmptyData {
+        if(tableName!=null) {
+            return tableName;
+        }
+        throw new EmptyData("table name");
     }
 
     public void setIndex(int newIndex){

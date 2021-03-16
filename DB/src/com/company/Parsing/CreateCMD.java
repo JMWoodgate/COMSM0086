@@ -1,6 +1,7 @@
 package com.company.Parsing;
 
 import com.company.DBExceptions.CommandException;
+import com.company.DBExceptions.EmptyData;
 import com.company.DBExceptions.StorageType;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class CreateCMD extends Parser implements DBCommand {
     private int index;
     private StorageType type;
     private String tableName;
+    private String databaseName;
 
     public CreateCMD(ArrayList<String> command, int index) throws CommandException {
         this.command = command;
@@ -23,7 +25,7 @@ public class CreateCMD extends Parser implements DBCommand {
 
     public void execute(){}
 
-    private boolean parseCreate(){
+    private boolean parseCreate() throws CommandException {
         index++;
         String nextCommand = command.get(index);
         switch(nextCommand){
@@ -33,18 +35,10 @@ public class CreateCMD extends Parser implements DBCommand {
                 break;
             case ("table"):
                 type = StorageType.TABLE;
-                //call Create Table
-                break;
-            default:
-                return false;
-        }
-        index++;
-        nextCommand = command.get(index);
-        switch(nextCommand){
-            case(";"):
-                break;
-            case("("):
-                //need to call AttributeList
+                if(!createTable()){
+                    throw new CommandException(
+                            command.get(index), index, "create table");
+                }
                 break;
             default:
                 return false;
@@ -52,13 +46,31 @@ public class CreateCMD extends Parser implements DBCommand {
         return true;
     }
 
+    private boolean createDatabase(){
+        index++;
+        String nextCommand = command.get(index);
+        if(isAlphaNumerical(nextCommand)) {
+            databaseName = nextCommand;
+            return true;
+        }
+        return false;
+    }
+
     private boolean createTable(){
         index++;
         String nextCommand = command.get(index);
         if(isAlphaNumerical(nextCommand)) {
-            return true;
+            tableName = nextCommand;
+            index++;
+            if(nextCommand.equals(";")){
+                return true;
+            }
+            else if(nextCommand.equals("(")){
+                //call attributeList
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     public StorageType getType(){
