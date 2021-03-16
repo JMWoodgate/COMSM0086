@@ -1,6 +1,7 @@
 package com.company.Parsing;
 
 import com.company.DBExceptions.CommandException;
+import com.company.DBExceptions.EmptyData;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class UseCMD {
         if(!parseUse()){
             index++;
             throw new CommandException(
+                    //expected database name
                     command.get(index), index, "database name");
         }
     }
@@ -27,8 +29,18 @@ public class UseCMD {
                 return false;
             }
         }
+        databaseName = nextCommand;
         index++;
         return true;
+    }
+
+    public String getDatabaseName() throws EmptyData {
+        if(databaseName!=null) {
+            return databaseName;
+        }
+        else{
+            throw new EmptyData("getDatabaseName");
+        }
     }
 
     public int getIndex(){
