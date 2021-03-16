@@ -1,18 +1,21 @@
-package com.company;
+package com.company.Parsing;
 
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
 import com.company.DBExceptions.EmptyData;
+import com.company.Tokenizer;
 
 public class Parser {
 
-    private final int index;
-    private final Tokenizer tokenizer;
+    protected int index;
+    private Tokenizer tokenizer;
 
     public Parser(String command) throws EmptyData {
         tokenizer = new Tokenizer(command);
         index = 0;
     }
+
+    public Parser(){}
 
     private void parseCommand(){
         int index = 0;
@@ -29,8 +32,31 @@ public class Parser {
             case "JOIN":
                 break;
             default:
-                return;
         }
+    }
+
+    private float floatLiteral(String token) throws DBException{
+        if(token!=null){
+            try{
+                return Float.parseFloat(token);
+            } catch (NumberFormatException e){
+                e.printStackTrace();
+                throw new CommandException(token, index, "float literal");
+            }
+        }
+        throw new EmptyData("Command in floatLiteral");
+    }
+
+    private int integerLiteral(String token) throws DBException{
+        if(token!=null){
+            try{
+                return Integer.parseInt(token);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                throw new CommandException(token, index, "integer literal");
+            }
+        }
+        throw new EmptyData("Command in integerLiteral");
     }
 
     private boolean boolLiteral(String token) throws DBException{

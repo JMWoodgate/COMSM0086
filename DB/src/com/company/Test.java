@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.DBExceptions.DBException;
+import com.company.Parsing.Parser;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public class Test {
         String testCommand = "FROM parties (SELECT) *;";
         ArrayList<String> tokenizedCommand = new ArrayList<>();
         Tokenizer testTokenizer = new Tokenizer(testCommand);
-        System.out.println(testTokenizer.getTokenizedCommand());
     }
 
     private void testTable() throws DBException {
