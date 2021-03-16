@@ -2,44 +2,46 @@ package com.company;
 
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
+import com.company.DBExceptions.EmptyData;
 
 public class Parser {
 
-    private int index;
-    private String command;
+    private final int index;
+    private final Tokenizer tokenizer;
 
     public Parser(String command){
-        this.command = command;
-        Tokenizer tokenizer = new Tokenizer(command);
+        tokenizer = new Tokenizer(command);
         index = 0;
     }
 
-    private void parseCommand(Tokenizer tokenizer){
+    private void parseCommand(){
         int index = 0;
         String nextCommand = tokenizer.nextToken(index);
-        if(nextCommand.equals("SELECT")){
-
-        }
-        else if(nextCommand.equals("CREATE")){
-
-        }
-        else if(nextCommand.equals("USE")){
-
+        switch (nextCommand) {
+            case "SELECT":
+            case "CREATE":
+                return;
+            case "USE":
+                break;
         }
     }
 
-    private void isOp(String token) throws DBException {
-        switch(token){
-            case("=="):
-            case(">"):
-            case("<"):
-            case(">="):
-            case("<="):
-            case("!="):
-            case("LIKE"):
-                break;
-            default:
-                throw new CommandException(token, index, "operator");
+    protected boolean isOp(String token) throws DBException {
+        if(token!=null) {
+            switch (token) {
+                case ("=="):
+                case (">"):
+                case ("<"):
+                case (">="):
+                case ("<="):
+                case ("!="):
+                case ("LIKE"):
+                    break;
+                default:
+                    throw new CommandException(token, index, "operator");
+            }
+            return true;
         }
+        throw new EmptyData("Command in isOp");
     }
 }

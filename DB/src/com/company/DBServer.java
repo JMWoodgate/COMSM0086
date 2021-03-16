@@ -69,6 +69,6 @@ class DBServer
         } catch (DBException e) {
             e.printStackTrace();
         }
-        DBServer server = new DBServer(8888);
+        //DBServer server = new DBServer(8888);
     }
 }
