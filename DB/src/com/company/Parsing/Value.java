@@ -12,14 +12,14 @@ public class Value {
     private boolean booleanLiteral;
     private float floatLiteral;
     private String stringLiteral;
-    private final ArrayList<String> tokenizedCommand;
+    private final ArrayList<String> command;
     private final int index;
     private LiteralType type;
 
-    public Value(ArrayList<String> tokenizedCommand, int index) throws DBException {
-        this.tokenizedCommand = tokenizedCommand;
+    public Value(ArrayList<String> command, int index) throws DBException {
+        this.command = command;
         this.index = index;
-        if(tokenizedCommand!=null){
+        if(command!=null){
             setLiteralType();
         }
         else {
@@ -48,19 +48,19 @@ public class Value {
     }
 
     private void setLiteralType() throws DBException{
-        if(integerLiteral(tokenizedCommand.get(index))){
+        if(integerLiteral(command.get(index))){
             type = LiteralType.INTEGER;
         }
-        else if(floatLiteral(tokenizedCommand.get(index))){
+        else if(floatLiteral(command.get(index))){
             type = LiteralType.FLOAT;
         }
-        else if(boolLiteral(tokenizedCommand.get(index))){
+        else if(boolLiteral(command.get(index))){
             type = LiteralType.BOOLEAN;
         }
         else{
             type = LiteralType.STRING;
             //if the token isn't an int, float, or boolean, it is a stringLiteral
-            stringLiteral = tokenizedCommand.get(index);
+            stringLiteral = command.get(index);
         }
     }
 
