@@ -9,7 +9,7 @@ public class Parser {
     private final int index;
     private final Tokenizer tokenizer;
 
-    public Parser(String command){
+    public Parser(String command) throws EmptyData {
         tokenizer = new Tokenizer(command);
         index = 0;
     }
@@ -18,15 +18,37 @@ public class Parser {
         int index = 0;
         String nextCommand = tokenizer.nextToken(index);
         switch (nextCommand) {
-            case "SELECT":
-            case "CREATE":
-                return;
             case "USE":
+            case "CREATE":
+            case "DROP":
+            case "ALTER":
+            case "INSERT":
+            case "SELECT":
+            case "UPDATE":
+            case "DELETE":
+            case "JOIN":
                 break;
+            default:
+                return;
         }
     }
 
-    protected boolean isOp(String token) throws DBException {
+    private boolean boolLiteral(String token) throws DBException{
+        if(token!=null){
+            if(token.equals("true")){
+                return true;
+            }
+            else if(token.equals("false")){
+                return false;
+            }
+            else{
+                throw new CommandException(token, index, "bool literal");
+            }
+        }
+        throw new EmptyData("Command in boolLiteral");
+    }
+
+    private boolean isOp(String token) throws DBException {
         if(token!=null) {
             switch (token) {
                 case ("=="):

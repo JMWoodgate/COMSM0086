@@ -37,10 +37,13 @@ public class FileIO {
 
     private void writeToOpenFile(BufferedWriter bufferedWriter, Table table)
             throws IOException {
+        //getting tables and rows from memory
         ArrayList<String> columns = table.getColumns();
         ArrayList<ArrayList<String>> rows = table.getRows();
+        //formatting columns and writing to file
         bufferedWriter.write(formatString(columns));
         bufferedWriter.write("\n");
+        //formatting rows and adding one at a time to file
         for (ArrayList<String> row : rows) {
             bufferedWriter.write(formatString(row));
             bufferedWriter.write("\n");
@@ -51,6 +54,7 @@ public class FileIO {
     public String formatString(ArrayList<String> stringToFormat){
         String formatString;
         StringBuilder stringBuilder = new StringBuilder();
+        //turning ArrayList into String and putting a tab between each token
         for (String s : stringToFormat) {
             stringBuilder.append(s);
             stringBuilder.append("\t");

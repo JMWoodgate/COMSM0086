@@ -4,10 +4,9 @@ import com.company.DBExceptions.DBException;
 
 import java.util.ArrayList;
 
-public class Test extends Parser{
+public class Test {
 
     public Test() throws DBException{
-        super("test");
         try {
             testParser();
             testTokenizer();
@@ -21,21 +20,15 @@ public class Test extends Parser{
     }
 
     private void testParser() throws DBException {
-        String testCommand = "FROM parties SELECT *;";
+        String testCommand = "FROM\tparties SELECT *;\n";
         Parser testParser = new Parser(testCommand);
-        assert(testParser.isOp("=="));
-        assert(testParser.isOp("!="));
-        assert(testParser.isOp(">="));
-        assert(testParser.isOp("<="));
-        assert(testParser.isOp(">"));
-        assert(testParser.isOp("<"));
-        assert(testParser.isOp("LIKE"));
     }
 
     private void testTokenizer() throws DBException {
-        String testCommand = "FROM parties SELECT *;";
+        String testCommand = "FROM parties (SELECT) *;";
         ArrayList<String> tokenizedCommand = new ArrayList<>();
         Tokenizer testTokenizer = new Tokenizer(testCommand);
+        System.out.println(testTokenizer.getTokenizedCommand());
     }
 
     private void testTable() throws DBException {
