@@ -35,45 +35,6 @@ public class Parser {
         }
     }
 
-    private float floatLiteral(String token) throws DBException{
-        if(token!=null){
-            try{
-                return Float.parseFloat(token);
-            } catch (NumberFormatException e){
-                e.printStackTrace();
-                throw new CommandException(token, index, "float literal");
-            }
-        }
-        throw new EmptyData("Command in floatLiteral");
-    }
-
-    private int integerLiteral(String token) throws DBException{
-        if(token!=null){
-            try{
-                return Integer.parseInt(token);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                throw new CommandException(token, index, "integer literal");
-            }
-        }
-        throw new EmptyData("Command in integerLiteral");
-    }
-
-    private boolean boolLiteral(String token) throws DBException{
-        if(token!=null){
-            if(token.equals("true")){
-                return true;
-            }
-            else if(token.equals("false")){
-                return false;
-            }
-            else{
-                throw new CommandException(token, index, "bool literal");
-            }
-        }
-        throw new EmptyData("Command in boolLiteral");
-    }
-
     private boolean isOp(String token) throws DBException {
         if(token!=null) {
             switch (token) {
