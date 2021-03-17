@@ -57,7 +57,7 @@ public class Parser {
                     return false;
             }
         } catch(DBException e){
-            e.printStackTrace();
+            throw new CommandException(tokenizer.nextToken(index), index, "command");
         }
         return true;
     }
@@ -94,6 +94,39 @@ public class Parser {
             throw new CommandException(
                     tokenizer.nextToken(index), index, "use");
         }
+    }
+
+    protected String parseDatabaseName(ArrayList<String> command, int index) throws CommandException {
+        index++;
+        String nextToken = command.get(index);
+        if(isAlphaNumerical(nextToken)) {
+            //getting the database name
+            databaseName = nextToken;
+            index++;
+            return databaseName;
+        }
+        throw new CommandException(nextToken, index, "databaseName");
+    }
+
+    protected String parseTableName(ArrayList<String> command, int index)
+            throws CommandException {
+        index++;
+        String nextToken = command.get(index);
+        if(isAlphaNumerical(nextToken)) {
+            //getting the table name
+            tableName = nextToken;
+            index++;
+            nextToken = command.get(index);
+            if(nextToken.equals(";")){
+                //end of statement
+                return tableName;
+            }
+            else if(nextToken.equals("(")){
+                //call attributeList
+                return tableName;
+            }
+        }
+        throw new CommandException(nextToken, index, "table name");
     }
 
     private boolean checkEndOfStatement() throws CommandException {

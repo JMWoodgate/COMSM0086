@@ -37,17 +37,16 @@ public class CreateCMD extends Parser implements DBCommand {
         switch(nextToken){
             case ("database"):
                 type = StorageType.DATABASE;
-                if(!parseCreateDatabase()){
-                    throw new CommandException(
-                            command.get(index), index, "create database");
-                }
+                databaseName = parseDatabaseName(command, index);
+                //increase index to be pointing to the ; after databaseName
+                index += 2;
                 break;
             case ("table"):
                 type = StorageType.TABLE;
-                if(!parseCreateTable()){
-                    throw new CommandException(
-                            command.get(index), index, "create table");
-                }
+                type = StorageType.TABLE;
+                tableName = parseTableName(command, index);
+                index += 2;
+                //now we have a problem with index if there is an attribute list...
                 break;
             default:
                 return false;
@@ -62,6 +61,7 @@ public class CreateCMD extends Parser implements DBCommand {
         if(isAlphaNumerical(nextToken)) {
             //getting the database name
             databaseName = nextToken;
+            index++;
             return true;
         }
         return false;

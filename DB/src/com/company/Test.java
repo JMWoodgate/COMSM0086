@@ -10,13 +10,13 @@ public class Test {
     public Test() throws DBException{
         try {
             testCreateCMD();
-            //testUseCMD();
-            //testValue();
-            //testParser();
-            //testTokenizer();
-            //testTable();
-            //testRow();
-            //testColumn();
+            testUseCMD();
+            testValue();
+            testParser();
+            testTokenizer();
+            testTable();
+            testRow();
+            testColumn();
         }
         catch(DBException e){
             System.out.println("DBException " + e);
@@ -26,12 +26,18 @@ public class Test {
 
     private void testCreateCMD() throws DBException{
         try{
-            String command = "CREATE table politics ;";
-            Parser testParser = new Parser(command);
-            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
-            CreateCMD testCreate = new CreateCMD(tokenizedCommand, 0);
-            assert(testCreate.getIndex()==3);
-            assert(testCreate.getTableName().equals("politics"));
+            String command1 = "CREATE table elections ;";
+            Parser testParser1 = new Parser(command1);
+            ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
+            CreateCMD testCreate1 = new CreateCMD(tokenizedCommand1, 0);
+            assert(testCreate1.getIndex()==3);
+            assert(testCreate1.getTableName().equals("elections"));
+            String command2 = "CREATE database politics;";
+            Parser testParser2 = new Parser(command2);
+            ArrayList<String> tokenizedCommand2 = testParser2.getTokenizedCommand();
+            CreateCMD testCreate2 = new CreateCMD(tokenizedCommand2, 0);
+            assert(testCreate2.getIndex()==3);
+            assert(testCreate2.getDatabaseName().equals("politics"));
         }
         catch(DBException e){
             System.out.println("DBException " + e);
@@ -46,7 +52,7 @@ public class Test {
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             UseCMD testUse = new UseCMD(tokenizedCommand, 0);
             assert(testUse.getDatabaseName().equals("elections"));
-            assert(testUse.getIndex()==1);
+            assert(testUse.getIndex()==2);
         }
         catch(DBException e){
             System.out.println("DBException " + e);
