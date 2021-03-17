@@ -24,7 +24,7 @@ public class SelectCMD extends Parser implements DBCommand{
                         command.get(index), index, "table name");
             }
         }else{
-            throw new EmptyData("ALTER command");
+            throw new EmptyData("SELECT command");
         }
     }
 
@@ -33,12 +33,27 @@ public class SelectCMD extends Parser implements DBCommand{
         try {
             index++;
             String nextToken = command.get(index);
-            if (!nextToken.equals("into")) {
-                throw new CommandException(nextToken, index, "into");
+            //call WildAttributeList and update index to the end
+            if (!nextToken.equals("from")) {
+                throw new CommandException(nextToken, index, "from");
             }
+            tableName = parseTableName(command, index);
+            index+=2;
+            nextToken = command.get(index);
+            switch(nextToken){
+                case(";"):
+                    break;
+                case("where"):
+                    //call condition & update index
+                    break;
+                default:
+                    throw new CommandException(nextToken, index, "; or where");
+            }
+            //point index to end of command
+            index+=2;
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "insert");
+            throw new CommandException(command.get(index), index, "select");
         }
     }
 

@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testSelectCMD();
             testInsertCMD();
             testAlterCMD();
             testDropCMD();
@@ -20,6 +21,21 @@ public class Test {
             testTable();
             testRow();
             testColumn();
+        }
+        catch(DBException e){
+            System.out.println("DBException " + e);
+            e.printStackTrace();
+        }
+    }
+
+    private void testSelectCMD() throws DBException {
+        try{
+            String command = "SELECT FROM elections WHERE ;";
+            Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            SelectCMD testSelect = new SelectCMD(tokenizedCommand, 0);
+            assert(testSelect.getIndex()==5);
+            assert(testSelect.getTableName().equals("elections"));
         }
         catch(DBException e){
             System.out.println("DBException " + e);
@@ -127,10 +143,10 @@ public class Test {
             assert (testValue1.getIntLiteral() == 1);
             Value testValue2 = new Value(elements, 1);
             assert (testValue2.getLiteralType() == LiteralType.BOOLEAN);
-            assert (testValue2.getBooleanLiteral() == true);
+            assert (testValue2.getBooleanLiteral());
             Value testValue3 = new Value(elements, 2);
             assert (testValue3.getLiteralType() == LiteralType.STRING);
-            assert (testValue3.getStringLiteral() == "place");
+            assert (testValue3.getStringLiteral().equals("place"));
             Value testValue4 = new Value(elements, 3);
             assert (testValue4.getLiteralType() == LiteralType.FLOAT);
             assert (testValue4.getFloatLiteral() <= 3.122 || testValue4.getFloatLiteral() >= 3.122);

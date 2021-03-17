@@ -56,6 +56,8 @@ public class Parser {
                     parseInsert();
                     break;
                 case "select":
+                    parseSelect();
+                    break;
                 case "update":
                 case "delete":
                 case "join":
@@ -64,6 +66,16 @@ public class Parser {
             }
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command");
+        }
+    }
+
+    private void parseSelect() throws DBException{
+        try{
+            SelectCMD select = new SelectCMD(tokenizedCommand, index);
+            index = select.getIndex();
+        } catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "select");
         }
     }
 
@@ -179,7 +191,8 @@ public class Parser {
                 case "add":
                 case "drop":
                 case "values":
-                    //string being parsed is an Alter or Insert command
+                case "where":
+                    //string being parsed is an Alter, Select or Insert command
                     return tableName;
                 default:
                     throw new CommandException(nextToken, index, "; ( add or drop");

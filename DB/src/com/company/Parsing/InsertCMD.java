@@ -24,7 +24,7 @@ public class InsertCMD extends Parser implements DBCommand{
                         command.get(index), index, "table name");
             }
         }else{
-            throw new EmptyData("ALTER command");
+            throw new EmptyData("INSERT command");
         }
     }
 
