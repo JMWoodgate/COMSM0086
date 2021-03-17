@@ -36,7 +36,7 @@ public class Parser {
 
     public Parser(){}
 
-    private boolean parseCommand() throws CommandException{
+    private void parseCommand() throws CommandException{
         try {
             String nextCommand = tokenizer.nextToken(index);
             switch (nextCommand) {
@@ -53,21 +53,31 @@ public class Parser {
                     parseAlter();
                     break;
                 case "insert":
+                    parseInsert();
+                    break;
                 case "select":
                 case "update":
                 case "delete":
                 case "join":
                     break;
                 default:
-                    return false;
             }
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command");
         }
-        return true;
     }
 
-    private boolean parseAlter() throws DBException{
+    private void parseInsert() throws DBException{
+        try{
+            InsertCMD insert = new InsertCMD(tokenizedCommand, index);
+            index = insert.getIndex();
+        } catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "insert");
+        }
+    }
+
+    private void parseAlter() throws DBException{
         try{
             AlterCMD alter = new AlterCMD(tokenizedCommand, index);
             index = alter.getIndex();
@@ -75,10 +85,9 @@ public class Parser {
             throw new CommandException(
                     tokenizer.nextToken(index), index, "alter");
         }
-        return true;
     }
 
-    private boolean parseDrop() throws DBException{
+    private void parseDrop() throws DBException{
         try{
             DropCMD drop = new DropCMD(tokenizedCommand, index);
             index = drop.getIndex();
@@ -95,10 +104,9 @@ public class Parser {
             throw new CommandException(
                     tokenizer.nextToken(index), index, "drop");
         }
-        return true;
     }
 
-    private boolean parseCreate() throws DBException{
+    private void parseCreate() throws DBException{
         try{
             CreateCMD create = new CreateCMD(tokenizedCommand, index);
             index = create.getIndex();
@@ -115,17 +123,15 @@ public class Parser {
             throw new CommandException(
                     tokenizer.nextToken(index), index, "create");
         }
-        return true;
     }
 
-    private boolean parseUse() throws DBException {
+    private void parseUse() throws DBException {
         try {
             //creates a new instance of useCMD and parses it
             UseCMD use = new UseCMD(tokenizedCommand, index);
             //updating the current index
             index = use.getIndex();
             databaseName = use.getDatabaseName();
-            return true;
         }catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "use");
@@ -136,7 +142,7 @@ public class Parser {
         index++;
         String nextToken = command.get(index);
         if(isAlphaNumerical(nextToken)) {
-            //getting the database name
+            //getting the attribute name
             attributeName = nextToken;
             return attributeName;
         }
@@ -163,20 +169,24 @@ public class Parser {
             tableName = nextToken;
             index++;
             nextToken = command.get(index);
-            if(nextToken.equals(";")){
-                //end of statement
-                return tableName;
-            }
-            else if(nextToken.equals("(")){
-                //call attributeList
-                return tableName;
-            }
-            else if(nextToken.equals("add") || nextToken.equals("drop")){
-                //call is Alter
-                return tableName;
+            switch (nextToken) {
+                case ";":
+                    //end of statement
+                    return tableName;
+                case "(":
+                    //call attributeList
+                    return tableName;
+                case "add":
+                case "drop":
+                    //string being parsed is an Alter command
+                    return tableName;
+                default:
+                    throw new CommandException(nextToken, index, "; ( add or drop");
             }
         }
-        throw new CommandException(nextToken, index, "table name");
+        else{
+            throw new CommandException(nextToken, index, "table name");
+        }
     }
 
     private boolean checkEndOfStatement() throws CommandException {
