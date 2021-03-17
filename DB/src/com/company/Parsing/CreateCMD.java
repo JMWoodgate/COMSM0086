@@ -43,7 +43,6 @@ public class CreateCMD extends Parser implements DBCommand {
                 break;
             case ("table"):
                 type = StorageType.TABLE;
-                type = StorageType.TABLE;
                 tableName = parseTableName(command, index);
                 index += 2;
                 //now we have a problem with index if there is an attribute list...

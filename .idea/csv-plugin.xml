@@ -59,6 +59,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\Parsing\InsertCMD.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\Parsing\Parser.java">
           <value>
             <Attribute>

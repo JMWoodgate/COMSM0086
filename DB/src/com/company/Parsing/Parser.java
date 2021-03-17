@@ -178,7 +178,8 @@ public class Parser {
                     return tableName;
                 case "add":
                 case "drop":
-                    //string being parsed is an Alter command
+                case "values":
+                    //string being parsed is an Alter or Insert command
                     return tableName;
                 default:
                     throw new CommandException(nextToken, index, "; ( add or drop");

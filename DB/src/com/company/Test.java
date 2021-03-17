@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testInsertCMD();
             testAlterCMD();
             testDropCMD();
             testCreateCMD();
@@ -19,6 +20,21 @@ public class Test {
             testTable();
             testRow();
             testColumn();
+        }
+        catch(DBException e){
+            System.out.println("DBException " + e);
+            e.printStackTrace();
+        }
+    }
+
+    private void testInsertCMD() throws DBException {
+        try{
+            String command = "INSERT INTO elections VALUES ( ;";
+            Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            InsertCMD testInsert = new InsertCMD(tokenizedCommand, 0);
+            assert(testInsert.getIndex()==6);
+            assert(testInsert.getTableName().equals("elections"));
         }
         catch(DBException e){
             System.out.println("DBException " + e);
