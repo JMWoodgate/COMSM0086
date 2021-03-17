@@ -43,12 +43,14 @@ public class Tokenizer {
             for (int i = 0; i < tokenizedCommand.size(); i++) {
                 String currentToken = tokenizedCommand.get(i);
                 switch (currentToken) {
+                    case (""):
                     case (" "):
                     case ("\t"):
                     case ("\n"):
                     case ("\r"):
                     case ("\f"):
                         tokenizedCommand.remove(currentToken);
+                        i--;
                         break;
                     default:
                         break;

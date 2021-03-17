@@ -33,7 +33,7 @@ public class Test {
     }
 
     private void testJoinCMD() throws DBException {
-        String command = "JOIN parties AND ward ON AND ;";
+        String command = "JOIN  parties AND ward ON AND;";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
@@ -76,7 +76,7 @@ public class Test {
     }
 
     private void testSelectCMD() throws DBException {
-        String command = "SELECT FROM elections WHERE ;";
+        String command = "SELECT FROM elections WHERE;";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
