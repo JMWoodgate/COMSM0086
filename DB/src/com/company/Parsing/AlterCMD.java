@@ -47,7 +47,7 @@ public class AlterCMD extends Parser implements DBCommand{
                 case ("drop"):
                     attributeName = parseAttributeName(command, index);
                     //increasing index to point to after the attribute name
-                    index += 3;
+                    index += 2;
                     break;
                 default:
                     return false;

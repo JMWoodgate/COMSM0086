@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testUpdateCMD();
             testSelectCMD();
             testInsertCMD();
             testAlterCMD();
@@ -28,13 +29,28 @@ public class Test {
         }
     }
 
+    private void testUpdateCMD() throws DBException {
+        try{
+            String command = "UPDATE elections SET WHERE ;";
+            Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            UpdateCMD testUpdate = new UpdateCMD(tokenizedCommand, 0);
+            assert(testUpdate.getIndex()==4);
+            assert(testUpdate.getTableName().equals("elections"));
+        }
+        catch(DBException e){
+            System.out.println("DBException " + e);
+            e.printStackTrace();
+        }
+    }
+
     private void testSelectCMD() throws DBException {
         try{
             String command = "SELECT FROM elections WHERE ;";
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             SelectCMD testSelect = new SelectCMD(tokenizedCommand, 0);
-            assert(testSelect.getIndex()==5);
+            assert(testSelect.getIndex()==4);
             assert(testSelect.getTableName().equals("elections"));
         }
         catch(DBException e){
@@ -49,7 +65,7 @@ public class Test {
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             InsertCMD testInsert = new InsertCMD(tokenizedCommand, 0);
-            assert(testInsert.getIndex()==6);
+            assert(testInsert.getIndex()==5);
             assert(testInsert.getTableName().equals("elections"));
         }
         catch(DBException e){
@@ -64,7 +80,7 @@ public class Test {
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             AlterCMD testAlter = new AlterCMD(tokenizedCommand, 0);
-            assert(testAlter.getIndex()==6);
+            assert(testAlter.getIndex()==5);
             assert(testAlter.getTableName().equals("elections"));
             assert(testAlter.getAttributeName().equals("party"));
         }

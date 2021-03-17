@@ -50,7 +50,7 @@ public class InsertCMD extends Parser implements DBCommand{
             }
             //call ValueList
             //get index to end of command ; (hack fix)
-            index+=2;
+            index++;
             return true;
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "insert");

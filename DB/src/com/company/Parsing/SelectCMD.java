@@ -50,7 +50,7 @@ public class SelectCMD extends Parser implements DBCommand{
                     throw new CommandException(nextToken, index, "; or where");
             }
             //point index to end of command
-            index+=2;
+            index++;
             return true;
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "select");
