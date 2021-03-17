@@ -11,8 +11,9 @@ public class AlterCMD extends Parser implements DBCommand{
 
     private final ArrayList<String> command;
     private int index;
-    private StorageType type;
+    private final StorageType type;
     private String tableName;
+    private String attributeName;
 
     public AlterCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
@@ -44,18 +45,24 @@ public class AlterCMD extends Parser implements DBCommand{
             nextToken = command.get(index);
             switch (nextToken) {
                 case ("add"):
-                    //check attribute name
-                    break;
                 case ("drop"):
-                    //check attribute name
+                    attributeName = parseAttributeName(command, index);
+                    index += 2;
                     break;
                 default:
                     return false;
             }
             return true;
-        } catch(DBException){
+        } catch(DBException e){
             throw new CommandException(command.get(index), index, "alter");
         }
+    }
+
+    public String getAttributeName() throws EmptyData{
+        if(attributeName!=null){
+            return attributeName;
+        }
+        throw new EmptyData("attribute name");
     }
 
     public StorageType getType(){

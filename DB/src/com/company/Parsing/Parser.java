@@ -13,6 +13,7 @@ public class Parser {
     private int commandSize;
     private String tableName;
     private String databaseName;
+    private String attributeName;
 
     public Parser(String command) throws DBException {
         if(command != null) {
@@ -49,6 +50,7 @@ public class Parser {
                     parseDrop();
                     break;
                 case "alter":
+                    parseAlter();
                 case "insert":
                 case "select":
                 case "update":
@@ -60,6 +62,18 @@ public class Parser {
             }
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command");
+        }
+        return true;
+    }
+
+    private boolean parseAlter() throws DBException{
+        try{
+            AlterCMD alter = new AlterCMD(tokenizedCommand, index);
+            index = alter.getIndex();
+
+        } catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "alter");
         }
         return true;
     }
@@ -116,6 +130,18 @@ public class Parser {
             throw new CommandException(
                     tokenizer.nextToken(index), index, "use");
         }
+    }
+
+    protected String parseAttributeName(ArrayList<String> command, int index) throws CommandException {
+        index++;
+        String nextToken = command.get(index);
+        if(isAlphaNumerical(nextToken)) {
+            //getting the database name
+            attributeName = nextToken;
+            index++;
+            return attributeName;
+        }
+        throw new CommandException(nextToken, index, "databaseName");
     }
 
     protected String parseDatabaseName(ArrayList<String> command, int index) throws CommandException {
