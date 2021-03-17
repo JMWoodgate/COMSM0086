@@ -78,6 +78,7 @@ public class Parser {
         try{
             JoinCMD join = new JoinCMD(tokenizedCommand, index);
             index = join.getIndex();
+            //do we need to store the table names? (as there are two tables here)
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "join");
@@ -88,6 +89,7 @@ public class Parser {
         try{
             DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
             index = delete.getIndex();
+            tableName = delete.getTableName();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "delete");
@@ -98,6 +100,7 @@ public class Parser {
         try{
             UpdateCMD update = new UpdateCMD(tokenizedCommand, index);
             index = update.getIndex();
+            tableName = update.getTableName();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "update");
@@ -108,6 +111,7 @@ public class Parser {
         try{
             SelectCMD select = new SelectCMD(tokenizedCommand, index);
             index = select.getIndex();
+            tableName = select.getTableName();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "select");
@@ -118,6 +122,7 @@ public class Parser {
         try{
             InsertCMD insert = new InsertCMD(tokenizedCommand, index);
             index = insert.getIndex();
+            tableName = insert.getTableName();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "insert");
@@ -128,6 +133,7 @@ public class Parser {
         try{
             AlterCMD alter = new AlterCMD(tokenizedCommand, index);
             index = alter.getIndex();
+            tableName = alter.getTableName();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "alter");
@@ -214,30 +220,16 @@ public class Parser {
         if(isAlphaNumerical(nextToken)) {
             //getting the table name
             tableName = nextToken;
-            index++;
-            nextToken = command.get(index);
-            switch (nextToken) {
-                case ";":
-                    //end of statement
-                    return tableName;
-                case "(":
-                    //call attributeList
-                    return tableName;
-                case "add":
-                case "drop":
-                case "values":
-                case "where":
-                case "set":
-                case "and":
-                case "on":
-                    //string being parsed is an Alter, Join, Update, Select or Insert command
-                    return tableName;
-                default:
-                    throw new CommandException(nextToken, index, "; ( add or drop");
-            }
+            return tableName;
         }
         else{
             throw new CommandException(nextToken, index, "table name");
+        }
+    }
+
+    protected void checkNextToken(String nextToken, String expectedToken, int index) throws CommandException{
+        if (!nextToken.equals(expectedToken)) {
+            throw new CommandException(nextToken, index, expectedToken);
         }
     }
 

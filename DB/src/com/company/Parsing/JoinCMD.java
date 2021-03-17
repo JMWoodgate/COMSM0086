@@ -36,22 +36,16 @@ public class JoinCMD extends Parser implements DBCommand{
             //point index to after tableName
             index+=2;
             String nextToken = command.get(index);
-            if (!nextToken.equals("and")) {
-                throw new CommandException(nextToken, index, "and");
-            }
+            checkNextToken(nextToken, "and", index);
             secondTableName = parseTableName(command, index);
             //point index to after tableName
             index+=2;
             nextToken = command.get(index);
-            if (!nextToken.equals("on")) {
-                throw new CommandException(nextToken, index, "on");
-            }
+            checkNextToken(nextToken, "on", index);
             //attributeName
             index++;
             nextToken = command.get(index);
-            if (!nextToken.equals("and")) {
-                throw new CommandException(nextToken, index, "and");
-            }
+            checkNextToken(nextToken, "and", index);
             //attributeName
             //point index to end of command
             index++;

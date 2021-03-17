@@ -35,9 +35,7 @@ public class AlterCMD extends Parser implements DBCommand{
         try {
             index++;
             String nextToken = command.get(index);
-            if (!nextToken.equals("table")) {
-                throw new CommandException(nextToken, index, "table");
-            }
+            checkNextToken(nextToken, "table", index);
             tableName = parseTableName(command, index);
             //increasing index to point to after the table name
             index+=2;

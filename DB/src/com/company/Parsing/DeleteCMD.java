@@ -33,16 +33,12 @@ public class DeleteCMD extends Parser implements DBCommand{
         try {
             index++;
             String nextToken = command.get(index);
-            if (!nextToken.equals("from")) {
-                throw new CommandException(nextToken, index, "from");
-            }
+            checkNextToken(nextToken, "from", index);
             tableName = parseTableName(command, index);
             //increasing index to point to after the table name
             index+=2;
             nextToken = command.get(index);
-            if (!nextToken.equals("where")) {
-                throw new CommandException(nextToken, index, "where");
-            }
+            checkNextToken(nextToken, "where", index);
             index++;
             //condition
             return true;

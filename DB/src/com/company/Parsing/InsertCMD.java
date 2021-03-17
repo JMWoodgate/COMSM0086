@@ -33,23 +33,17 @@ public class InsertCMD extends Parser implements DBCommand{
         try {
             index++;
             String nextToken = command.get(index);
-            if (!nextToken.equals("into")) {
-                throw new CommandException(nextToken, index, "into");
-            }
+            checkNextToken(nextToken, "into", index);
             tableName = parseTableName(command, index);
             //increasing index to point to after the table name
             index+=2;
             nextToken = command.get(index);
-            if (!nextToken.equals("values")) {
-                throw new CommandException(nextToken, index, "values");
-            }
+            checkNextToken(nextToken, "values", index);
             index++;
             nextToken = command.get(index);
-            if (!nextToken.equals("(")) {
-                throw new CommandException(nextToken, index, "values");
-            }
+            checkNextToken(nextToken, "(", index);
             //call ValueList
-            //get index to end of command ; (hack fix)
+            //get index to end of command ;
             index++;
             return true;
         } catch(DBException e){

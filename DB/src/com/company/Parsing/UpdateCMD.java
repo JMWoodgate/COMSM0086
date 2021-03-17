@@ -35,15 +35,11 @@ public class UpdateCMD extends Parser implements DBCommand{
             //point index to after tableName
             index+=2;
             String nextToken = command.get(index);
-            if (!nextToken.equals("set")) {
-                throw new CommandException(nextToken, index, "set");
-            }
+            checkNextToken(nextToken, "set", index);
             //nameValueList
             index++;
             nextToken = command.get(index);
-            if (!nextToken.equals("where")) {
-                throw new CommandException(nextToken, index, "where");
-            }
+            checkNextToken(nextToken, "where", index);
             //condition
             //point index to end of command
             index++;

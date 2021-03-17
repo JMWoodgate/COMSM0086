@@ -44,47 +44,22 @@ public class CreateCMD extends Parser implements DBCommand {
             case ("table"):
                 type = StorageType.TABLE;
                 tableName = parseTableName(command, index);
-                index += 2;
-                //now we have a problem with index if there is an attribute list...
-                break;
+                //skip to after tableName
+                index+=2;
+                nextToken = command.get(index);
+                if(nextToken.equals(";")){
+                    break;
+                }
+                else if(nextToken.equals("(")){
+                    //call attributeList
+                    //update index
+                    break;
+                }
+                throw new CommandException(nextToken, index, "; or (<attribute list>)");
             default:
                 return false;
         }
         return true;
-    }
-
-    //CREATE Database <Database Name>
-    private boolean parseCreateDatabase(){
-        index++;
-        String nextToken = command.get(index);
-        if(isAlphaNumerical(nextToken)) {
-            //getting the database name
-            databaseName = nextToken;
-            index++;
-            return true;
-        }
-        return false;
-    }
-
-    //CREATE Table <Table Name> || <Table Name> (<Attribute List>)
-    private boolean parseCreateTable(){
-        index++;
-        String nextToken = command.get(index);
-        if(isAlphaNumerical(nextToken)) {
-            //getting the table name
-            tableName = nextToken;
-            index++;
-            nextToken = command.get(index);
-            if(nextToken.equals(";")){
-                //end of statement
-                return true;
-            }
-            else if(nextToken.equals("(")){
-                //call attributeList
-                return true;
-            }
-        }
-        return false;
     }
 
     public StorageType getType(){

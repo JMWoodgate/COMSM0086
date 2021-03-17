@@ -34,9 +34,7 @@ public class SelectCMD extends Parser implements DBCommand{
             index++;
             String nextToken = command.get(index);
             //call WildAttributeList and update index to the end
-            if (!nextToken.equals("from")) {
-                throw new CommandException(nextToken, index, "from");
-            }
+            checkNextToken(nextToken, "from", index);
             tableName = parseTableName(command, index);
             index+=2;
             nextToken = command.get(index);
