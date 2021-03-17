@@ -65,11 +65,22 @@ public class Parser {
                     parseDelete();
                     break;
                 case "join":
+                    parseJoin();
                     break;
                 default:
             }
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command");
+        }
+    }
+
+    private void parseJoin() throws DBException{
+        try{
+            JoinCMD join = new JoinCMD(tokenizedCommand, index);
+            index = join.getIndex();
+        } catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "join");
         }
     }
 
@@ -79,7 +90,7 @@ public class Parser {
             index = delete.getIndex();
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "update");
+                    tokenizer.nextToken(index), index, "delete");
         }
     }
 
@@ -217,7 +228,9 @@ public class Parser {
                 case "values":
                 case "where":
                 case "set":
-                    //string being parsed is an Alter, Update, Select or Insert command
+                case "and":
+                case "on":
+                    //string being parsed is an Alter, Join, Update, Select or Insert command
                     return tableName;
                 default:
                     throw new CommandException(nextToken, index, "; ( add or drop");

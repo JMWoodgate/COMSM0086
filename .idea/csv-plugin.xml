@@ -66,6 +66,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\Parsing\JoinCMD.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\Parsing\Parser.java">
           <value>
             <Attribute>
@@ -74,6 +81,13 @@
           </value>
         </entry>
         <entry key="\DB\src\com\company\Parsing\SelectCMD.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\src\com\company\Parsing\UpdateCMD.java">
           <value>
             <Attribute>
               <option name="separator" value=";" />

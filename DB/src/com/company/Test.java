@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testJoinCMD();
             testDeleteCMD();
             testUpdateCMD();
             testSelectCMD();
@@ -23,6 +24,22 @@ public class Test {
             testTable();
             testRow();
             testColumn();
+        }
+        catch(DBException e){
+            System.out.println("DBException " + e);
+            e.printStackTrace();
+        }
+    }
+
+    private void testJoinCMD() throws DBException {
+        try{
+            String command = "JOIN parties AND ward ON AND ;";
+            Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            JoinCMD testJoin = new JoinCMD(tokenizedCommand, 0);
+            assert(testJoin.getIndex()==6);
+            assert(testJoin.getFirstTableName().equals("parties"));
+            assert(testJoin.getSecondTableName().equals("ward"));
         }
         catch(DBException e){
             System.out.println("DBException " + e);
