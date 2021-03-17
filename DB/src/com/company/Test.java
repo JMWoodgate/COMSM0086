@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testDeleteCMD();
             testUpdateCMD();
             testSelectCMD();
             testInsertCMD();
@@ -22,6 +23,21 @@ public class Test {
             testTable();
             testRow();
             testColumn();
+        }
+        catch(DBException e){
+            System.out.println("DBException " + e);
+            e.printStackTrace();
+        }
+    }
+
+    private void testDeleteCMD() throws DBException {
+        try{
+            String command = "DELETE FROM elections WHERE ;";
+            Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            DeleteCMD testDelete = new DeleteCMD(tokenizedCommand, 0);
+            assert(testDelete.getIndex()==4);
+            assert(testDelete.getTableName().equals("elections"));
         }
         catch(DBException e){
             System.out.println("DBException " + e);

@@ -62,12 +62,24 @@ public class Parser {
                     parseUpdate();
                     break;
                 case "delete":
+                    parseDelete();
+                    break;
                 case "join":
                     break;
                 default:
             }
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command");
+        }
+    }
+
+    private void parseDelete() throws DBException{
+        try{
+            DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
+            index = delete.getIndex();
+        } catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "update");
         }
     }
 
