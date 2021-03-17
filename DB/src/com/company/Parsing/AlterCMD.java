@@ -25,7 +25,7 @@ public class AlterCMD extends Parser implements DBCommand{
                         command.get(index), index, "database or table name");
             }
         }else{
-            throw new EmptyData("DROP command");
+            throw new EmptyData("ALTER command");
         }
     }
 
@@ -38,16 +38,16 @@ public class AlterCMD extends Parser implements DBCommand{
             if (!nextToken.equals("table")) {
                 throw new CommandException(nextToken, index, "table");
             }
-            index++;
-            nextToken = command.get(index);
             tableName = parseTableName(command, index);
-            index++;
+            //increasing index to point to after the table name
+            index+=2;
             nextToken = command.get(index);
             switch (nextToken) {
                 case ("add"):
                 case ("drop"):
                     attributeName = parseAttributeName(command, index);
-                    index += 2;
+                    //increasing index to point to after the attribute name
+                    index += 3;
                     break;
                 default:
                     return false;

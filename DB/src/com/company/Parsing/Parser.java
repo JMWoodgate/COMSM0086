@@ -51,6 +51,7 @@ public class Parser {
                     break;
                 case "alter":
                     parseAlter();
+                    break;
                 case "insert":
                 case "select":
                 case "update":
@@ -70,7 +71,6 @@ public class Parser {
         try{
             AlterCMD alter = new AlterCMD(tokenizedCommand, index);
             index = alter.getIndex();
-
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "alter");
@@ -138,7 +138,6 @@ public class Parser {
         if(isAlphaNumerical(nextToken)) {
             //getting the database name
             attributeName = nextToken;
-            index++;
             return attributeName;
         }
         throw new CommandException(nextToken, index, "databaseName");
@@ -150,7 +149,6 @@ public class Parser {
         if(isAlphaNumerical(nextToken)) {
             //getting the database name
             databaseName = nextToken;
-            index++;
             return databaseName;
         }
         throw new CommandException(nextToken, index, "databaseName");
@@ -171,6 +169,10 @@ public class Parser {
             }
             else if(nextToken.equals("(")){
                 //call attributeList
+                return tableName;
+            }
+            else if(nextToken.equals("add") || nextToken.equals("drop")){
+                //call is Alter
                 return tableName;
             }
         }

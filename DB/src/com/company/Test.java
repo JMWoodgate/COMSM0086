@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testAlterCMD();
             testDropCMD();
             testCreateCMD();
             testUseCMD();
@@ -18,6 +19,22 @@ public class Test {
             testTable();
             testRow();
             testColumn();
+        }
+        catch(DBException e){
+            System.out.println("DBException " + e);
+            e.printStackTrace();
+        }
+    }
+
+    private void testAlterCMD() throws DBException {
+        try{
+            String command = "ALTER TABLE elections ADD party;";
+            Parser testParser = new Parser(command);
+            ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
+            AlterCMD testAlter = new AlterCMD(tokenizedCommand, 0);
+            assert(testAlter.getIndex()==6);
+            assert(testAlter.getTableName().equals("elections"));
+            assert(testAlter.getAttributeName().equals("party"));
         }
         catch(DBException e){
             System.out.println("DBException " + e);
