@@ -25,20 +25,21 @@ public class CreateCMD extends Parser implements DBCommand {
 
     public void execute(){}
 
+    //CREATE <create Database> || <create Table>
     private boolean parseCreate() throws CommandException {
         index++;
-        String nextCommand = command.get(index);
-        switch(nextCommand){
+        String nextToken = command.get(index);
+        switch(nextToken){
             case ("database"):
                 type = StorageType.DATABASE;
-                if(!createDatabase()){
+                if(!parseCreateDatabase()){
                     throw new CommandException(
                             command.get(index), index, "create database");
                 }
                 break;
             case ("table"):
                 type = StorageType.TABLE;
-                if(!createTable()){
+                if(!parseCreateTable()){
                     throw new CommandException(
                             command.get(index), index, "create table");
                 }
@@ -49,26 +50,31 @@ public class CreateCMD extends Parser implements DBCommand {
         return true;
     }
 
-    private boolean createDatabase(){
+    //CREATE Database <Database Name>
+    private boolean parseCreateDatabase(){
         index++;
-        String nextCommand = command.get(index);
-        if(isAlphaNumerical(nextCommand)) {
-            databaseName = nextCommand;
+        String nextToken = command.get(index);
+        if(isAlphaNumerical(nextToken)) {
+            //getting the database name
+            databaseName = nextToken;
             return true;
         }
         return false;
     }
 
-    private boolean createTable(){
+    //CREATE Table <Table Name> || <Table Name> (<Attribute List>)
+    private boolean parseCreateTable(){
         index++;
-        String nextCommand = command.get(index);
-        if(isAlphaNumerical(nextCommand)) {
-            tableName = nextCommand;
+        String nextToken = command.get(index);
+        if(isAlphaNumerical(nextToken)) {
+            //getting the table name
+            tableName = nextToken;
             index++;
-            if(nextCommand.equals(";")){
+            if(nextToken.equals(";")){
+                //end of statement
                 return true;
             }
-            else if(nextCommand.equals("(")){
+            else if(nextToken.equals("(")){
                 //call attributeList
                 return true;
             }

@@ -25,15 +25,12 @@ public class UseCMD extends Parser implements DBCommand{
 
     private boolean parseUse(){
         index++;
-        String nextCommand = command.get(index);
-        if(!isAlphaNumerical(nextCommand)){
+        String nextToken = command.get(index);
+        if(!isAlphaNumerical(nextToken)){
             return false;
         }
-        databaseName = nextCommand;
+        databaseName = nextToken;
         return true;
     }
 
-    public int getIndex(){
-        return index;
-    }
 }

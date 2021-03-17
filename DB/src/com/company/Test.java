@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testCreateCMD();
             testUseCMD();
             testValue();
             testParser();
@@ -19,6 +20,7 @@ public class Test {
         }
         catch(DBException e){
             System.out.println("DBException " + e);
+            e.printStackTrace();
         }
     }
 
@@ -28,7 +30,8 @@ public class Test {
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             CreateCMD testCreate = new CreateCMD(tokenizedCommand, 0);
-            assert(testCreate.getIndex()==1);
+            assert(testCreate.getIndex()==2);
+            assert(testCreate.getDatabaseName().equals("politics"));
         }
         catch(DBException e){
             e.printStackTrace();

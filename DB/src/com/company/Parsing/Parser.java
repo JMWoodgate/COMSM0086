@@ -18,9 +18,11 @@ public class Parser {
 
     public Parser(String command) throws DBException {
         try {
+            //tokenizing the command
             tokenizer = new Tokenizer(command);
             tokenizedCommand = tokenizer.getTokenizedCommand();
             commandSize = tokenizedCommand.size();
+            //checking that the statement ends with a ;
             checkEndOfStatement();
             index = 0;
             parseCommand();
@@ -36,8 +38,9 @@ public class Parser {
             String nextCommand = tokenizer.nextToken(index);
             switch (nextCommand) {
                 case "use":
-                    //creates a new instance of use and parses it
+                    //creates a new instance of useCMD and parses it
                     UseCMD use = new UseCMD(tokenizedCommand, index);
+                    //updating the current index
                     index = use.getIndex();
                     break;
                 case "create":
