@@ -16,7 +16,7 @@ public class Parser {
     private String attributeName;
 
     public Parser(String command) throws DBException {
-        if(command != null) {
+        if(command!=null && command.length()>0) {
             try {
                 //tokenizing the command
                 tokenizer = new Tokenizer(command);
