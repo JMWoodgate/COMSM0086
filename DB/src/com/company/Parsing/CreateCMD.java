@@ -34,30 +34,33 @@ public class CreateCMD extends Parser implements DBCommand {
     private boolean parseCreate() throws CommandException {
         index++;
         String nextToken = command.get(index);
-        switch(nextToken){
-            case ("database"):
-                type = StorageType.DATABASE;
-                databaseName = parseDatabaseName(command, index);
-                //increase index to be pointing to the ; after databaseName
-                index += 2;
-                break;
-            case ("table"):
-                type = StorageType.TABLE;
-                tableName = parseTableName(command, index);
-                //skip to after tableName
-                index+=2;
-                nextToken = command.get(index);
-                if(nextToken.equals(";")){
+        try {
+            switch (nextToken) {
+                case ("database"):
+                    type = StorageType.DATABASE;
+                    databaseName = parseDatabaseName(command, index);
+                    //increase index to be pointing to the ; after databaseName
+                    index += 2;
                     break;
-                }
-                else if(nextToken.equals("(")){
-                    //call attributeList
-                    //update index
-                    break;
-                }
-                throw new CommandException(nextToken, index, "; or (<attribute list>)");
-            default:
-                return false;
+                case ("table"):
+                    type = StorageType.TABLE;
+                    tableName = parseTableName(command, index);
+                    //skip to after tableName
+                    index += 2;
+                    nextToken = command.get(index);
+                    if (nextToken.equals(";")) {
+                        break;
+                    } else if (nextToken.equals("(")) {
+                        //call attributeList
+                        //update index
+                        break;
+                    }
+                    throw new CommandException(nextToken, index, "; or (<attribute list>)");
+                default:
+                    return false;
+            }
+        } catch (DBException e){
+            throw new CommandException(command.get(index), index, "CREATE", e);
         }
         return true;
     }

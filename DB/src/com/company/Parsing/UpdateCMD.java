@@ -45,7 +45,7 @@ public class UpdateCMD extends Parser implements DBCommand{
             index++;
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "update");
+            throw new CommandException(command.get(index), index, "UPDATE", e);
         }
     }
 

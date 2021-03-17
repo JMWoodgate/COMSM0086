@@ -43,7 +43,7 @@ public class DeleteCMD extends Parser implements DBCommand{
             //condition
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "insert");
+            throw new CommandException(command.get(index), index, "DELETE", e);
         }
     }
 

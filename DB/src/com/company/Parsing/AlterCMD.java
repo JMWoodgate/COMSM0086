@@ -52,7 +52,7 @@ public class AlterCMD extends Parser implements DBCommand{
             }
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "alter");
+            throw new CommandException(command.get(index), index, "ALTER");
         }
     }
 

@@ -45,13 +45,13 @@ public class SelectCMD extends Parser implements DBCommand{
                     //call condition & update index
                     break;
                 default:
-                    throw new CommandException(nextToken, index, "; or where");
+                    throw new CommandException(nextToken, index, "; or WHERE");
             }
             //point index to end of command
             index++;
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "select");
+            throw new CommandException(command.get(index), index, "SELECT", e);
         }
     }
 

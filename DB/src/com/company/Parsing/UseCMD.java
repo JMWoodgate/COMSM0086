@@ -23,7 +23,7 @@ public class UseCMD extends Parser implements DBCommand{
             this.index += 2;
             //increase index to be pointing to the ; after databaseName
         } catch (DBException e){
-            throw new CommandException(command.get(index), index, "use");
+            throw new CommandException(command.get(index), index, "USE", e);
         }
     }
 

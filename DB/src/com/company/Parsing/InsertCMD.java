@@ -47,7 +47,7 @@ public class InsertCMD extends Parser implements DBCommand{
             index++;
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "insert");
+            throw new CommandException(command.get(index), index, "INSERT", e);
         }
     }
 

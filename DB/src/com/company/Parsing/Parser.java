@@ -4,6 +4,7 @@ import com.company.DBExceptions.*;
 import com.company.Tokenizer;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Parser {
 
@@ -70,7 +71,7 @@ public class Parser {
                 default:
             }
         } catch(DBException e){
-            throw new CommandException(tokenizer.nextToken(index), index, "command");
+            throw new CommandException(tokenizer.nextToken(index), index, "command", e);
         }
     }
 
@@ -81,7 +82,7 @@ public class Parser {
             //do we need to store the table names? (as there are two tables here)
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "join");
+                    tokenizer.nextToken(index), index, "join", e);
         }
     }
 
@@ -92,7 +93,7 @@ public class Parser {
             tableName = delete.getTableName();
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "delete");
+                    tokenizer.nextToken(index), index, "delete", e);
         }
     }
 
@@ -103,7 +104,7 @@ public class Parser {
             tableName = update.getTableName();
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "update");
+                    tokenizer.nextToken(index), index, "update", e);
         }
     }
 
@@ -114,7 +115,7 @@ public class Parser {
             tableName = select.getTableName();
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "select");
+                    tokenizer.nextToken(index), index, "select", e);
         }
     }
 
@@ -125,7 +126,7 @@ public class Parser {
             tableName = insert.getTableName();
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "insert");
+                    tokenizer.nextToken(index), index, "insert", e);
         }
     }
 
@@ -136,7 +137,7 @@ public class Parser {
             tableName = alter.getTableName();
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "alter");
+                    tokenizer.nextToken(index), index, "alter", e);
         }
     }
 
@@ -155,7 +156,7 @@ public class Parser {
             }
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "drop");
+                    tokenizer.nextToken(index), index, "drop", e);
         }
     }
 
@@ -163,7 +164,7 @@ public class Parser {
         try{
             CreateCMD create = new CreateCMD(tokenizedCommand, index);
             index = create.getIndex();
-            if(create.getType()== StorageType.DATABASE){
+            if(create.getType()==StorageType.DATABASE){
                 databaseName = create.getDatabaseName();
             }else if(create.getType()==StorageType.TABLE){
                 tableName = create.getTableName();
@@ -174,7 +175,7 @@ public class Parser {
             }
         } catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "create");
+                    tokenizer.nextToken(index), index, "create", e);
         }
     }
 
@@ -187,7 +188,7 @@ public class Parser {
             databaseName = use.getDatabaseName();
         }catch(DBException e){
             throw new CommandException(
-                    tokenizer.nextToken(index), index, "use");
+                    tokenizer.nextToken(index), index, "use", e);
         }
     }
 
@@ -229,6 +230,7 @@ public class Parser {
 
     protected void checkNextToken(String nextToken, String expectedToken, int index) throws CommandException{
         if (!nextToken.equals(expectedToken)) {
+            expectedToken = expectedToken.toUpperCase();
             throw new CommandException(nextToken, index, expectedToken);
         }
     }

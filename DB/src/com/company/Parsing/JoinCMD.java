@@ -51,7 +51,7 @@ public class JoinCMD extends Parser implements DBCommand{
             index++;
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "join");
+            throw new CommandException(command.get(index), index, "JOIN", e);
         }
     }
 
