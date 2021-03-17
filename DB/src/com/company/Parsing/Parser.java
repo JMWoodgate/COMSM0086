@@ -46,6 +46,8 @@ public class Parser {
                     parseCreate();
                     break;
                 case "drop":
+                    parseDrop();
+                    break;
                 case "alter":
                 case "insert":
                 case "select":
@@ -58,6 +60,26 @@ public class Parser {
             }
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command");
+        }
+        return true;
+    }
+
+    private boolean parseDrop() throws DBException{
+        try{
+            DropCMD drop = new DropCMD(tokenizedCommand, index);
+            index = drop.getIndex();
+            if(drop.getType()== StorageType.DATABASE){
+                databaseName = drop.getDatabaseName();
+            }else if(drop.getType()==StorageType.TABLE){
+                tableName = drop.getTableName();
+            }
+            else{
+                throw new StorageTypeException(
+                        drop.getType(), index, "table or database");
+            }
+        } catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "drop");
         }
         return true;
     }

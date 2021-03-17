@@ -9,7 +9,6 @@ public class DropCMD extends Parser implements DBCommand{
     private final ArrayList<String> command;
     private int index;
     private StorageType type;
-    private String structureName;
     private String databaseName;
     private String tableName;
 
@@ -64,15 +63,6 @@ public class DropCMD extends Parser implements DBCommand{
             return databaseName;
         }
         throw new EmptyData("database name");
-    }
-
-    public String getStructureName() throws EmptyData {
-        if(structureName!=null){
-            return structureName;
-        }
-        else{
-            throw new EmptyData("structure name");
-        }
     }
 
     public void execute(){}
