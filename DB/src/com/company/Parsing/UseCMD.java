@@ -11,7 +11,7 @@ public class UseCMD extends Parser implements DBCommand{
 
     private final ArrayList<String> command;
     private int index;
-    private String databaseName;
+    private final String databaseName;
     private final StorageType type;
 
     public UseCMD(ArrayList<String> command, int index) throws CommandException {

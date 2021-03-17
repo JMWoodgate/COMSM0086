@@ -9,6 +9,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testDropCMD();
             testCreateCMD();
             testUseCMD();
             testValue();
@@ -17,6 +18,27 @@ public class Test {
             testTable();
             testRow();
             testColumn();
+        }
+        catch(DBException e){
+            System.out.println("DBException " + e);
+            e.printStackTrace();
+        }
+    }
+
+    private void testDropCMD() throws DBException{
+        try{
+            String command1 = "DROP table elections ;";
+            Parser testParser1 = new Parser(command1);
+            ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
+            DropCMD testDrop1 = new DropCMD(tokenizedCommand1, 0);
+            assert(testDrop1.getIndex()==3);
+            assert(testDrop1.getTableName().equals("elections"));
+            String command2 = "DROP database politics;";
+            Parser testParser2 = new Parser(command2);
+            ArrayList<String> tokenizedCommand2 = testParser2.getTokenizedCommand();
+            DropCMD testDrop2 = new DropCMD(tokenizedCommand2, 0);
+            assert(testDrop2.getIndex()==3);
+            assert(testDrop2.getDatabaseName().equals("politics"));
         }
         catch(DBException e){
             System.out.println("DBException " + e);
