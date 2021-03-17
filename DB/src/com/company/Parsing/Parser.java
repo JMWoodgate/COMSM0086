@@ -1,8 +1,6 @@
 package com.company.Parsing;
 
-import com.company.DBExceptions.CommandException;
-import com.company.DBExceptions.DBException;
-import com.company.DBExceptions.EmptyData;
+import com.company.DBExceptions.*;
 import com.company.Tokenizer;
 
 import java.util.ArrayList;
@@ -17,17 +15,21 @@ public class Parser {
     private String databaseName;
 
     public Parser(String command) throws DBException {
-        try {
-            //tokenizing the command
-            tokenizer = new Tokenizer(command);
-            tokenizedCommand = tokenizer.getTokenizedCommand();
-            commandSize = tokenizedCommand.size();
-            //checking that the statement ends with a ;
-            checkEndOfStatement();
-            index = 0;
-            parseCommand();
-        } catch(DBException e){
-            e.printStackTrace();
+        if(command != null) {
+            try {
+                //tokenizing the command
+                tokenizer = new Tokenizer(command);
+                tokenizedCommand = tokenizer.getTokenizedCommand();
+                commandSize = tokenizedCommand.size();
+                //checking that the statement ends with a ;
+                assert(checkEndOfStatement());
+                index = 0;
+                parseCommand();
+            } catch (DBException e) {
+                e.printStackTrace();
+            }
+        }else{
+            throw new EmptyData("Parser command");
         }
     }
 
@@ -38,13 +40,11 @@ public class Parser {
             String nextCommand = tokenizer.nextToken(index);
             switch (nextCommand) {
                 case "use":
-                    //creates a new instance of useCMD and parses it
-                    UseCMD use = new UseCMD(tokenizedCommand, index);
-                    //updating the current index
-                    index = use.getIndex();
+                    parseUse();
                     break;
                 case "create":
-
+                    parseCreate();
+                    break;
                 case "drop":
                 case "alter":
                 case "insert":
@@ -60,6 +60,40 @@ public class Parser {
             e.printStackTrace();
         }
         return true;
+    }
+
+    private boolean parseCreate() throws DBException{
+        try{
+            CreateCMD create = new CreateCMD(tokenizedCommand, index);
+            index = create.getIndex();
+            if(create.getType()== StorageType.DATABASE){
+                databaseName = create.getDatabaseName();
+            }else if(create.getType()==StorageType.TABLE){
+                tableName = create.getTableName();
+            }
+            else{
+                throw new StorageTypeException(
+                        create.getType(), index, "table or database");
+            }
+        } catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "create");
+        }
+        return true;
+    }
+
+    private boolean parseUse() throws DBException {
+        try {
+            //creates a new instance of useCMD and parses it
+            UseCMD use = new UseCMD(tokenizedCommand, index);
+            //updating the current index
+            index = use.getIndex();
+            databaseName = use.getDatabaseName();
+            return true;
+        }catch(DBException e){
+            throw new CommandException(
+                    tokenizer.nextToken(index), index, "use");
+        }
     }
 
     private boolean checkEndOfStatement() throws CommandException {

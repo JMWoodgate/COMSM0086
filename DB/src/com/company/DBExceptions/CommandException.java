@@ -5,6 +5,8 @@ public class CommandException extends DBException{
     private int index;
     private String expected;
 
+    public CommandException(){}
+
     public CommandException(String command, int index, String expected){
         this.command = command;
         this.index = index;

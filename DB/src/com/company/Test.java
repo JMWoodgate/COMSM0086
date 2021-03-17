@@ -10,13 +10,13 @@ public class Test {
     public Test() throws DBException{
         try {
             testCreateCMD();
-            testUseCMD();
-            testValue();
-            testParser();
-            testTokenizer();
-            testTable();
-            testRow();
-            testColumn();
+            //testUseCMD();
+            //testValue();
+            //testParser();
+            //testTokenizer();
+            //testTable();
+            //testRow();
+            //testColumn();
         }
         catch(DBException e){
             System.out.println("DBException " + e);
@@ -26,14 +26,15 @@ public class Test {
 
     private void testCreateCMD() throws DBException{
         try{
-            String command = "CREATE database politics ;";
+            String command = "CREATE table politics ;";
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             CreateCMD testCreate = new CreateCMD(tokenizedCommand, 0);
-            assert(testCreate.getIndex()==2);
-            assert(testCreate.getDatabaseName().equals("politics"));
+            assert(testCreate.getIndex()==3);
+            assert(testCreate.getTableName().equals("politics"));
         }
         catch(DBException e){
+            System.out.println("DBException " + e);
             e.printStackTrace();
         }
     }
@@ -48,6 +49,7 @@ public class Test {
             assert(testUse.getIndex()==1);
         }
         catch(DBException e){
+            System.out.println("DBException " + e);
             e.printStackTrace();
         }
     }
@@ -72,6 +74,7 @@ public class Test {
             assert (testValue4.getLiteralType() == LiteralType.FLOAT);
             assert (testValue4.getFloatLiteral() <= 3.122 || testValue4.getFloatLiteral() >= 3.122);
         }catch(DBException e){
+            System.out.println("DBException " + e);
             e.printStackTrace();
         }
     }

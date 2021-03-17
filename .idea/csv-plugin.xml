@@ -10,10 +10,24 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\DBExceptions\CommandException.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\DBExceptions\StorageType.java">
           <value>
             <Attribute>
               <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\src\com\company\DBExceptions\StorageTypeException.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
             </Attribute>
           </value>
         </entry>
@@ -25,6 +39,27 @@
           </value>
         </entry>
         <entry key="\DB\src\com\company\Database.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\src\com\company\Parsing\CreateCMD.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\src\com\company\Parsing\Parser.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\src\com\company\Test.java">
           <value>
             <Attribute>
               <option name="separator" value=";" />
