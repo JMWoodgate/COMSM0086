@@ -1,4 +1,4 @@
-package com.company.Parsing;
+package com.company.DBCommand;
 
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
@@ -15,16 +15,25 @@ public class Value {
     private final ArrayList<String> command;
     private final int index;
     private LiteralType type;
+    private String value;
 
     public Value(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         if(command!=null){
             setLiteralType();
+            value = command.get(index);
         }
         else {
             throw new EmptyData("Command");
         }
+    }
+
+    public String getValue() throws EmptyData {
+        if(value!=null) {
+            return value;
+        }
+        throw new EmptyData("value");
     }
 
     public LiteralType getLiteralType() {
@@ -57,11 +66,22 @@ public class Value {
         else if(boolLiteral(command.get(index))){
             type = LiteralType.BOOLEAN;
         }
-        else{
+        else if(stringLiteral(command.get(index))){
             type = LiteralType.STRING;
-            //if the token isn't an int, float, or boolean, it is a stringLiteral
-            stringLiteral = command.get(index);
         }
+        else{
+            throw new CommandException(command.get(index), index, "value");
+        }
+    }
+
+    private boolean stringLiteral(String token) throws DBException {
+        if(token.charAt(0)!='\''){
+            return false;
+        }
+        if(token.charAt(token.length())!='\''){
+            return false;
+        }
+        return true;
     }
 
     private boolean floatLiteral(String token) throws DBException {

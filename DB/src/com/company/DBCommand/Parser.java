@@ -1,10 +1,9 @@
-package com.company.Parsing;
+package com.company.DBCommand;
 
 import com.company.DBExceptions.*;
 import com.company.Tokenizer;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class Parser {
 

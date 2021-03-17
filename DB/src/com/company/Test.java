@@ -2,7 +2,7 @@ package com.company;
 
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
-import com.company.Parsing.*;
+import com.company.DBCommand.*;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.company.Parsing;
+package com.company.DBCommand;
 
 import com.company.DBExceptions.*;
 

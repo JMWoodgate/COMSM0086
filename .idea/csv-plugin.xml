@@ -45,6 +45,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\NameValueList.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\Parsing\CreateCMD.java">
           <value>
             <Attribute>

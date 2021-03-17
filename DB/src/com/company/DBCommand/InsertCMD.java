@@ -1,4 +1,4 @@
-package com.company.Parsing;
+package com.company.DBCommand;
 
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
@@ -7,51 +7,47 @@ import com.company.DBExceptions.StorageType;
 
 import java.util.ArrayList;
 
-public class SelectCMD extends Parser implements DBCommand{
+public class InsertCMD extends Parser implements DBCommand{
 
     private final ArrayList<String> command;
     private int index;
     private final StorageType type;
     private String tableName;
 
-    public SelectCMD(ArrayList<String> command, int index) throws DBException {
+    public InsertCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
         if(command != null) {
-            if (!parseSelect()) {
+            if (!parseInsert()) {
                 throw new CommandException(
                         command.get(index), index, "table name");
             }
         }else{
-            throw new EmptyData("SELECT command");
+            throw new EmptyData("INSERT command");
         }
     }
 
     //INSERT INTO <TableName> VALUES (<ValueList>)
-    private boolean parseSelect() throws DBException{
+    private boolean parseInsert() throws DBException{
         try {
             index++;
             String nextToken = command.get(index);
-            //call WildAttributeList and update index to the end
-            checkNextToken(nextToken, "from", index);
+            checkNextToken(nextToken, "into", index);
             tableName = parseTableName(command, index);
+            //increasing index to point to after the table name
             index+=2;
             nextToken = command.get(index);
-            switch(nextToken){
-                case(";"):
-                    break;
-                case("where"):
-                    //call condition & update index
-                    break;
-                default:
-                    throw new CommandException(nextToken, index, "; or WHERE");
-            }
-            //point index to end of command
+            checkNextToken(nextToken, "values", index);
+            index++;
+            nextToken = command.get(index);
+            checkNextToken(nextToken, "(", index);
+            //call ValueList
+            //get index to end of command ;
             index++;
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "SELECT", e);
+            throw new CommandException(command.get(index), index, "INSERT", e);
         }
     }
 

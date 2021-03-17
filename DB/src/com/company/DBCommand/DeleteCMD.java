@@ -1,4 +1,4 @@
-package com.company.Parsing;
+package com.company.DBCommand;
 
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
@@ -7,60 +7,44 @@ import com.company.DBExceptions.StorageType;
 
 import java.util.ArrayList;
 
-public class AlterCMD extends Parser implements DBCommand{
+public class DeleteCMD extends Parser implements DBCommand{
 
     private final ArrayList<String> command;
     private int index;
     private final StorageType type;
     private String tableName;
-    private String attributeName;
 
-    public AlterCMD(ArrayList<String> command, int index) throws DBException {
+    public DeleteCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
         if(command != null) {
-            if (!parseAlter()) {
+            if (!parseDelete()) {
                 throw new CommandException(
-                        command.get(index), index, "database or table name");
+                        command.get(index), index, "table name");
             }
         }else{
-            throw new EmptyData("ALTER command");
+            throw new EmptyData("DELETE command");
         }
     }
 
-    //ALTER TABLE <TableName> <AlterationType> <AttributeName>
-    //AlterationType <ADD> <DROP>
-    private boolean parseAlter() throws DBException{
+    //DELETE FROM <TableName> WHERE <Condition>
+    private boolean parseDelete() throws DBException{
         try {
             index++;
             String nextToken = command.get(index);
-            checkNextToken(nextToken, "table", index);
+            checkNextToken(nextToken, "from", index);
             tableName = parseTableName(command, index);
             //increasing index to point to after the table name
             index+=2;
             nextToken = command.get(index);
-            switch (nextToken) {
-                case ("add"):
-                case ("drop"):
-                    attributeName = parseAttributeName(command, index);
-                    //increasing index to point to after the attribute name
-                    index += 2;
-                    break;
-                default:
-                    return false;
-            }
+            checkNextToken(nextToken, "where", index);
+            index++;
+            //condition
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "ALTER");
+            throw new CommandException(command.get(index), index, "DELETE", e);
         }
-    }
-
-    public String getAttributeName() throws EmptyData{
-        if(attributeName!=null){
-            return attributeName;
-        }
-        throw new EmptyData("attribute name");
     }
 
     public StorageType getType(){

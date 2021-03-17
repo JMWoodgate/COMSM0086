@@ -1,4 +1,4 @@
-package com.company.Parsing;
+package com.company.DBCommand;
 
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
@@ -7,48 +7,60 @@ import com.company.DBExceptions.StorageType;
 
 import java.util.ArrayList;
 
-public class InsertCMD extends Parser implements DBCommand{
+public class AlterCMD extends Parser implements DBCommand{
 
     private final ArrayList<String> command;
     private int index;
     private final StorageType type;
     private String tableName;
+    private String attributeName;
 
-    public InsertCMD(ArrayList<String> command, int index) throws DBException {
+    public AlterCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
         if(command != null) {
-            if (!parseInsert()) {
+            if (!parseAlter()) {
                 throw new CommandException(
-                        command.get(index), index, "table name");
+                        command.get(index), index, "database or table name");
             }
         }else{
-            throw new EmptyData("INSERT command");
+            throw new EmptyData("ALTER command");
         }
     }
 
-    //INSERT INTO <TableName> VALUES (<ValueList>)
-    private boolean parseInsert() throws DBException{
+    //ALTER TABLE <TableName> <AlterationType> <AttributeName>
+    //AlterationType <ADD> <DROP>
+    private boolean parseAlter() throws DBException{
         try {
             index++;
             String nextToken = command.get(index);
-            checkNextToken(nextToken, "into", index);
+            checkNextToken(nextToken, "table", index);
             tableName = parseTableName(command, index);
             //increasing index to point to after the table name
             index+=2;
             nextToken = command.get(index);
-            checkNextToken(nextToken, "values", index);
-            index++;
-            nextToken = command.get(index);
-            checkNextToken(nextToken, "(", index);
-            //call ValueList
-            //get index to end of command ;
-            index++;
+            switch (nextToken) {
+                case ("add"):
+                case ("drop"):
+                    attributeName = parseAttributeName(command, index);
+                    //increasing index to point to after the attribute name
+                    index += 2;
+                    break;
+                default:
+                    return false;
+            }
             return true;
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "INSERT", e);
+            throw new CommandException(command.get(index), index, "ALTER");
         }
+    }
+
+    public String getAttributeName() throws EmptyData{
+        if(attributeName!=null){
+            return attributeName;
+        }
+        throw new EmptyData("attribute name");
     }
 
     public StorageType getType(){

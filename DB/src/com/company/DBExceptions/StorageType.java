@@ -1,5 +1,5 @@
 package com.company.DBExceptions;
 
 public enum StorageType {
-    DATABASE, TABLE, ROW, COLUMN, FILE, COMMAND
+    DATABASE, TABLE, ROW, COLUMN, ATTRIBUTE, FILE, COMMAND
 }
