@@ -10,7 +10,8 @@ public class Test {
 
     public Test() throws DBException{
         try {
-            /*testJoinCMD();
+            testValueList();
+            testJoinCMD();
             testDeleteCMD();
             testUpdateCMD();
             testSelectCMD();
@@ -18,17 +19,35 @@ public class Test {
             testAlterCMD();
             testDropCMD();
             testCreateCMD();
-            testUseCMD();*/
+            testUseCMD();
             testValue();
             testParser();
             testTokenizer();
-            /*testTable();
+            testTable();
             testRow();
-            testColumn();*/
+            testColumn();
         }
         catch(DBException e){
             System.out.println("DBException " + e);
             e.printStackTrace();
+        }
+    }
+
+    private void testValueList() throws DBException {
+        ArrayList<String> elements = new ArrayList<>();
+        elements.add("(");
+        elements.add("true");
+        elements.add(",");
+        elements.add("3.122");
+        elements.add(",");
+        elements.add("'pla");
+        elements.add("!");
+        elements.add("ce'");
+        elements.add(")");
+        try{
+            ValueList valueList = new ValueList(elements, 0);
+        }catch(DBException e){
+            throw new CommandException(elements.get(0), 0, "testValueList", e);
         }
     }
 

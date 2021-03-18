@@ -18,16 +18,24 @@ public class Value {
     private String value;
 
     public Value(ArrayList<String> command, int index) throws DBException {
-        System.out.println("entered Value with "+command);
         this.command = command;
         this.index = index;
-        if(command!=null){
-            setLiteralType();
-            value = command.get(index);
+        try {
+            if (command != null) {
+                //storing the token
+                value = command.get(index);
+                //checks the token and sets the type of value
+                setLiteralType();
+            } else {
+                throw new EmptyData("Command");
+            }
+        } catch(DBException e){
+            throw new CommandException(command.get(index), index, "value", e);
         }
-        else {
-            throw new EmptyData("Command");
-        }
+    }
+
+    public int getIndex(){
+        return index;
     }
 
     public String getValue() throws EmptyData {
@@ -58,7 +66,6 @@ public class Value {
     }
 
     private void setLiteralType() throws DBException{
-        System.out.println("entered setLiteralType with "+command);
         if(integerLiteral(command.get(index))){
             type = LiteralType.INTEGER;
         }
@@ -77,14 +84,14 @@ public class Value {
     }
 
     private boolean stringLiteral(ArrayList<String> tokenizedCommand, int index) throws DBException {
-        System.out.println("entered stringLiteral with "+tokenizedCommand +"\nand index "+index);
         String token = tokenizedCommand.get(index);
         if(token.charAt(0)!='\''){
             return false;
         }
         int lastIndex = token.length() - 1;
         if(token.charAt(lastIndex)!= '\''){
-            //if the end of that token isn't a single quote, we need to concat the tokens back together
+            //if the end of that token isn't a single quote, concat tokens
+            //function updates index after concat to point to the end of the string literal
             stringLiteral = concatStringLiteral(tokenizedCommand, index);
             return true;
         }
@@ -92,8 +99,7 @@ public class Value {
         return true;
     }
 
-    public String concatStringLiteral(ArrayList<String> tokenizedCommand, int index){
-        System.out.println("entered getStringLiteral");
+    private String concatStringLiteral(ArrayList<String> tokenizedCommand, int index){
         //store the first token of the stringLiteral
         String currentToken = tokenizedCommand.get(index);
         String stringLiteral = currentToken;
@@ -110,9 +116,7 @@ public class Value {
         //update the index to be pointing to the end of the stringLiteral
         // in the tokenizedCommand list
         this.index = index;
-        System.out.println("end of getStringLiteral with " + stringLiteral);
-        System.out.println("tokenizedCommand is " + tokenizedCommand);
-        System.out.println("index is " + index);
+        value = stringLiteral;
         return stringLiteral;
     }
 
@@ -172,5 +176,4 @@ public class Value {
             throw new EmptyData("Command in boolLiteral");
         }
     }
-
 }
