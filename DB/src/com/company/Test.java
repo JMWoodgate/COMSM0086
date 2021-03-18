@@ -10,7 +10,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
-            testJoinCMD();
+            /*testJoinCMD();
             testDeleteCMD();
             testUpdateCMD();
             testSelectCMD();
@@ -18,13 +18,13 @@ public class Test {
             testAlterCMD();
             testDropCMD();
             testCreateCMD();
-            testUseCMD();
+            testUseCMD();*/
             testValue();
             testParser();
             testTokenizer();
-            testTable();
+            /*testTable();
             testRow();
-            testColumn();
+            testColumn();*/
         }
         catch(DBException e){
             System.out.println("DBException " + e);
@@ -187,8 +187,9 @@ public class Test {
             ArrayList<String> elements = new ArrayList<>();
             elements.add("1");
             elements.add("true");
-            elements.add("place");
+            elements.add("'place'");
             elements.add("3.122");
+            elements.add("'pla!ce'");
             Value testValue1 = new Value(elements, 0);
             assert (testValue1.getLiteralType() == LiteralType.INTEGER);
             assert (testValue1.getIntLiteral() == 1);
@@ -197,10 +198,13 @@ public class Test {
             assert (testValue2.getBooleanLiteral());
             Value testValue3 = new Value(elements, 2);
             assert (testValue3.getLiteralType() == LiteralType.STRING);
-            assert (testValue3.getStringLiteral().equals("place"));
+            assert (testValue3.getStringLiteral().equals("'place'"));
             Value testValue4 = new Value(elements, 3);
             assert (testValue4.getLiteralType() == LiteralType.FLOAT);
             assert (testValue4.getFloatLiteral() <= 3.122 || testValue4.getFloatLiteral() >= 3.122);
+            Value testValue5 = new Value(elements, 4);
+            assert (testValue5.getLiteralType() == LiteralType.STRING);
+            assert (testValue5.getStringLiteral().equals("'pla!ce'"));
         }catch(DBException e){
             System.out.println("DBException " + e);
             e.printStackTrace();
@@ -213,9 +217,13 @@ public class Test {
     }
 
     private void testTokenizer() throws DBException {
-        String testCommand = "FROM parties (SELECT) *;";
-        ArrayList<String> tokenizedCommand = new ArrayList<>();
-        Tokenizer testTokenizer = new Tokenizer(testCommand);
+        String testCommand = "FROM 'pa1!rties' (SELECT) *;";
+        try {
+            ArrayList<String> tokenizedCommand = new ArrayList<>();
+            Tokenizer testTokenizer = new Tokenizer(testCommand);
+        } catch (DBException e){
+            throw new CommandException(testCommand, 0, "tokenizer", e);
+        }
     }
 
     private void testTable() throws DBException {

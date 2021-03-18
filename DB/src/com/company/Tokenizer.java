@@ -25,19 +25,22 @@ public class Tokenizer {
     }
 
     private ArrayList<String> tokenizeCommand(String command) throws EmptyData {
-        command = command.toLowerCase();
-        //turning command into an array list
-        ArrayList<String> tokenizedCommand = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(command, " \t\n\r\f();=<>!*", true);
-        while (tokenizer.hasMoreElements()) {
-            tokenizedCommand.add(tokenizer.nextToken());
+        if(command!=null) {
+            command = command.toLowerCase();
+            //turning command into an array list
+            ArrayList<String> tokenizedCommand = new ArrayList<>();
+            StringTokenizer tokenizer = new StringTokenizer(command, " \t\n\r\f();=<>!*", true);
+            while (tokenizer.hasMoreElements()) {
+                tokenizedCommand.add(tokenizer.nextToken());
+            }
+            tokenizedCommand = cleanCommandList(tokenizedCommand);
+            return tokenizedCommand;
         }
-        tokenizedCommand = cleanCommandList(tokenizedCommand);
-        return tokenizedCommand;
+        throw new EmptyData("Command");
     }
 
     //getting rid of empty strings in tokenized command list
-    public ArrayList<String> cleanCommandList(ArrayList<String> tokenizedCommand)
+    private ArrayList<String> cleanCommandList(ArrayList<String> tokenizedCommand)
             throws EmptyData {
         if(tokenizedCommand != null) {
             for (int i = 0; i < tokenizedCommand.size(); i++) {
@@ -60,5 +63,4 @@ public class Tokenizer {
         }
         throw new EmptyData("Command");
     }
-
 }

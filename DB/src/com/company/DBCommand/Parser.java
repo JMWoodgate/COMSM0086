@@ -18,6 +18,7 @@ public class Parser {
     public Parser(String command) throws DBException {
         if(command!=null && command.length()>0) {
             try {
+                checkQuotes(command);
                 //tokenizing the command
                 tokenizer = new Tokenizer(command);
                 tokenizedCommand = tokenizer.getTokenizedCommand();
@@ -232,6 +233,21 @@ public class Parser {
             expectedToken = expectedToken.toUpperCase();
             throw new CommandException(nextToken, index, expectedToken);
         }
+    }
+
+    private boolean checkQuotes(String command) throws DBException {
+        int count = 0;
+        if(command!=null) {
+            for (int i = 0; i < command.length(); i++) {
+                if (command.charAt(i) == '\'') {
+                    count++;
+                }
+            }
+            if (count % 2 == 0) {
+                return true;
+            }
+            throw new CommandException(command, index, "missing quotation mark");
+        } throw new EmptyData("command");
     }
 
     private boolean checkEndOfStatement() throws CommandException {

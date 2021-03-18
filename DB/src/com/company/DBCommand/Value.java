@@ -13,11 +13,12 @@ public class Value {
     private float floatLiteral;
     private String stringLiteral;
     private final ArrayList<String> command;
-    private final int index;
+    private int index;
     private LiteralType type;
     private String value;
 
     public Value(ArrayList<String> command, int index) throws DBException {
+        System.out.println("entered Value with "+command);
         this.command = command;
         this.index = index;
         if(command!=null){
@@ -57,6 +58,7 @@ public class Value {
     }
 
     private void setLiteralType() throws DBException{
+        System.out.println("entered setLiteralType with "+command);
         if(integerLiteral(command.get(index))){
             type = LiteralType.INTEGER;
         }
@@ -66,7 +68,7 @@ public class Value {
         else if(boolLiteral(command.get(index))){
             type = LiteralType.BOOLEAN;
         }
-        else if(stringLiteral(command.get(index))){
+        else if(stringLiteral(command, index)){
             type = LiteralType.STRING;
         }
         else{
@@ -74,14 +76,43 @@ public class Value {
         }
     }
 
-    private boolean stringLiteral(String token) throws DBException {
+    private boolean stringLiteral(ArrayList<String> tokenizedCommand, int index) throws DBException {
+        System.out.println("entered stringLiteral with "+tokenizedCommand +"\nand index "+index);
+        String token = tokenizedCommand.get(index);
         if(token.charAt(0)!='\''){
             return false;
         }
-        if(token.charAt(token.length())!='\''){
-            return false;
+        int lastIndex = token.length() - 1;
+        if(token.charAt(lastIndex)!= '\''){
+            //if the end of that token isn't a single quote, we need to concat the tokens back together
+            stringLiteral = concatStringLiteral(tokenizedCommand, index);
+            return true;
         }
+        stringLiteral = token;
         return true;
+    }
+
+    public String concatStringLiteral(ArrayList<String> tokenizedCommand, int index){
+        System.out.println("entered getStringLiteral");
+        //store the first token of the stringLiteral
+        String currentToken = tokenizedCommand.get(index);
+        String stringLiteral = currentToken;
+
+        //loop through until we find the end of the stringLiteral
+        while(currentToken.charAt(currentToken.length()-1)!='\''){
+            index++;
+            //get the next token in the list
+            currentToken = tokenizedCommand.get(index);
+            //concat it to the end of our stringLiteral
+            stringLiteral = stringLiteral.concat(currentToken);
+        }
+
+        //update the index to be pointing to the end of the stringLiteral
+        // in the tokenizedCommand list
+        this.index = index;
+        System.out.println("end of getStringLiteral with " + stringLiteral);
+        System.out.println("tokenizedCommand is " + tokenizedCommand);
+        return stringLiteral;
     }
 
     private boolean floatLiteral(String token) throws DBException {
