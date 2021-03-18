@@ -12,17 +12,16 @@ public class NameValueList extends Parser{
 
     private final ArrayList<String> command;
     private int index;
-    private final StorageType type;
     private String attributeName;
-    private ArrayList<String> attributeList;
+    private final ArrayList<String> attributeList;
     private String valueString;
-    private ArrayList<String> valueList;
-    private boolean isList;
+    private final ArrayList<String> valueList;
 
     public NameValueList(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
-        type = StorageType.ATTRIBUTE;
+        valueList = new ArrayList<String>();
+        attributeList = new ArrayList<String>();
         try{
             parseNameValueList();
         }catch(DBException e){
@@ -31,29 +30,18 @@ public class NameValueList extends Parser{
     }
 
     private void parseNameValueList() throws DBException{
-        valueList = new ArrayList<String>();
-        attributeList = new ArrayList<String>();
         try{
-            System.out.println("entered parseNameValueList");
-            parseNameValuePair();
-            //storing the attribute name and value string;
-            attributeList.add(attributeName);
-            System.out.println("attributeName "+attributeName);
-            System.out.println("attributeList "+attributeList);
-            valueList.add(valueString);
-            System.out.println("value "+valueString);
-            System.out.println("valueList "+valueList);
             String nextToken = command.get(index);
-            System.out.println("nextToken "+nextToken);
-            if(nextToken.equals(";")||nextToken.equals("WHERE")){
-                return;
+            while(!nextToken.equals(";")&&!nextToken.equals("where")) {
+                parseNameValuePair();
+                nextToken = command.get(index);
+                if (nextToken.equals(",")) {
+                    index++;
+                    //if comma, it's a list so need to call recursively
+                    parseNameValueList();
+                    return;
+                }
             }
-            if(nextToken.equals(",")){
-                index++;
-                parseNameValueList();
-                return;
-            }
-            throw new CommandException(command.get(index), index, "name value list");
         }catch(DBException e){
             throw new CommandException(command.get(index), index, "name value list", e);
         }
@@ -64,6 +52,7 @@ public class NameValueList extends Parser{
             //have to decrease index because parseAttributeName increases it again
             index--;
             attributeName = parseAttributeName(command, index);
+            attributeList.add(attributeName);
             //now have to skip past attribute name
             index+=2;
             String nextToken = command.get(index);
@@ -72,14 +61,11 @@ public class NameValueList extends Parser{
             //get the value
             Value value = new Value(command, index);
             valueString = value.getValue();
+            valueList.add(valueString);
             index = value.getIndex()+1;
         }catch(DBException e){
             throw new CommandException(command.get(index), index, "name value pair", e);
         }
-    }
-
-    public boolean isList(){
-        return isList;
     }
 
     public ArrayList<String> getAttributeList() throws EmptyData {

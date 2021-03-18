@@ -13,11 +13,15 @@ public class UpdateCMD extends Parser implements DBCommand{
     private int index;
     private final StorageType type;
     private String tableName;
+    private ArrayList<String> attributeList;
+    private ArrayList<String> valueList;
 
     public UpdateCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
+        valueList = new ArrayList<String>();
+        attributeList = new ArrayList<String>();
         if(command != null) {
             if (!parseUpdate()) {
                 throw new CommandException(
@@ -36,9 +40,15 @@ public class UpdateCMD extends Parser implements DBCommand{
             index+=2;
             String nextToken = command.get(index);
             checkNextToken(nextToken, "set", index);
-            //nameValueList
             index++;
+            //make nameValueList and update index
+            NameValueList nameValueList = new NameValueList(command, index);
+            //get attribute names and values
+            attributeList = nameValueList.getAttributeList();
+            valueList = nameValueList.getValueList();
+            index = nameValueList.getIndex();
             nextToken = command.get(index);
+            //check for where
             checkNextToken(nextToken, "where", index);
             //condition
             //point index to end of command
@@ -47,6 +57,20 @@ public class UpdateCMD extends Parser implements DBCommand{
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "UPDATE", e);
         }
+    }
+
+    public ArrayList<String> getAttributeList() throws EmptyData {
+        if(attributeList!=null){
+            return attributeList;
+        }
+        throw new EmptyData("attribute list");
+    }
+
+    public ArrayList<String> getValueList() throws EmptyData {
+        if(valueList!=null){
+            return valueList;
+        }
+        throw new EmptyData("value list");
     }
 
     public StorageType getType(){

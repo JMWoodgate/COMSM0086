@@ -46,8 +46,6 @@ public class Test {
         elements1.add(";");
         try{
             NameValueList nameValueList = new NameValueList(elements1, 0);
-            System.out.println("attribute list "+nameValueList.getAttributeList());
-            System.out.println("value list "+nameValueList.getValueList());
             assert(nameValueList.getAttributeList().get(0).equals("ward"));
             assert(nameValueList.getValueList().get(0).equals("3"));
             assert(nameValueList.getAttributeList().get(1).equals("party"));
@@ -111,13 +109,19 @@ public class Test {
     }
 
     private void testUpdateCMD() throws DBException {
-        String command = "UPDATE elections SET WHERE ;";
+        String command = "UPDATE elections SET party='name', ward=9 WHERE ;";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             UpdateCMD testUpdate = new UpdateCMD(tokenizedCommand, 0);
-            assert(testUpdate.getIndex()==4);
+            assert(testUpdate.getIndex()==11);
             assert(testUpdate.getTableName().equals("elections"));
+            ArrayList<String> list = testUpdate.getAttributeList();
+            assert(list.get(0).equals("party"));
+            assert(list.get(1).equals("ward"));
+            list = testUpdate.getValueList();
+            assert(list.get(0).equals("'name'"));
+            assert(list.get(1).equals("9"));
         }
         catch(DBException e){
             throw new CommandException(command, 0, "UPDATE", e);

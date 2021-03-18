@@ -88,7 +88,7 @@ public class Value {
         if(token.charAt(0)!='\''){
             return false;
         }
-        int lastIndex = token.length() - 1;
+        int lastIndex = token.length()-1;
         if(token.charAt(lastIndex)!= '\''){
             //if the end of that token isn't a single quote, concat tokens
             //function updates index after concat to point to the end of the string literal
@@ -103,9 +103,9 @@ public class Value {
         //store the first token of the stringLiteral
         String currentToken = tokenizedCommand.get(index);
         String stringLiteral = currentToken;
-
         //loop through until we find the end of the stringLiteral
-        while(currentToken.charAt(currentToken.length()-1)!='\''){
+        while(currentToken.charAt(currentToken.length()-1)!='\''
+                &&index<tokenizedCommand.size()-1){
             index++;
             //get the next token in the list
             currentToken = tokenizedCommand.get(index);
