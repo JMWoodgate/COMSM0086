@@ -10,6 +10,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testNameValueList();
             testValueList();
             testJoinCMD();
             testDeleteCMD();
@@ -30,6 +31,22 @@ public class Test {
         catch(DBException e){
             System.out.println("DBException " + e);
             e.printStackTrace();
+        }
+    }
+
+    private void testNameValueList() throws DBException{
+        ArrayList<String> elements = new ArrayList<>();
+        elements.add("ward");
+        elements.add("=");
+        elements.add("3");
+        elements.add(";");
+        try{
+            NameValueList nameValueList = new NameValueList(elements, 0);
+            assert(nameValueList.getAttributeName().equals("ward"));
+            assert(nameValueList.getValueString().equals("3"));
+            assert(nameValueList.getIndex()==10);
+        }catch(DBException e){
+            throw new CommandException(elements.get(0), 0, "testValueList", e);
         }
     }
 
@@ -114,12 +131,11 @@ public class Test {
     }
 
     private void testInsertCMD() throws DBException {
-        String command = "INSERT INTO elections VALUES ( );";
+        String command = "INSERT INTO elections VALUES ('name', false, 23, 'h=5');";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             InsertCMD testInsert = new InsertCMD(tokenizedCommand, 0);
-            assert(testInsert.getIndex()==5);
             assert(testInsert.getTableName().equals("elections"));
         }
         catch(DBException e){

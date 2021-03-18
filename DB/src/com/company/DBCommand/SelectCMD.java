@@ -28,7 +28,8 @@ public class SelectCMD extends Parser implements DBCommand{
         }
     }
 
-    //INSERT INTO <TableName> VALUES (<ValueList>)
+    //SELECT <WildAttributeList> FROM <TableName> |
+    //SELECT <WildAttributeList> FROM <TableName> WHERE <Condition>
     private boolean parseSelect() throws DBException{
         try {
             index++;
