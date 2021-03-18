@@ -112,6 +112,7 @@ public class Value {
         this.index = index;
         System.out.println("end of getStringLiteral with " + stringLiteral);
         System.out.println("tokenizedCommand is " + tokenizedCommand);
+        System.out.println("index is " + index);
         return stringLiteral;
     }
 

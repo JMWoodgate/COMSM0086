@@ -189,7 +189,9 @@ public class Test {
             elements.add("true");
             elements.add("'place'");
             elements.add("3.122");
-            elements.add("'pla!ce'");
+            elements.add("'pla");
+            elements.add("!");
+            elements.add("ce'");
             Value testValue1 = new Value(elements, 0);
             assert (testValue1.getLiteralType() == LiteralType.INTEGER);
             assert (testValue1.getIntLiteral() == 1);
