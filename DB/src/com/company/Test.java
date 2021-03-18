@@ -43,9 +43,14 @@ public class Test {
         elements.add("'pla");
         elements.add("!");
         elements.add("ce'");
+        elements.add(",");
+        elements.add("','");
         elements.add(")");
         try{
             ValueList valueList = new ValueList(elements, 0);
+            assert(valueList.getValueListString().get(0).equals("true"));
+            assert(valueList.getValueListString().get(3).equals("','"));
+            assert(valueList.getIndex()==10);
         }catch(DBException e){
             throw new CommandException(elements.get(0), 0, "testValueList", e);
         }
@@ -109,7 +114,7 @@ public class Test {
     }
 
     private void testInsertCMD() throws DBException {
-        String command = "INSERT INTO elections VALUES ( ;";
+        String command = "INSERT INTO elections VALUES ( );";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();

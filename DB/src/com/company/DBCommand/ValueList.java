@@ -46,6 +46,8 @@ public class ValueList {
                 valueList.add(value);
                 //also storing string in a list for ease of access
                 valueListString.add(value.getValue());
+                //if stringLiteral has a special character,
+                // index will be further than expected
                 index = value.getIndex()+1;
                 //if no comma and haven't reached end of list, syntax error
                 if(!command.get(index).equals(",")&&!command.get(index).equals(")")){

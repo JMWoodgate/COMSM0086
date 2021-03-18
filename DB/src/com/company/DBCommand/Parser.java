@@ -19,6 +19,7 @@ public class Parser {
         if(command!=null && command.length()>0) {
             try {
                 checkQuotes(command);
+                checkBrackets(command);
                 //tokenizing the command
                 tokenizer = new Tokenizer(command);
                 tokenizedCommand = tokenizer.getTokenizedCommand();
@@ -235,7 +236,26 @@ public class Parser {
         }
     }
 
-    private boolean checkQuotes(String command) throws DBException {
+    public void checkBrackets(String command) throws DBException {
+        int open = 0;
+        int close = 0;
+        if(command!=null) {
+            for (int i = 0; i < command.length(); i++) {
+                if (command.charAt(i) == '(') {
+                    open++;
+                }
+                else if (command.charAt(i) == ')'){
+                    close++;
+                }
+            }
+            if (open==close) {
+                return;
+            }
+            throw new CommandException(command, index, "missing bracket");
+        } throw new EmptyData("command");
+    }
+
+    public void checkQuotes(String command) throws DBException {
         int count = 0;
         if(command!=null) {
             for (int i = 0; i < command.length(); i++) {
@@ -244,7 +264,7 @@ public class Parser {
                 }
             }
             if (count % 2 == 0) {
-                return true;
+                return;
             }
             throw new CommandException(command, index, "missing quotation mark");
         } throw new EmptyData("command");
