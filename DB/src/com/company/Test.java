@@ -35,18 +35,26 @@ public class Test {
     }
 
     private void testNameValueList() throws DBException{
-        ArrayList<String> elements = new ArrayList<>();
-        elements.add("ward");
-        elements.add("=");
-        elements.add("3");
-        elements.add(";");
+        ArrayList<String> elements1 = new ArrayList<>();
+        elements1.add("ward");
+        elements1.add("=");
+        elements1.add("3");
+        elements1.add(",");
+        elements1.add("party");
+        elements1.add("=");
+        elements1.add("'green'");
+        elements1.add(";");
         try{
-            NameValueList nameValueList = new NameValueList(elements, 0);
-            assert(nameValueList.getAttributeName().equals("ward"));
-            assert(nameValueList.getValueString().equals("3"));
-            assert(nameValueList.getIndex()==10);
+            NameValueList nameValueList = new NameValueList(elements1, 0);
+            System.out.println("attribute list "+nameValueList.getAttributeList());
+            System.out.println("value list "+nameValueList.getValueList());
+            assert(nameValueList.getAttributeList().get(0).equals("ward"));
+            assert(nameValueList.getValueList().get(0).equals("3"));
+            assert(nameValueList.getAttributeList().get(1).equals("party"));
+            assert(nameValueList.getValueList().get(1).equals("'green'"));
+            assert(nameValueList.getIndex()==7);
         }catch(DBException e){
-            throw new CommandException(elements.get(0), 0, "testValueList", e);
+            throw new CommandException(elements1.get(0), 0, "testValueList", e);
         }
     }
 

@@ -201,7 +201,7 @@ public class Parser {
             attributeName = nextToken;
             return attributeName;
         }
-        throw new CommandException(nextToken, index, "databaseName");
+        throw new CommandException(nextToken, index, "attribute name");
     }
 
     protected String parseDatabaseName(ArrayList<String> command, int index) throws CommandException {
@@ -212,7 +212,7 @@ public class Parser {
             databaseName = nextToken;
             return databaseName;
         }
-        throw new CommandException(nextToken, index, "databaseName");
+        throw new CommandException(nextToken, index, "database name");
     }
 
     protected String parseTableName(ArrayList<String> command, int index)
