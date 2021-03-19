@@ -13,14 +13,14 @@ public class DeleteCMD extends Parser implements DBCommand{
     private int index;
     private final StorageType type;
     private String tableName;
-    private ArrayList<Condition> conditionListString;
+    private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
 
     public DeleteCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
-        conditionListString = new ArrayList<>();
+        conditionListArray = new ArrayList<>();
         if(command != null) {
             if (!parseDelete()) {
                 throw new CommandException(
@@ -44,9 +44,9 @@ public class DeleteCMD extends Parser implements DBCommand{
             //check for "where"
             checkNextToken(command.get(index), "where", index);
             index++;
-            //get conditions, store as object and string for testing
+            //get conditions, store as object and array for testing
             conditionListObject = new ConditionList(command, index);
-            conditionListString = conditionListObject.getConditionList();
+            conditionListArray = conditionListObject.getConditionList();
             index = conditionListObject.getIndex();
             return true;
         } catch(DBException e){
@@ -61,9 +61,9 @@ public class DeleteCMD extends Parser implements DBCommand{
         throw new EmptyData("condition list in DeleteCMD");
     }
 
-    public ArrayList<Condition> getConditionListString() throws EmptyData {
-        if(conditionListString!=null){
-            return conditionListString;
+    public ArrayList<Condition> getConditionListArray() throws EmptyData {
+        if(conditionListArray!=null){
+            return conditionListArray;
         }
         throw new EmptyData("condition list in DeleteCMD");
     }

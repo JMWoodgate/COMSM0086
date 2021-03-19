@@ -63,7 +63,7 @@ public class Test {
         elements1.add(";");
         try{
             Parser parser1 = new Parser(command1);
-            assert(parser1.getConditionList().get(0).getConditionString().equals("party=='green'"));
+            assert(parser1.getConditionListArray().get(0).getConditionString().equals("party=='green'"));
             assert(parser1.getTableName().equals("elections"));
 
             ConditionList conditionList = new ConditionList(elements1, 0);
@@ -71,9 +71,9 @@ public class Test {
             assert(conditionList.getConditionList().get(1).getConditionString().equals("ward!=true"));
             assert(conditionList.getConditionList().get(2).getConditionString().equals("id>5"));
             Parser parser2 = new Parser(command2);
-            assert(parser2.getConditionList().get(0).getConditionString().equals("field=='labour'"));
-            assert(parser2.getConditionList().get(1).getConditionString().equals("ward!=true"));
-            assert(parser2.getConditionList().get(2).getConditionString().equals("id>5"));
+            assert(parser2.getConditionListArray().get(0).getConditionString().equals("field=='labour'"));
+            assert(parser2.getConditionListArray().get(1).getConditionString().equals("ward!=true"));
+            assert(parser2.getConditionListArray().get(2).getConditionString().equals("id>5"));
             assert(parser2.getTableName().equals("elections"));
         }catch(DBException e){
             throw new CommandException(command1, 0, "testParseCondition", e);
@@ -196,19 +196,18 @@ public class Test {
     }
 
     private void testUpdateCMD() throws DBException {
-        String command = "UPDATE elections SET party='name', ward=9 WHERE ;";
+        String command = "UPDATE elections SET party='name', ward=9 WHERE (id<3) AND (party!='labour');";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             UpdateCMD testUpdate = new UpdateCMD(tokenizedCommand, 0);
-            assert(testUpdate.getIndex()==11);
             assert(testUpdate.getTableName().equals("elections"));
-            ArrayList<String> list = testUpdate.getAttributeList();
-            assert(list.get(0).equals("party"));
-            assert(list.get(1).equals("ward"));
-            list = testUpdate.getValueList();
-            assert(list.get(0).equals("'name'"));
-            assert(list.get(1).equals("9"));
+            ArrayList<String> attributeList = testUpdate.getAttributeList();
+            assert(attributeList.get(0).equals("party"));
+            assert(attributeList.get(1).equals("ward"));
+            attributeList = testUpdate.getValueList();
+            assert(attributeList.get(0).equals("'name'"));
+            assert(attributeList.get(1).equals("9"));
         }
         catch(DBException e){
             throw new CommandException(command, 0, "UPDATE", e);

@@ -14,8 +14,8 @@ public class Parser {
     private String tableName;
     private String databaseName;
     private String attributeName;
-    private ArrayList<Condition> conditionListString;
-    private Condition conditionListObject;
+    private ArrayList<Condition> conditionListArray;
+    private ConditionList conditionListObject;
 
     public Parser(String command) throws DBException {
         if(command!=null && command.length()>0) {
@@ -28,7 +28,7 @@ public class Parser {
                 commandSize = tokenizedCommand.size();
                 //checking that the statement ends with a ;
                 assert(checkEndOfStatement());
-                conditionListString = new ArrayList<>();
+                conditionListArray = new ArrayList<>();
                 index = 0;
                 parseCommand();
             } catch (DBException e) {
@@ -95,7 +95,7 @@ public class Parser {
             DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
             index = delete.getIndex();
             tableName = delete.getTableName();
-            conditionListString = delete.getConditionListString();
+            conditionListArray = delete.getConditionListArray();
             conditionListObject = delete.getConditionListObject();
         } catch(DBException e){
             throw new CommandException(
@@ -108,6 +108,8 @@ public class Parser {
             UpdateCMD update = new UpdateCMD(tokenizedCommand, index);
             index = update.getIndex();
             tableName = update.getTableName();
+            conditionListArray = update.getConditionListArray();
+            conditionListObject = update.getConditionListObject();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "update", e);
@@ -293,7 +295,7 @@ public class Parser {
         return true;
     }
 
-    public ArrayList<Condition> getConditionListObject() throws EmptyData {
+    public ConditionList getConditionListObject() throws EmptyData {
         if(conditionListObject!=null){
             return conditionListObject;
         }
@@ -302,9 +304,9 @@ public class Parser {
         }
     }
 
-    public ArrayList<Condition> getConditionListString() throws EmptyData {
-        if(conditionListString!=null){
-            return conditionListString;
+    public ArrayList<Condition> getConditionListArray() throws EmptyData {
+        if(conditionListArray!=null){
+            return conditionListArray;
         }
         else{
             throw new EmptyData("condition list string");

@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\DBCommand\DeleteCMD.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\DBCommand\Parser.java">
           <value>
             <Attribute>

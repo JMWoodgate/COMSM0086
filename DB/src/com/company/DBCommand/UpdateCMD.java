@@ -15,6 +15,8 @@ public class UpdateCMD extends Parser implements DBCommand{
     private String tableName;
     private ArrayList<String> attributeList;
     private ArrayList<String> valueList;
+    private ArrayList<Condition> conditionListArray;
+    private ConditionList conditionListObject;
 
     public UpdateCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
@@ -22,6 +24,7 @@ public class UpdateCMD extends Parser implements DBCommand{
         type = StorageType.TABLE;
         valueList = new ArrayList<String>();
         attributeList = new ArrayList<String>();
+        conditionListArray = new ArrayList<>();
         if(command != null) {
             if (!parseUpdate()) {
                 throw new CommandException(
@@ -50,13 +53,29 @@ public class UpdateCMD extends Parser implements DBCommand{
             nextToken = command.get(index);
             //check for where
             checkNextToken(nextToken, "where", index);
-            //condition
-            //point index to end of command
             index++;
+            //get conditions, store as object and array for testing
+            conditionListObject = new ConditionList(command, index);
+            conditionListArray = conditionListObject.getConditionList();
+            index = conditionListObject.getIndex();
             return true;
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "UPDATE", e);
         }
+    }
+
+    public ConditionList getConditionListObject()throws EmptyData {
+        if(conditionListObject!=null){
+            return conditionListObject;
+        }
+        throw new EmptyData("condition list in DeleteCMD");
+    }
+
+    public ArrayList<Condition> getConditionListArray() throws EmptyData {
+        if(conditionListArray!=null){
+            return conditionListArray;
+        }
+        throw new EmptyData("condition list in DeleteCMD");
     }
 
     public ArrayList<String> getAttributeList() throws EmptyData {
