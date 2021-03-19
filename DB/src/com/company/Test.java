@@ -10,6 +10,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testWildAttributeList();
             testNameValueList();
             testValueList();
             testJoinCMD();
@@ -31,6 +32,22 @@ public class Test {
         catch(DBException e){
             System.out.println("DBException " + e);
             e.printStackTrace();
+        }
+    }
+
+    private void testWildAttributeList() throws DBException{
+        ArrayList<String> elements = new ArrayList<>();
+        elements.add("party");
+        elements.add(",");
+        elements.add("ward");
+        elements.add(";");
+        try{
+            WildAttributeList wildAttributeList = new WildAttributeList(elements, 0);
+            assert(wildAttributeList.getAttributeList().get(0).equals("party"));
+            assert(wildAttributeList.getAttributeList().get(1).equals("ward"));
+            assert(wildAttributeList.getIndex()==3);
+        }catch(DBException e){
+            throw new CommandException(elements.get(0), 0, "wild attribute list", e);
         }
     }
 
@@ -80,14 +97,16 @@ public class Test {
     }
 
     private void testJoinCMD() throws DBException {
-        String command = "JOIN  parties AND ward ON AND;";
+        String command = "JOIN parties AND ward ON name AND id;";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             JoinCMD testJoin = new JoinCMD(tokenizedCommand, 0);
-            assert(testJoin.getIndex()==6);
-            assert(testJoin.getFirstTableName().equals("parties"));
-            assert(testJoin.getSecondTableName().equals("ward"));
+            assert(testJoin.getIndex()==8);
+            assert(testJoin.getTableNames().get(0).equals("parties"));
+            assert(testJoin.getTableNames().get(1).equals("ward"));
+            assert(testJoin.getAttributeNames().get(0).equals("name"));
+            assert(testJoin.getAttributeNames().get(1).equals("id"));
         }
         catch(DBException e){
             throw new CommandException(command, 0, "JOIN", e);

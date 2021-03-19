@@ -31,16 +31,20 @@ public class NameValueList extends Parser{
 
     private void parseNameValueList() throws DBException{
         try{
-            String nextToken = command.get(index);
-            while(!nextToken.equals(";")&&!nextToken.equals("where")) {
-                parseNameValuePair();
-                nextToken = command.get(index);
-                if (nextToken.equals(",")) {
-                    index++;
-                    //if comma, it's a list so need to call recursively
-                    parseNameValueList();
-                    return;
+            if(command!=null) {
+                String nextToken = command.get(index);
+                while (!nextToken.equals(";") && !nextToken.equals("where")) {
+                    parseNameValuePair();
+                    nextToken = command.get(index);
+                    if (nextToken.equals(",")) {
+                        index++;
+                        //if comma, it's a list so need to call recursively
+                        parseNameValueList();
+                        return;
+                    }
                 }
+            }else{
+                throw new EmptyData("command in name value list");
             }
         }catch(DBException e){
             throw new CommandException(command.get(index), index, "name value list", e);
@@ -50,11 +54,10 @@ public class NameValueList extends Parser{
     private void parseNameValuePair() throws DBException{
         try{
             //have to decrease index because parseAttributeName increases it again
-            index--;
             attributeName = parseAttributeName(command, index);
             attributeList.add(attributeName);
             //now have to skip past attribute name
-            index+=2;
+            index++;
             String nextToken = command.get(index);
             checkNextToken(nextToken, "=", index);
             index++;

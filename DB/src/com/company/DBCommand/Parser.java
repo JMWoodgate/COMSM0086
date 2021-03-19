@@ -194,9 +194,8 @@ public class Parser {
     }
 
     protected String parseAttributeName(ArrayList<String> command, int index) throws CommandException {
-        index++;
         String nextToken = command.get(index);
-        if(isAlphaNumerical(nextToken)) {
+        if(isAlphaNumerical(nextToken)||nextToken.equals("*")) {
             //getting the attribute name
             attributeName = nextToken;
             return attributeName;
@@ -255,7 +254,7 @@ public class Parser {
         } throw new EmptyData("command");
     }
 
-    public void checkQuotes(String command) throws DBException {
+    private void checkQuotes(String command) throws DBException {
         int count = 0;
         if(command!=null) {
             for (int i = 0; i < command.length(); i++) {

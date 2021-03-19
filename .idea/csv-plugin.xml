@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\DBCommand\ValueList.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\DBExceptions\CommandException.java">
           <value>
             <Attribute>

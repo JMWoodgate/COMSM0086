@@ -12,13 +12,16 @@ public class JoinCMD extends Parser implements DBCommand{
     private final ArrayList<String> command;
     private int index;
     private final StorageType type;
-    private String firstTableName;
-    private String secondTableName;
+    private ArrayList<String> tableNames;
+    private ArrayList<String> attributeNames;
+
 
     public JoinCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
+        tableNames = new ArrayList<String>();
+        attributeNames = new ArrayList<String>();
         if(command != null) {
             if (!parseJoin()) {
                 throw new CommandException(
@@ -32,21 +35,26 @@ public class JoinCMD extends Parser implements DBCommand{
     //JOIN <TableName> AND <TableName> ON <AttributeName> AND <AttributeName>
     private boolean parseJoin() throws DBException{
         try {
-            firstTableName = parseTableName(command, index);
+            //get table names
+            String firstTableName = parseTableName(command, index);
+            tableNames.add(firstTableName);
             //point index to after tableName
             index+=2;
-            String nextToken = command.get(index);
-            checkNextToken(nextToken, "and", index);
-            secondTableName = parseTableName(command, index);
+            checkNextToken(command.get(index), "and", index);
+            String secondTableName = parseTableName(command, index);
+            tableNames.add(secondTableName);
             //point index to after tableName
             index+=2;
-            nextToken = command.get(index);
-            checkNextToken(nextToken, "on", index);
-            //attributeName
+            checkNextToken(command.get(index), "on", index);
             index++;
-            nextToken = command.get(index);
-            checkNextToken(nextToken, "and", index);
-            //attributeName
+            //get attribute names
+            String firstAttributeName = parseAttributeName(command, index);
+            attributeNames.add(firstAttributeName);
+            index++;
+            checkNextToken(command.get(index), "and", index);
+            index++;
+            String secondAttributeName = parseAttributeName(command, index);
+            attributeNames.add(secondAttributeName);
             //point index to end of command
             index++;
             return true;
@@ -59,18 +67,18 @@ public class JoinCMD extends Parser implements DBCommand{
         return type;
     }
 
-    public String getSecondTableName() throws EmptyData {
-        if(secondTableName!=null) {
-            return secondTableName;
+    public ArrayList<String> getTableNames() throws EmptyData {
+        if(tableNames!=null) {
+            return tableNames;
         }
-        throw new EmptyData("second table name");
+        throw new EmptyData("table names");
     }
 
-    public String getFirstTableName() throws EmptyData {
-        if(firstTableName!=null) {
-            return firstTableName;
+    public ArrayList<String> getAttributeNames() throws EmptyData {
+        if(attributeNames!=null) {
+            return attributeNames;
         }
-        throw new EmptyData("first table name");
+        throw new EmptyData("attribute name");
     }
 
     public void execute(){}

@@ -16,7 +16,11 @@ public class ValueList {
     public ValueList(ArrayList<String> command, int index) throws DBException{
         this.command = command;
         this.index = index;
-        setValueList();
+        try{
+            parseValueList();
+        }catch(DBException e){
+            throw new CommandException(command.get(index), index, "value list", e);
+        }
     }
 
     public ArrayList<String> getValueListString() throws DBException{
@@ -33,21 +37,22 @@ public class ValueList {
         throw new EmptyData("get value list");
     }
 
-    private void setValueList() throws DBException {
+    private void parseValueList() throws DBException {
         valueList = new ArrayList<Value>();
         valueListString = new ArrayList<String>();
         try {
             //move past first bracket
             index++;
             //looping until the end of valueList
-            while (!command.get(index).equals(")")&&index<command.size()) {
+            while (!command.get(index).equals(")")) {
                 //getting first value & storing in list
                 Value value = new Value(command, index);
                 valueList.add(value);
                 //also storing string in a list for ease of access
                 valueListString.add(value.getValue());
                 //if stringLiteral has a special character,
-                // index will be further than expected
+                // index will be further than expected-
+
                 index = value.getIndex()+1;
                 //if no comma and haven't reached end of list, syntax error
                 if(!command.get(index).equals(",")&&!command.get(index).equals(")")){
