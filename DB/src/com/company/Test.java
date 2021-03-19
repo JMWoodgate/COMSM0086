@@ -283,12 +283,11 @@ public class Test {
     }
 
     private void testCreateCMD() throws DBException{
-        String command1 = "CREATE table elections ;";
+        String command1 = "CREATE table elections (party, ward);";
         try{
             Parser testParser1 = new Parser(command1);
             ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
             CreateCMD testCreate1 = new CreateCMD(tokenizedCommand1, 0);
-            assert(testCreate1.getIndex()==3);
             assert(testCreate1.getTableName().equals("elections"));
         }
         catch(DBException e){

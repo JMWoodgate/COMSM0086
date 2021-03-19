@@ -30,7 +30,8 @@ public class WildAttributeList extends Parser{
         try{
             if(command!=null){
                 String nextToken = command.get(index);
-                while(!nextToken.equals(";")&&!nextToken.equals("from")){
+                while(!nextToken.equals(";")&&
+                        !nextToken.equals("from")&&!nextToken.equals(")")){
                     parseAttributeName(command, index);
                     attributeName = nextToken;
                     attributeList.add(attributeName);

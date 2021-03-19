@@ -14,10 +14,12 @@ public class CreateCMD extends Parser implements DBCommand {
     private StorageType type;
     private String tableName;
     private String databaseName;
+    private ArrayList<String> attributeList;
 
     public CreateCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
+        attributeList = new ArrayList<String>();
         if(command != null) {
             if (!parseCreate()) {
                 throw new CommandException(
@@ -51,8 +53,11 @@ public class CreateCMD extends Parser implements DBCommand {
                     if (nextToken.equals(";")) {
                         break;
                     } else if (nextToken.equals("(")) {
-                        //call attributeList
-                        //update index
+                        index++;
+                        WildAttributeList wildAttributeList = new WildAttributeList(command, index);
+                        //updating index and storing attributes
+                        index = wildAttributeList.getIndex();
+                        attributeList = wildAttributeList.getAttributeList();
                         break;
                     }
                     throw new CommandException(nextToken, index, "; or (<attribute list>)");
@@ -67,6 +72,13 @@ public class CreateCMD extends Parser implements DBCommand {
 
     public StorageType getType(){
         return type;
+    }
+
+    public ArrayList<String> getAttributeList() throws EmptyData {
+        if(attributeList!=null){
+            return attributeList;
+        }
+        throw new EmptyData("wild attribute list");
     }
 
     public String getTableName() throws EmptyData {
