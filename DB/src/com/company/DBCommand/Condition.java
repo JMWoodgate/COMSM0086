@@ -31,15 +31,17 @@ public class Condition extends Parser{
     // <attributeName> <operator> <value>
     private void parseCondition() throws DBException{
         try {
-            System.out.println("parsing condition in Condition "+command.get(index));
+            //get attribute name
             attributeName = parseAttributeName(command, index);
             index++;
+            //get operator
             op = parseOp();
             index++;
+            //get value and store as object as well as string
             valueObject = new Value(command, index);
-            index = valueObject.getIndex()+1;
             valueString = valueObject.getValue();
-            System.out.println("parsed condition "+attributeName+op+valueString);
+            //update index
+            index = valueObject.getIndex()+1;
         }catch(DBException e){
             throw new CommandException(command.get(index), index, "condition", e);
         }

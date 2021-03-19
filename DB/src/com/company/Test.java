@@ -11,7 +11,7 @@ public class Test {
     public Test() throws DBException{
         try {
             testParseConditions();
-            /*testCondition();
+            testCondition();
             testWildAttributeList();
             testNameValueList();
             testValueList();
@@ -29,7 +29,7 @@ public class Test {
             testTokenizer();
             testTable();
             testRow();
-            testColumn();*/
+            testColumn();
         }
         catch(DBException e){
             System.out.println("DBException " + e);
@@ -65,14 +65,12 @@ public class Test {
             Parser parser1 = new Parser(command1);
             assert(parser1.getConditionList().get(0).getConditionString().equals("party=='green'"));
             assert(parser1.getTableName().equals("elections"));
-            System.out.println("first parser complete");
 
             ConditionList conditionList = new ConditionList(elements1, 0);
             assert(conditionList.getConditionList().get(0).getConditionString().equals("field=='labour'"));
             assert(conditionList.getConditionList().get(1).getConditionString().equals("ward!=true"));
             assert(conditionList.getConditionList().get(2).getConditionString().equals("id>5"));
             Parser parser2 = new Parser(command2);
-            System.out.println("new parser");
             assert(parser2.getConditionList().get(0).getConditionString().equals("field=='labour'"));
             assert(parser2.getConditionList().get(1).getConditionString().equals("ward!=true"));
             assert(parser2.getConditionList().get(2).getConditionString().equals("id>5"));
@@ -91,7 +89,6 @@ public class Test {
         elements1.add(";");
         try{
             Condition condition = new Condition(elements1, 0);
-            System.out.println("index is "+condition.getIndex());
             assert(condition.getIndex()==4);
             assert(condition.getOp().equals("<="));
             assert(condition.getAttribute().equals("party"));
@@ -191,7 +188,6 @@ public class Test {
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             DeleteCMD testDelete = new DeleteCMD(tokenizedCommand, 0);
-            assert(testDelete.getIndex()==4);
             assert(testDelete.getTableName().equals("elections"));
         }
         catch(DBException e){

@@ -14,7 +14,8 @@ public class Parser {
     private String tableName;
     private String databaseName;
     private String attributeName;
-    private ArrayList<Condition> conditionList;
+    private ArrayList<Condition> conditionListString;
+    private Condition conditionListObject;
 
     public Parser(String command) throws DBException {
         if(command!=null && command.length()>0) {
@@ -27,7 +28,7 @@ public class Parser {
                 commandSize = tokenizedCommand.size();
                 //checking that the statement ends with a ;
                 assert(checkEndOfStatement());
-                conditionList = new ArrayList<>();
+                conditionListString = new ArrayList<>();
                 index = 0;
                 parseCommand();
             } catch (DBException e) {
@@ -67,14 +68,12 @@ public class Parser {
                     break;
                 case "delete":
                     parseDelete();
-                    System.out.println("parsedDelete");
                     break;
                 case "join":
                     parseJoin();
                     break;
                 default:
             }
-            System.out.println("exiting parser");
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command", e);
         }
@@ -93,13 +92,11 @@ public class Parser {
 
     private void parseDelete() throws DBException{
         try{
-            System.out.println("creating delete object with "+tokenizedCommand);
             DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
-            System.out.println("returned from delete constructor");
             index = delete.getIndex();
             tableName = delete.getTableName();
-            conditionList = delete.getConditionList();
-            System.out.println("got condition list");
+            conditionListString = delete.getConditionListString();
+            conditionListObject = delete.getConditionListObject();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "delete", e);
@@ -296,12 +293,21 @@ public class Parser {
         return true;
     }
 
-    public ArrayList<Condition> getConditionList() throws EmptyData {
-        if(conditionList!=null){
-            return conditionList;
+    public ArrayList<Condition> getConditionListObject() throws EmptyData {
+        if(conditionListObject!=null){
+            return conditionListObject;
         }
         else{
-            throw new EmptyData("condition list");
+            throw new EmptyData("condition list string");
+        }
+    }
+
+    public ArrayList<Condition> getConditionListString() throws EmptyData {
+        if(conditionListString!=null){
+            return conditionListString;
+        }
+        else{
+            throw new EmptyData("condition list string");
         }
     }
 

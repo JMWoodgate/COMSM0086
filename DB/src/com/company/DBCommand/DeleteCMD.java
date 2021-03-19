@@ -13,13 +13,14 @@ public class DeleteCMD extends Parser implements DBCommand{
     private int index;
     private final StorageType type;
     private String tableName;
-    private ArrayList<Condition> conditionList;
+    private ArrayList<Condition> conditionListString;
+    private ConditionList conditionListObject;
 
     public DeleteCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
-        conditionList = new ArrayList<>();
+        conditionListString = new ArrayList<>();
         if(command != null) {
             if (!parseDelete()) {
                 throw new CommandException(
@@ -33,31 +34,36 @@ public class DeleteCMD extends Parser implements DBCommand{
     //DELETE FROM <TableName> WHERE <Condition>
     private boolean parseDelete() throws DBException{
         try {
-            System.out.println("entered parseDelete in DeleteCMD");
             index++;
-            String nextToken = command.get(index);
-            checkNextToken(nextToken, "from", index);
+            //check for "from"
+            checkNextToken(command.get(index), "from", index);
+            //get table name
             tableName = parseTableName(command, index);
             //increasing index to point to after the table name
             index+=2;
-            nextToken = command.get(index);
-            checkNextToken(nextToken, "where", index);
+            //check for "where"
+            checkNextToken(command.get(index), "where", index);
             index++;
-            System.out.println("calling parseConditions from DeleteCMD with "+command.get(index));
-            ConditionList conditionListObject = new ConditionList(command, index);
-            conditionList = conditionListObject.getConditionList();
-            System.out.println("conditionList in parseDelete DeleteCMD");
+            //get conditions, store as object and string for testing
+            conditionListObject = new ConditionList(command, index);
+            conditionListString = conditionListObject.getConditionList();
             index = conditionListObject.getIndex();
-            System.out.println("returned from parseConditions to DeleteCMD");
             return true;
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "DELETE", e);
         }
     }
 
-    public ArrayList<Condition> getConditionList() throws EmptyData {
-        if(conditionList!=null){
-            return conditionList;
+    public ConditionList getConditionListObject()throws EmptyData {
+        if(conditionListObject!=null){
+            return conditionListObject;
+        }
+        throw new EmptyData("condition list in DeleteCMD");
+    }
+
+    public ArrayList<Condition> getConditionListString() throws EmptyData {
+        if(conditionListString!=null){
+            return conditionListString;
         }
         throw new EmptyData("condition list in DeleteCMD");
     }

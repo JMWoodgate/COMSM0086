@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ConditionList {
 
     private final ArrayList<String> command;
-    private ArrayList<Condition> conditionList;
+    private final ArrayList<Condition> conditionList;
     private int index;
     private int count;
 
@@ -30,9 +30,7 @@ public class ConditionList {
 
     //(<Condition>) AND (<Condition>) | (<Condition) OR (<Condition>)
     // | <attributeName> <operator> <value>
-    public void parseConditions() throws DBException {
-        System.out.println("entered parseConditions with "+command);
-        System.out.println("looking at "+command.get(index));
+    private void parseConditions() throws DBException {
         try{
             switch(command.get(index)){
                 case ("("):
@@ -40,7 +38,6 @@ public class ConditionList {
                     //check for nested brackets
                     if(command.get(index).equals("(")){
                         parseConditions();
-                        System.out.println("breaking parseConditions from (");
                     }
                     else {
                         //get condition
@@ -48,28 +45,21 @@ public class ConditionList {
                         conditionList.add(condition);
                         //update index
                         index = condition.getIndex();
-                        System.out.println("breaking parseConditions from first condition");
                     }
                 //check for end of condition
                 case (")"):
-                    System.out.println("got )");
                     index++;
                     //check for second condition or end of condition
                     endOfCondition();
                     break;
                 //if no opening bracket, is a single condition
                 default:
-                    System.out.println("entered default switch in parseConditions with "+command.get(index));
                     Condition condition = new Condition(command, index);
-                    System.out.println("got new condition "+condition.getConditionString());
                     conditionList.add(condition);
-                    System.out.println("added condition to list");
                     index = condition.getIndex();
-                    System.out.println("got index "+index);
                     break;
             }
             if(count < conditionList.size()) {
-                System.out.println("condition list stored in parseConditions in ConditionList " + conditionList.get(count).getConditionString());
                 count++;
             }
         }catch(DBException e){
@@ -79,23 +69,20 @@ public class ConditionList {
 
     private void endOfCondition() throws CommandException {
         try {
-            System.out.println("checking endOfCondition with "+command.get(index));
             switch (command.get(index)) {
                 case ("and"):
                 case ("or"):
                     index++;
-                    System.out.println("calling parseConditions from endOfCondition with "+command.get(index));
                     parseConditions();
-                    System.out.println("returned from parseConditions call in endOfCondition");
                     break;
-                case (";"):
                 case (")"):
+                case (";"):
                     break;
                 default:
-                    throw new CommandException(command.get(index), index, "and, or, ; at end of condition");
+                    throw new CommandException(command.get(index), index, "and, or, ;, ) at end of condition");
             }
         }catch(DBException e){
-            throw new CommandException(command.get(index), index, "and, or, ; at end of condition", e);
+            throw new CommandException(command.get(index), index, "and, or, ;, ) at end of condition", e);
         }
     }
 
