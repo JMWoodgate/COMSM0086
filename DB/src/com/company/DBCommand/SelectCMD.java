@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class SelectCMD extends Parser implements DBCommand{
 
     private final ArrayList<String> command;
+    private ArrayList<String> attributeList;
     private int index;
     private final StorageType type;
     private String tableName;
@@ -18,6 +19,7 @@ public class SelectCMD extends Parser implements DBCommand{
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
+        attributeList = new ArrayList<String>();
         if(command != null) {
             if (!parseSelect()) {
                 throw new CommandException(
@@ -33,20 +35,21 @@ public class SelectCMD extends Parser implements DBCommand{
     private boolean parseSelect() throws DBException{
         try {
             index++;
-            String nextToken = command.get(index);
-            //call WildAttributeList and update index to the end
-            checkNextToken(nextToken, "from", index);
+            WildAttributeList wildAttributeList = new WildAttributeList(command, index);
+            //updating index and storing attributes
+            index = wildAttributeList.getIndex();
+            attributeList = wildAttributeList.getAttributeList();
+            checkNextToken(command.get(index), "from", index);
             tableName = parseTableName(command, index);
             index+=2;
-            nextToken = command.get(index);
-            switch(nextToken){
+            switch(command.get(index)){
                 case(";"):
                     break;
                 case("where"):
                     //call condition & update index
                     break;
                 default:
-                    throw new CommandException(nextToken, index, "; or WHERE");
+                    throw new CommandException(command.get(index), index, "; or WHERE");
             }
             //point index to end of command
             index++;
@@ -58,6 +61,13 @@ public class SelectCMD extends Parser implements DBCommand{
 
     public StorageType getType(){
         return type;
+    }
+
+    public ArrayList<String> getAttributeList() throws EmptyData {
+        if(attributeList!=null){
+            return attributeList;
+        }
+        throw new EmptyData("wild attribute list");
     }
 
     public String getTableName() throws EmptyData {

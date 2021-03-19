@@ -36,18 +36,24 @@ public class Test {
     }
 
     private void testWildAttributeList() throws DBException{
-        ArrayList<String> elements = new ArrayList<>();
-        elements.add("party");
-        elements.add(",");
-        elements.add("ward");
-        elements.add(";");
+        ArrayList<String> elements1 = new ArrayList<>();
+        elements1.add("party");
+        elements1.add(",");
+        elements1.add("ward");
+        elements1.add(";");
+        ArrayList<String> elements2 = new ArrayList<>();
+        elements2.add("*");
+        elements2.add(";");
         try{
-            WildAttributeList wildAttributeList = new WildAttributeList(elements, 0);
-            assert(wildAttributeList.getAttributeList().get(0).equals("party"));
-            assert(wildAttributeList.getAttributeList().get(1).equals("ward"));
-            assert(wildAttributeList.getIndex()==3);
+            WildAttributeList wildAttributeList1 = new WildAttributeList(elements1, 0);
+            assert(wildAttributeList1.getAttributeList().get(0).equals("party"));
+            assert(wildAttributeList1.getAttributeList().get(1).equals("ward"));
+            assert(wildAttributeList1.getIndex()==3);
+            WildAttributeList wildAttributeList2 = new WildAttributeList(elements2, 0);
+            assert(wildAttributeList2.getAttributeList().get(0).equals("*"));
+            assert(wildAttributeList2.getIndex()==1);
         }catch(DBException e){
-            throw new CommandException(elements.get(0), 0, "wild attribute list", e);
+            throw new CommandException(elements1.get(0), 0, "wild attribute list", e);
         }
     }
 
@@ -148,13 +154,15 @@ public class Test {
     }
 
     private void testSelectCMD() throws DBException {
-        String command = "SELECT FROM elections WHERE;";
+        String command = "SELECT ward, parties FROM elections WHERE;";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             SelectCMD testSelect = new SelectCMD(tokenizedCommand, 0);
-            assert(testSelect.getIndex()==4);
+            assert(testSelect.getIndex()==7);
             assert(testSelect.getTableName().equals("elections"));
+            assert(testSelect.getAttributeList().get(0).equals("ward"));
+            assert(testSelect.getAttributeList().get(1).equals("parties"));
         }
         catch(DBException e){
             throw new CommandException(command, 0, "SELECT", e);
