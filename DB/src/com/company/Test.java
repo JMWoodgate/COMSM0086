@@ -10,7 +10,8 @@ public class Test {
 
     public Test() throws DBException{
         try {
-            testCondition();
+            testParseConditions();
+            /*testCondition();
             testWildAttributeList();
             testNameValueList();
             testValueList();
@@ -28,7 +29,7 @@ public class Test {
             testTokenizer();
             testTable();
             testRow();
-            testColumn();
+            testColumn();*/
         }
         catch(DBException e){
             System.out.println("DBException " + e);
@@ -36,16 +37,62 @@ public class Test {
         }
     }
 
+    private void testParseConditions() throws DBException{
+        String command1 = "DELETE FROM elections WHERE party == 'green';";
+        String command2 = "DELETE FROM elections WHERE ((field == 'labour')OR(ward!=true))AND id>5;";
+        ArrayList<String> elements1 = new ArrayList<>();
+        elements1.add("(");
+        elements1.add("(");
+        elements1.add("field");
+        elements1.add("=");
+        elements1.add("=");
+        elements1.add("'labour'");
+        elements1.add(")");
+        elements1.add("or");
+        elements1.add("(");
+        elements1.add("ward");
+        elements1.add("!");
+        elements1.add("=");
+        elements1.add("true");
+        elements1.add(")");
+        elements1.add(")");
+        elements1.add("and");
+        elements1.add("id");
+        elements1.add(">");
+        elements1.add("5");
+        elements1.add(";");
+        try{
+            Parser parser1 = new Parser(command1);
+            assert(parser1.getConditionList().get(0).getConditionString().equals("party=='green'"));
+            assert(parser1.getTableName().equals("elections"));
+            System.out.println("first parser complete");
+
+            ConditionList conditionList = new ConditionList(elements1, 0);
+            assert(conditionList.getConditionList().get(0).getConditionString().equals("field=='labour'"));
+            assert(conditionList.getConditionList().get(1).getConditionString().equals("ward!=true"));
+            assert(conditionList.getConditionList().get(2).getConditionString().equals("id>5"));
+            Parser parser2 = new Parser(command2);
+            System.out.println("new parser");
+            assert(parser2.getConditionList().get(0).getConditionString().equals("field=='labour'"));
+            assert(parser2.getConditionList().get(1).getConditionString().equals("ward!=true"));
+            assert(parser2.getConditionList().get(2).getConditionString().equals("id>5"));
+            assert(parser2.getTableName().equals("elections"));
+        }catch(DBException e){
+            throw new CommandException(command1, 0, "testParseCondition", e);
+        }
+    }
+
     private void testCondition() throws DBException{
         ArrayList<String> elements1 = new ArrayList<>();
         elements1.add("party");
-        elements1.add("<=");
+        elements1.add("<");
+        elements1.add("=");
         elements1.add("3");
         elements1.add(";");
         try{
             Condition condition = new Condition(elements1, 0);
             System.out.println("index is "+condition.getIndex());
-            assert(condition.getIndex()==3);
+            assert(condition.getIndex()==4);
             assert(condition.getOp().equals("<="));
             assert(condition.getAttribute().equals("party"));
             assert(condition.getValueString().equals("3"));
@@ -139,7 +186,7 @@ public class Test {
     }
 
     private void testDeleteCMD() throws DBException {
-        String command = "DELETE FROM elections WHERE ;";
+        String command = "DELETE FROM elections WHERE (id<3) AND (party!='labour');";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();

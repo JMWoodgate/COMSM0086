@@ -28,11 +28,10 @@ public class Condition extends Parser{
         }
     }
 
-    //(<Condition>) AND (<Condition>) | (<Condition) OR (<Condition>)
-    // | <attributeName> <operator> <value>
-
+    // <attributeName> <operator> <value>
     private void parseCondition() throws DBException{
         try {
+            System.out.println("parsing condition in Condition "+command.get(index));
             attributeName = parseAttributeName(command, index);
             index++;
             op = parseOp();
@@ -40,6 +39,7 @@ public class Condition extends Parser{
             valueObject = new Value(command, index);
             index = valueObject.getIndex()+1;
             valueString = valueObject.getValue();
+            System.out.println("parsed condition "+attributeName+op+valueString);
         }catch(DBException e){
             throw new CommandException(command.get(index), index, "condition", e);
         }
@@ -49,15 +49,31 @@ public class Condition extends Parser{
         try {
             switch (command.get(index)) {
                 case (">"):
+                    index++;
+                    if(command.get(index).equals("=")){
+                        return ">=";
+                    }
+                    index--;
                     return ">";
                 case ("<"):
+                    index++;
+                    if(command.get(index).equals("=")){
+                        return "<=";
+                    }
+                    index--;
                     return "<";
-                case ("=="):
-                    return "==";
-                case ("<="):
-                    return "<=";
-                case (">="):
-                    return ">=";
+                case ("!"):
+                    index++;
+                    if(command.get(index).equals("=")){
+                        return "!=";
+                    }
+                    index--;
+                case ("="):
+                    index++;
+                    if(command.get(index).equals("=")){
+                        return "==";
+                    }
+                    index--;
                 case ("LIKE"):
                     return "LIKE";
                 default:
@@ -73,6 +89,17 @@ public class Condition extends Parser{
             return valueObject;
         }
         throw new EmptyData("value object in condition");
+    }
+
+    public String getConditionString() throws EmptyData{
+        if(op!=null){
+            if(attributeName!=null) {
+                if (valueString != null) {
+                    return attributeName + op + valueString;
+                }
+            }
+        }
+        throw new EmptyData("value string in condition");
     }
 
     public String getValueString() throws EmptyData{

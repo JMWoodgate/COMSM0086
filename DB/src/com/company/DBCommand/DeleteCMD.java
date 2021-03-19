@@ -13,11 +13,13 @@ public class DeleteCMD extends Parser implements DBCommand{
     private int index;
     private final StorageType type;
     private String tableName;
+    private ArrayList<Condition> conditionList;
 
     public DeleteCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
+        conditionList = new ArrayList<>();
         if(command != null) {
             if (!parseDelete()) {
                 throw new CommandException(
@@ -31,6 +33,7 @@ public class DeleteCMD extends Parser implements DBCommand{
     //DELETE FROM <TableName> WHERE <Condition>
     private boolean parseDelete() throws DBException{
         try {
+            System.out.println("entered parseDelete in DeleteCMD");
             index++;
             String nextToken = command.get(index);
             checkNextToken(nextToken, "from", index);
@@ -40,11 +43,23 @@ public class DeleteCMD extends Parser implements DBCommand{
             nextToken = command.get(index);
             checkNextToken(nextToken, "where", index);
             index++;
-            //condition
+            System.out.println("calling parseConditions from DeleteCMD with "+command.get(index));
+            ConditionList conditionListObject = new ConditionList(command, index);
+            conditionList = conditionListObject.getConditionList();
+            System.out.println("conditionList in parseDelete DeleteCMD");
+            index = conditionListObject.getIndex();
+            System.out.println("returned from parseConditions to DeleteCMD");
             return true;
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "DELETE", e);
         }
+    }
+
+    public ArrayList<Condition> getConditionList() throws EmptyData {
+        if(conditionList!=null){
+            return conditionList;
+        }
+        throw new EmptyData("condition list in DeleteCMD");
     }
 
     public StorageType getType(){

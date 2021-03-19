@@ -14,6 +14,7 @@ public class Parser {
     private String tableName;
     private String databaseName;
     private String attributeName;
+    private ArrayList<Condition> conditionList;
 
     public Parser(String command) throws DBException {
         if(command!=null && command.length()>0) {
@@ -26,6 +27,7 @@ public class Parser {
                 commandSize = tokenizedCommand.size();
                 //checking that the statement ends with a ;
                 assert(checkEndOfStatement());
+                conditionList = new ArrayList<>();
                 index = 0;
                 parseCommand();
             } catch (DBException e) {
@@ -65,12 +67,14 @@ public class Parser {
                     break;
                 case "delete":
                     parseDelete();
+                    System.out.println("parsedDelete");
                     break;
                 case "join":
                     parseJoin();
                     break;
                 default:
             }
+            System.out.println("exiting parser");
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command", e);
         }
@@ -89,9 +93,13 @@ public class Parser {
 
     private void parseDelete() throws DBException{
         try{
+            System.out.println("creating delete object with "+tokenizedCommand);
             DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
+            System.out.println("returned from delete constructor");
             index = delete.getIndex();
             tableName = delete.getTableName();
+            conditionList = delete.getConditionList();
+            System.out.println("got condition list");
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "delete", e);
@@ -193,36 +201,6 @@ public class Parser {
         }
     }
 
-    private ArrayList<Condition> parseConditions(ArrayList<String> command, int index)
-            throws DBException{
-        ArrayList<Condition> conditionList = new ArrayList<>();
-        Condition condition;
-        try{
-            switch(command.get(index)){
-                case ("("):
-                    index++;
-                    if(command.get(index).equals("(")){
-                        parseConditions(command, index);
-                        break;
-                    }
-                    condition = new Condition(command, index);
-                    conditionList.add(condition);
-                    index = condition.getIndex();
-                    break;
-                case (")"):
-                    break;
-                default:
-                    condition = new Condition(command, index);
-                    conditionList.add(condition);
-                    index = condition.getIndex();
-                    break;
-            }
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index, "conditions", e);
-        }
-        return conditionList;
-    }
-
     protected String parseAttributeName(ArrayList<String> command, int index) throws CommandException {
         String nextToken = command.get(index);
         if(isAlphaNumerical(nextToken)||nextToken.equals("*")) {
@@ -316,6 +294,15 @@ public class Parser {
             }
         }
         return true;
+    }
+
+    public ArrayList<Condition> getConditionList() throws EmptyData {
+        if(conditionList!=null){
+            return conditionList;
+        }
+        else{
+            throw new EmptyData("condition list");
+        }
     }
 
     public ArrayList<String> getTokenizedCommand() throws EmptyData {
