@@ -193,6 +193,35 @@ public class Parser {
         }
     }
 
+    private ArrayList<Condition> parseConditions(ArrayList<String> command, int index)
+            throws DBException{
+        ArrayList<Condition> conditionList = new ArrayList<>();
+        Condition condition;
+        try{
+            switch(command.get(index)){
+                case ("("):
+                    condition = new Condition(command, index);
+                    conditionList.add(condition);
+                    index = condition.getIndex();
+                    if(command.get(index).equals("(")){
+                        parseConditions(command, index);
+                        break;
+                    }
+                    break;
+                case (")"):
+                    break;
+                default:
+                    condition = new Condition(command, index);
+                    conditionList.add(condition);
+                    index = condition.getIndex();
+                    break;
+            }
+        }catch(DBException e){
+            throw new CommandException(command.get(index), index, "conditions", e);
+        }
+        return conditionList;
+    }
+
     protected String parseAttributeName(ArrayList<String> command, int index) throws CommandException {
         String nextToken = command.get(index);
         if(isAlphaNumerical(nextToken)||nextToken.equals("*")) {
@@ -317,24 +346,5 @@ public class Parser {
 
     public void setIndex(int newIndex){
         index = newIndex;
-    }
-
-    private boolean isOp(String token) throws DBException {
-        if(token!=null) {
-            switch (token) {
-                case ("=="):
-                case (">"):
-                case ("<"):
-                case (">="):
-                case ("<="):
-                case ("!="):
-                case ("LIKE"):
-                    break;
-                default:
-                    throw new CommandException(tokenizedCommand.get(index), index, "operator");
-            }
-            return true;
-        }
-        throw new EmptyData("Command in isOp");
     }
 }

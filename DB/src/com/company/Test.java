@@ -10,6 +10,7 @@ public class Test {
 
     public Test() throws DBException{
         try {
+            testCondition();
             testWildAttributeList();
             testNameValueList();
             testValueList();
@@ -32,6 +33,24 @@ public class Test {
         catch(DBException e){
             System.out.println("DBException " + e);
             e.printStackTrace();
+        }
+    }
+
+    private void testCondition() throws DBException{
+        ArrayList<String> elements1 = new ArrayList<>();
+        elements1.add("party");
+        elements1.add("<=");
+        elements1.add("3");
+        elements1.add(";");
+        try{
+            Condition condition = new Condition(elements1, 0);
+            System.out.println("index is "+condition.getIndex());
+            assert(condition.getIndex()==3);
+            assert(condition.getOp().equals("<="));
+            assert(condition.getAttribute().equals("party"));
+            assert(condition.getValueString().equals("3"));
+        }catch(DBException e){
+            throw new CommandException(elements1.get(0), 0, "testCondition", e);
         }
     }
 

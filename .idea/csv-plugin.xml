@@ -10,6 +10,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\DBCommand\Condition.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\src\com\company\DBCommand\Parser.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\DBCommand\ValueList.java">
           <value>
             <Attribute>
