@@ -319,9 +319,9 @@ public class Parser {
         index = newIndex;
     }
 
-    private boolean isOp() throws DBException {
-        if(tokenizedCommand!=null) {
-            switch (tokenizedCommand.get(index)) {
+    private boolean isOp(String token) throws DBException {
+        if(token!=null) {
+            switch (token) {
                 case ("=="):
                 case (">"):
                 case ("<"):

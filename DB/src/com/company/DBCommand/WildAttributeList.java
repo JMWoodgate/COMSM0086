@@ -24,6 +24,8 @@ public class WildAttributeList extends Parser{
         }
     }
 
+    //WILD ATTRIBUTE LIST <attributeList> | <*>
+    //ATTRIBUTE LIST <attributeName> | <attributeName>,<attributeList>
     private void parseAttributeList() throws DBException{
         try{
             if(command!=null){
