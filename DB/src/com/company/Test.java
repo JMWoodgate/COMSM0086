@@ -215,12 +215,11 @@ public class Test {
     }
 
     private void testSelectCMD() throws DBException {
-        String command = "SELECT ward, parties FROM elections WHERE;";
+        String command = "SELECT ward, parties FROM elections WHERE (id<3) AND (party!='labour');";
         try{
             Parser testParser = new Parser(command);
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             SelectCMD testSelect = new SelectCMD(tokenizedCommand, 0);
-            assert(testSelect.getIndex()==7);
             assert(testSelect.getTableName().equals("elections"));
             assert(testSelect.getAttributeList().get(0).equals("ward"));
             assert(testSelect.getAttributeList().get(1).equals("parties"));
