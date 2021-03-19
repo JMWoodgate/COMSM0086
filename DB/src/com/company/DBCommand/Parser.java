@@ -200,13 +200,14 @@ public class Parser {
         try{
             switch(command.get(index)){
                 case ("("):
-                    condition = new Condition(command, index);
-                    conditionList.add(condition);
-                    index = condition.getIndex();
+                    index++;
                     if(command.get(index).equals("(")){
                         parseConditions(command, index);
                         break;
                     }
+                    condition = new Condition(command, index);
+                    conditionList.add(condition);
+                    index = condition.getIndex();
                     break;
                 case (")"):
                     break;
