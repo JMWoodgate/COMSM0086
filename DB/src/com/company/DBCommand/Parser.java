@@ -16,8 +16,10 @@ public class Parser {
     private String attributeName;
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
+    private boolean parsedOK;
+    private String exception;
 
-    public Parser(String command) throws DBException {
+    public Parser(String command) {
         if(command!=null && command.length()>0) {
             try {
                 checkQuotes(command);
@@ -31,15 +33,33 @@ public class Parser {
                 conditionListArray = new ArrayList<>();
                 index = 0;
                 parseCommand();
+                parsedOK = true;
             } catch (DBException e) {
-                e.printStackTrace();
+                System.out.println("caught exception in parser constructor");
+                parsedOK = false;
+                exception = setException(e);
             }
         }else{
-            throw new EmptyData("Parser command");
+            System.out.println("Empty parser command");
         }
     }
 
     public Parser(){}
+
+    public String getException() {
+        System.out.println("exception in getException is "+exception);
+        return exception;
+    }
+
+    private String setException(DBException e) {
+        exception = e.toString();
+        return exception;
+    }
+
+    public boolean getParsedOK(){
+        System.out.println("entered getParsedOK with "+parsedOK);
+        return parsedOK;
+    }
 
     private void parseCommand() throws CommandException{
         try {

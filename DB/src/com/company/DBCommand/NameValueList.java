@@ -3,9 +3,7 @@ package com.company.DBCommand;
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
 import com.company.DBExceptions.EmptyData;
-import com.company.DBExceptions.StorageType;
 
-import javax.naming.Name;
 import java.util.ArrayList;
 
 public class NameValueList extends Parser{

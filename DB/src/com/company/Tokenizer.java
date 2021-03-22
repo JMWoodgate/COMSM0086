@@ -3,10 +3,7 @@ package com.company;
 import com.company.DBExceptions.EmptyData;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 public class Tokenizer {
 
