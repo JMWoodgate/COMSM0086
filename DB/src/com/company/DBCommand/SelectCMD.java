@@ -42,7 +42,9 @@ public class SelectCMD extends Parser implements DBCommand{
             WildAttributeList wildAttributeList = new WildAttributeList(command, index);
             //updating index and storing attributes
             index = wildAttributeList.getIndex();
+            System.out.println("calling attributeList from SelectCMD");
             attributeList = wildAttributeList.getAttributeList();
+            System.out.println("checking for FROM in SelectCMD");
             checkNextToken(command.get(index), "from", index);
             tableName = parseTableName(command, index);
             index+=2;

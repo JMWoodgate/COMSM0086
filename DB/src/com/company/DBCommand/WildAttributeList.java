@@ -28,19 +28,26 @@ public class WildAttributeList extends Parser{
     //ATTRIBUTE LIST <attributeName> | <attributeName>,<attributeList>
     private void parseAttributeList() throws DBException{
         try{
+            System.out.println("parsing "+command);
             if(command!=null){
                 String nextToken = command.get(index);
                 while(!nextToken.equals(";")&&
                         !nextToken.equals("from")&&!nextToken.equals(")")){
+                    System.out.println("nextToken1 in parseAttributeList "+nextToken);
                     parseAttributeName(command, index);
                     attributeName = nextToken;
                     attributeList.add(attributeName);
                     index++;
                     nextToken = command.get(index);
+                    System.out.println("nextToken2 in parseAttributeList "+nextToken);
                     if(nextToken.equals(",")){
                         index++;
+                        System.out.println("parsing attribute list recursively");
                         parseAttributeList();
                         return;
+                    }
+                    else if(!nextToken.equals("from")&&!nextToken.equals(")")){
+                        throw new CommandException(nextToken, index, "missing comma in attribute list");
                     }
                 }
             }else{
