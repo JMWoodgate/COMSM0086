@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class WildAttributeList extends Parser{
 
     private int index;
-    private ArrayList<String> command;
+    private final ArrayList<String> command;
     private String attributeName;
-    private ArrayList<String> attributeList;
+    private final ArrayList<String> attributeList;
 
     public WildAttributeList(ArrayList<String> command, int index) throws CommandException {
         this.index = index;
@@ -28,21 +28,17 @@ public class WildAttributeList extends Parser{
     //ATTRIBUTE LIST <attributeName> | <attributeName>,<attributeList>
     private void parseAttributeList() throws DBException{
         try{
-            System.out.println("parsing "+command);
             if(command!=null){
                 String nextToken = command.get(index);
                 while(!nextToken.equals(";")&&
                         !nextToken.equals("from")&&!nextToken.equals(")")){
-                    System.out.println("nextToken1 in parseAttributeList "+nextToken);
                     parseAttributeName(command, index);
                     attributeName = nextToken;
                     attributeList.add(attributeName);
                     index++;
                     nextToken = command.get(index);
-                    System.out.println("nextToken2 in parseAttributeList "+nextToken);
                     if(nextToken.equals(",")){
                         index++;
-                        System.out.println("parsing attribute list recursively");
                         parseAttributeList();
                         return;
                     }
