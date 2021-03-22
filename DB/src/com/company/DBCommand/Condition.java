@@ -76,8 +76,8 @@ public class Condition extends Parser{
                         return "==";
                     }
                     index--;
-                case ("LIKE"):
-                    return "LIKE";
+                case ("like"):
+                    return "like";
                 default:
                     throw new CommandException(command.get(index), index, "op");
             }

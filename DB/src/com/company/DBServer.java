@@ -60,24 +60,28 @@ class DBServer
             e.printStackTrace();
         }*/
 
-        String incomingCommand = socketReader.readLine();
-        parser = new Parser(incomingCommand);
-        parsedOK = parser.getParsedOK();
-        if(parsedOK){
+        while(parsedOK) {
+            String incomingCommand = socketReader.readLine();
+            parser = new Parser(incomingCommand);
+            parsedOK = parser.getParsedOK();
+            while (!parsedOK) {
+                socketWriter.write("[ERROR] Thanks for your message: " + incomingCommand);
+                socketWriter.write("\n" + parser.getException());
+                socketWriter.write("\n" + ((char) 4) + "\n");
+                socketWriter.flush();
+                incomingCommand = socketReader.readLine();
+                parser = new Parser(incomingCommand);
+                parsedOK = parser.getParsedOK();
+            }
             socketWriter.write("[OK2] Thanks for your message: " + incomingCommand);
-            socketWriter.write("\n" + ((char)4) + "\n");
+            socketWriter.write("\n" + ((char) 4) + "\n");
             socketWriter.flush();
         }
-        else{
-            socketWriter.write("[ERROR] Thanks for your message: " + incomingCommand);
-            socketWriter.write("\n"+parser.getException());
-            socketWriter.write("\n" + ((char)4) + "\n");
-            socketWriter.flush();
-        }
-        System.out.println("Received message: " + incomingCommand);
+
+        /*System.out.println("Received message: " + incomingCommand);
         socketWriter.write("[OK1] Thanks for your message: " + incomingCommand);
         socketWriter.write("\n" + ((char)4) + "\n");
-        socketWriter.flush();
+        socketWriter.flush();*/
 
 
     }
