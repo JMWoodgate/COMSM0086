@@ -14,26 +14,22 @@ public class FileIO {
     }
 
     public void deleteFolder() throws DBException{
-        System.out.println("entered deleteFolder with "+folderName);
         File folder = new File(folderName);
         File[] listOfFiles;
         if(folder.exists()) {
-            System.out.println("folder exists");
             //creating a list of files that are within the folder
             listOfFiles = folder.listFiles();
-            System.out.println(listOfFiles);
-            for(int i = 0; i < listOfFiles.length; i++){
-                File currentFile = new File(folder.getPath());
-                try{
-                    currentFile.delete();
-                }catch(Exception e){
-                    throw new FileException(e);
+            assert listOfFiles != null;
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile()) {
+                    //saving the name in a string for error handling
+                    String fileName = listOfFile.getName();
+                    if (!listOfFile.delete())
+                        throw new FileException("couldn't delete file "+fileName);
+                    }
                 }
-            }
-            try{
-                folder.delete();
-            }catch(Exception e){
-                throw new FileException(e);
+            if(!folder.delete()){
+                throw new FileException("couldn't delete folder "+folderName);
             }
         }
     }

@@ -1,10 +1,12 @@
 package com.company.DBCommand;
 
-import com.company.DBExceptions.*;
+import com.company.DBExceptions.CommandException;
+import com.company.DBExceptions.DBException;
+import com.company.DBExceptions.FileException;
+import com.company.DBExceptions.StorageType;
 import com.company.Database;
 import com.company.FileIO;
 import com.company.Table;
-import com.company.Tokenizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +69,6 @@ public class Interpreter {
         StorageType type = parser.getType();
         System.out.println("entered interpretDrop");
         if(type==StorageType.DATABASE){
-            System.out.println("in interpretDrop type Database");
             databaseName = parser.getDatabaseName();
             currentFolder = parser.getCurrentFolder();
             FileIO fileToDelete = new FileIO(currentFolder);
@@ -75,6 +76,12 @@ public class Interpreter {
         }
         else if(type==StorageType.TABLE) {
             tableName = parser.getTableName();
+            File fileToDelete = new File(currentFolder+File.separator+tableName+".tab");
+            if(fileToDelete.exists()){
+                if(!fileToDelete.delete()){
+                    throw new FileException("couldn't delete table "+tableName);
+                }
+            }
         }
     }
 
