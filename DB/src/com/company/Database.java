@@ -12,7 +12,7 @@ public class Database {
 
     public Database(String databaseName){
         this.databaseName = databaseName;
-        tables = new ArrayList<Table>();
+        tables = new ArrayList<>();
     }
 
     public ArrayList<Table> getTables(){

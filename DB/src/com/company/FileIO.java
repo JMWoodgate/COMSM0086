@@ -23,7 +23,7 @@ public class FileIO {
             final boolean mkdir = folderToMake.mkdir();
             //create new folder (for new database)
             if(!mkdir){
-                throw new FileException();
+                throw new FileException("couldn't make folder");
             }
             //create new database and return
             return new Database(folderName);

@@ -38,10 +38,13 @@ public class CreateCMD extends Parser implements DBCommand {
 
     public void execute() throws DBException {
         if(type==StorageType.DATABASE){
+            System.out.println("executing create database");
             try {
             FileIO fileIO = new FileIO(databaseName);
+            System.out.println("created database");
             //creates new folder and returns an empty database object
             database = fileIO.makeFolder(parentFolder,databaseName);
+            System.out.println("returned from makeFolder");
         } catch(DBException e){
             throw new FileException(e);
         }

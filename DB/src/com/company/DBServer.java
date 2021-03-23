@@ -9,11 +9,23 @@ import java.util.*;
 
 class DBServer
 {
+    private String folderName;
     public DBServer(int portNumber)
     {
         try {
+            //open connection
             ServerSocket serverSocket = new ServerSocket(portNumber);
             System.out.println("Server Listening");
+            //create databases directory to store info
+            folderName = "."+ File.separator+"databases";
+            File parentFolder = new File(folderName);
+            if(!parentFolder.exists()) {
+                final boolean mkdir = parentFolder.mkdir();
+                //create new folder (for new database)
+                if (!mkdir) {
+                    throw new IOException();
+                }
+            }
             while(true) processNextConnection(serverSocket);
         } catch(IOException ioe) {
             System.err.println(ioe);
@@ -69,16 +81,6 @@ class DBServer
             e.printStackTrace();
         }*/
 
-        String folderName = "."+ File.separator+"databases";
-        File parentFolder = new File(folderName);
-        if(!parentFolder.exists()) {
-            final boolean mkdir = parentFolder.mkdir();
-            //create new folder (for new database)
-            if (!mkdir) {
-                throw new IOException();
-            }
-        }
-
         while(parsedOK) {
             String incomingCommand = socketReader.readLine();
             parser = new Parser(incomingCommand, folderName);
@@ -108,8 +110,17 @@ class DBServer
 
     public static void main(String[] args) {
         try {
+            String folderName = "."+ File.separator+"databases";
+            File parentFolder = new File(folderName);
+            if(!parentFolder.exists()) {
+                final boolean mkdir = parentFolder.mkdir();
+                //create new folder (for new database)
+                if (!mkdir) {
+                    throw new IOException();
+                }
+            }
             Test testing = new Test();
-        } catch (DBException e) {
+        } catch (DBException | IOException e) {
             e.printStackTrace();
         }
         DBServer server = new DBServer(8888);
