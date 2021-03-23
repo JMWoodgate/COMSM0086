@@ -23,10 +23,13 @@ public class Interpreter {
     private String parentFolder;
     private final String homeDirectory;
     private Database database;
+    private ArrayList<Database> databaseList;
     private Table table;
 
     public Interpreter(String homeDirectory){
         this.homeDirectory = homeDirectory;
+        database = new Database(homeDirectory);
+        databaseList = new ArrayList<>();
     }
 
     public void interpretCommand(String command, Parser parser) throws DBException {
@@ -39,6 +42,7 @@ public class Interpreter {
                     interpretCreate(command, parser);
                     break;
                 case "drop":
+                    interpretDrop(command, parser);
                     break;
                 case "alter":
                     break;
@@ -59,8 +63,25 @@ public class Interpreter {
         }
     }
 
+    private void interpretDrop(String command, Parser parser) throws DBException {
+        StorageType type = parser.getType();
+        System.out.println("entered interpretDrop");
+        if(type==StorageType.DATABASE){
+            System.out.println("in interpretDrop type Database");
+            databaseName = parser.getDatabaseName();
+            currentFolder = parser.getCurrentFolder();
+            FileIO fileToDelete = new FileIO(currentFolder);
+            fileToDelete.deleteFolder();
+        }
+        else if(type==StorageType.TABLE) {
+            tableName = parser.getTableName();
+        }
+    }
+
     private void interpretUse(String command, Parser parser) throws DBException {
+        //gets the name of the database
         databaseName = parser.getDatabaseName();
+        //gets the relative pathname to the database
         currentFolder = parser.getCurrentFolder();
     }
 
@@ -81,17 +102,13 @@ public class Interpreter {
             try{
                 //make a new file within specified database
                 FileIO fileIO = new FileIO(databaseName);
-                //creates a new table within a specified folder
-                //returns error if file already exists
-                File newTableFile = fileIO.makeFile(homeDirectory+File.separator+databaseName, tableName);
+                //creates a new table within a specified folder (returns error if file already exists)
+                File newTableFile = fileIO.makeFile(currentFolder, tableName);
                 table = new Table(databaseName, tableName);
                 table.fillTableFromMemory(attributeList, null);
-                System.out.println("successfully filled table");
                 database.addTable(table);
-                System.out.println("successfully added table");
                 //writes to file (creates file if it doesn't exist)
-                fileIO.writeFile(homeDirectory+File.separator+databaseName, tableName, table);
-                System.out.println("successfully written file");
+                fileIO.writeFile(currentFolder, tableName, table);
             } catch (DBException | IOException e) {
                 throw new FileException(e);
             }

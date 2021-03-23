@@ -26,12 +26,9 @@ public class Table {
             columns = new ArrayList<>();
             //have to add id column
             columns.add(new Column(tableName, "id", 0));
-            System.out.println("adding column "+columns.get(0).getColumnName()+" at index "+columns.get(0).getColumnIndex());
             //then add the rest of the columns
             for (int i = 0; i < columnNames.size(); i++) {
-                System.out.println("adding column "+columnNames.get(i)+" at index "+i);
                 columns.add(new Column(tableName, columnNames.get(i), i+1));
-                System.out.println("successfully added column");
             }
         }
         if(rowData!=null){

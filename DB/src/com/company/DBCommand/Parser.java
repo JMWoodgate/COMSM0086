@@ -170,9 +170,11 @@ public class Parser {
         try{
             DropCMD drop = new DropCMD(tokenizedCommand, index);
             index = drop.getIndex();
-            if(drop.getType()== StorageType.DATABASE){
+            type = drop.getType();
+            if(type== StorageType.DATABASE){
                 databaseName = drop.getDatabaseName();
-            }else if(drop.getType()==StorageType.TABLE){
+                currentFolder = homeDirectory+File.separator+databaseName;
+            }else if(type==StorageType.TABLE){
                 tableName = drop.getTableName();
             }
             else{

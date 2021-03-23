@@ -13,6 +13,31 @@ public class FileIO {
         this.folderName = folderName;
     }
 
+    public void deleteFolder() throws DBException{
+        System.out.println("entered deleteFolder with "+folderName);
+        File folder = new File(folderName);
+        File[] listOfFiles;
+        if(folder.exists()) {
+            System.out.println("folder exists");
+            //creating a list of files that are within the folder
+            listOfFiles = folder.listFiles();
+            System.out.println(listOfFiles);
+            for(int i = 0; i < listOfFiles.length; i++){
+                File currentFile = new File(folder.getPath());
+                try{
+                    currentFile.delete();
+                }catch(Exception e){
+                    throw new FileException(e);
+                }
+            }
+            try{
+                folder.delete();
+            }catch(Exception e){
+                throw new FileException(e);
+            }
+        }
+    }
+
     public Database makeFolder(String parentFolder, String folderName) throws DBException {
         if(folderName==null||parentFolder==null){
             throw new EmptyData("database name in makeFolder");
@@ -72,6 +97,7 @@ public class FileIO {
         //write the table to the file
         //getting tables and rows from memory
         ArrayList<String> columns = table.getColumns();
+        System.out.println("columns in writeFile");
         ArrayList<ArrayList<String>> rows = table.getRows();
         //formatting columns and writing to file
         bufferedWriter.write(formatString(columns));
