@@ -136,7 +136,8 @@ public class FileIO {
                     try {
                         //sending the data we read to our new table
                         fileName = removeExtension(fileName);
-                        newTable = new Table(folderName, fileName, dataFromFile);
+                        newTable = new Table(folderName, fileName);
+                        newTable.fillTableFromFile(dataFromFile);
                     } catch (DBException e) {
                         e.printStackTrace();
                     }

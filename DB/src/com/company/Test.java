@@ -401,7 +401,8 @@ public class Test {
         testData.add("2\tBye\tnowhere");
         testData.add(null);
 
-        Table testTable = new Table(dbName, "myTable", testData);
+        Table testTable = new Table(dbName, "myTable");
+        testTable.fillTableFromFile(testData);
         assert (testTable.getNumberOfColumns() == 3);
         assert (testTable.getNumberOfRows() == 2);
         ArrayList<String> parsedTest = new ArrayList<>();

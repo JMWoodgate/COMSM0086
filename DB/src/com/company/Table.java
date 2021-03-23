@@ -14,15 +14,31 @@ public class Table {
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
 
-    public Table(String databaseName, String tableName,
-                 ArrayList<String> dataFromFile) throws DBException {
+    public Table(String databaseName, String tableName) throws DBException {
         this.databaseName = databaseName;
         this.tableName = tableName;
-
-        fillTable(dataFromFile);
     }
 
-    private void fillTable(ArrayList<String> dataFromFile)
+    public void fillTableFromMemory(ArrayList<String> columnNames, ArrayList<String> rowData){
+        if(columnNames!=null){
+            numberOfColumns = columnNames.size();
+            columns = new ArrayList<>();
+            for (int i = 0; i < numberOfColumns; i++) {
+                columns.add(new Column(tableName, columnNames.get(i), i));
+            }
+        }
+        if(rowData!=null){
+            numberOfRows = rowData.size();
+            rows = new ArrayList<>();
+            for (int i = 1; i <= numberOfRows; i++) {
+                ArrayList<String> currentRow = parseString(rowData.get(i));
+                rows.add(new Row(tableName, currentRow, numberOfColumns));
+            }
+        }
+    }
+    //can we replace the filling section with fillTableFromMemory? as they are the same
+    //just need to separate rows from column names
+    public void fillTableFromFile(ArrayList<String> dataFromFile)
             throws DBException {
         numberOfRows = initNumberOfRows(dataFromFile);
         numberOfColumns = initNumberOfColumns(dataFromFile.get(0));

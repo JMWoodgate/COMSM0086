@@ -55,7 +55,8 @@ public class CreateCMD extends Parser implements DBCommand {
                 //returns error if file already exists
                 File newTableFile = fileIO.makeFile(databaseName, tableName);
                 System.out.println("attributeList: "+attributeList);
-                table = new Table(databaseName, tableName, attributeList);
+                table = new Table(databaseName, tableName);
+                table.fillTableFromMemory(attributeList, null);
                 //writes to file (creates file if it doesn't exist)
                 fileIO.writeFile(databaseName, tableName, table);
             } catch (DBException | IOException e) {

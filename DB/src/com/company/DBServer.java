@@ -81,7 +81,7 @@ class DBServer
             e.printStackTrace();
         }*/
 
-        //while(parsedOK) {
+        while(parsedOK) {
             String incomingCommand = socketReader.readLine();
             parser = new Parser(incomingCommand, folderName);
             parsedOK = parser.getParsedOK();
@@ -91,7 +91,6 @@ class DBServer
                 socketWriter.write("\n" + ((char) 4) + "\n");
                 socketWriter.flush();
                 incomingCommand = socketReader.readLine();
-                folderName = parser.getCurrentFolder();
                 parser = new Parser(incomingCommand, folderName);
                 parsedOK = parser.getParsedOK();
             }
@@ -99,7 +98,7 @@ class DBServer
             socketWriter.write("\n" + ((char) 4) + "\n");
             socketWriter.flush();
             folderName = parser.getCurrentFolder();
-        //}
+        }
 
         /*System.out.println("Received message: " + incomingCommand);
         socketWriter.write("[OK1] Thanks for your message: " + incomingCommand);
