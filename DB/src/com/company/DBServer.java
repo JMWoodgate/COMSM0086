@@ -1,6 +1,7 @@
 package com.company;
 import com.company.DBCommand.Parser;
 import com.company.DBExceptions.DBException;
+import com.company.DBExceptions.EmptyData;
 
 import java.io.*;
 import java.net.*;
@@ -27,15 +28,14 @@ class DBServer
             BufferedWriter socketWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             System.out.println("Connection Established");
             while(true) processNextCommand(socketReader, socketWriter);
-        } catch(IOException ioe) {
+        } catch(IOException | EmptyData ioe) {
             System.err.println(ioe);
         } catch(NullPointerException npe) {
             System.out.println("Connection Lost");
         }
     }
 
-    private void processNextCommand(BufferedReader socketReader, BufferedWriter socketWriter) throws IOException, NullPointerException
-    {
+    private void processNextCommand(BufferedReader socketReader, BufferedWriter socketWriter) throws IOException, NullPointerException, EmptyData {
         /*String folderName = File.separator + "Users" + File.separator + "jessw" + File.separator
                 + "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
                 File.separator + "Testfiles" + File.separator;*/
@@ -69,9 +69,19 @@ class DBServer
             e.printStackTrace();
         }*/
 
+        String folderName = "."+ File.separator+"databases";
+        File parentFolder = new File(folderName);
+        if(!parentFolder.exists()) {
+            final boolean mkdir = parentFolder.mkdir();
+            //create new folder (for new database)
+            if (!mkdir) {
+                throw new IOException();
+            }
+        }
+
         while(parsedOK) {
             String incomingCommand = socketReader.readLine();
-            parser = new Parser(incomingCommand);
+            parser = new Parser(incomingCommand, folderName);
             parsedOK = parser.getParsedOK();
             while (!parsedOK) {
                 socketWriter.write("[ERROR] from: " + incomingCommand);
@@ -79,7 +89,8 @@ class DBServer
                 socketWriter.write("\n" + ((char) 4) + "\n");
                 socketWriter.flush();
                 incomingCommand = socketReader.readLine();
-                parser = new Parser(incomingCommand);
+                folderName = parser.getCurrentFolder();
+                parser = new Parser(incomingCommand, folderName);
                 parsedOK = parser.getParsedOK();
             }
             socketWriter.write("[OK] Thanks for your message: " + incomingCommand);

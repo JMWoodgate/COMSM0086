@@ -13,8 +13,8 @@ public class Test {
 
     public Test() throws DBException{
         try {
-            testFiles();
-            testParseConditions();
+            //testFiles();
+            /*testParseConditions();
             testCondition();
             testWildAttributeList();
             testNameValueList();
@@ -25,7 +25,7 @@ public class Test {
             testSelectCMD();
             testInsertCMD();
             testAlterCMD();
-            testDropCMD();
+            testDropCMD();*/
             testCreateCMD();
             testUseCMD();
             testValue();
@@ -35,7 +35,7 @@ public class Test {
             testRow();
             testColumn();
         }
-        catch(DBException | IOException e){
+        catch(DBException e){
             System.out.println("DBException " + e);
             e.printStackTrace();
         }
@@ -87,7 +87,7 @@ public class Test {
         elements1.add("5");
         elements1.add(";");
         try{
-            Parser parser1 = new Parser(command1);
+            Parser parser1 = new Parser(command1, "."+ File.separator+"databases");
             assert(parser1.getConditionListArray().get(0).getConditionString().equals("party=='green'"));
             assert(parser1.getTableName().equals("elections"));
 
@@ -95,7 +95,7 @@ public class Test {
             assert(conditionList.getConditionList().get(0).getConditionString().equals("field=='labour'"));
             assert(conditionList.getConditionList().get(1).getConditionString().equals("ward!=true"));
             assert(conditionList.getConditionList().get(2).getConditionString().equals("id>5"));
-            Parser parser2 = new Parser(command2);
+            Parser parser2 = new Parser(command2, "."+ File.separator+"databases");
             assert(parser2.getConditionListArray().get(0).getConditionString().equals("field=='labour'"));
             assert(parser2.getConditionListArray().get(1).getConditionString().equals("ward!=true"));
             assert(parser2.getConditionListArray().get(2).getConditionString().equals("id>5"));
@@ -195,7 +195,7 @@ public class Test {
     private void testJoinCMD() throws DBException {
         String command = "JOIN parties AND ward ON name AND id;";
         try{
-            Parser testParser = new Parser(command);
+            Parser testParser = new Parser(command, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             JoinCMD testJoin = new JoinCMD(tokenizedCommand, 0);
             assert(testJoin.getIndex()==8);
@@ -212,7 +212,7 @@ public class Test {
     private void testDeleteCMD() throws DBException {
         String command = "DELETE FROM elections WHERE (id<3) AND (party!='labour');";
         try{
-            Parser testParser = new Parser(command);
+            Parser testParser = new Parser(command, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             DeleteCMD testDelete = new DeleteCMD(tokenizedCommand, 0);
             assert(testDelete.getTableName().equals("elections"));
@@ -225,7 +225,7 @@ public class Test {
     private void testUpdateCMD() throws DBException {
         String command = "UPDATE elections SET party='name', ward=9 WHERE (id<3) AND (party!='labour');";
         try{
-            Parser testParser = new Parser(command);
+            Parser testParser = new Parser(command, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             UpdateCMD testUpdate = new UpdateCMD(tokenizedCommand, 0);
             assert(testUpdate.getTableName().equals("elections"));
@@ -244,7 +244,7 @@ public class Test {
     private void testSelectCMD() throws DBException {
         String command = "SELECT ward, parties FROM elections WHERE (id<3) AND (party!='labour');";
         try{
-            Parser testParser = new Parser(command);
+            Parser testParser = new Parser(command, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             SelectCMD testSelect = new SelectCMD(tokenizedCommand, 0);
             assert(testSelect.getTableName().equals("elections"));
@@ -259,7 +259,7 @@ public class Test {
     private void testInsertCMD() throws DBException {
         String command = "INSERT INTO elections VALUES ('name', false, 23, 'h=5');";
         try{
-            Parser testParser = new Parser(command);
+            Parser testParser = new Parser(command, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             InsertCMD testInsert = new InsertCMD(tokenizedCommand, 0);
             assert(testInsert.getTableName().equals("elections"));
@@ -272,7 +272,7 @@ public class Test {
     private void testAlterCMD() throws DBException {
         String command = "ALTER TABLE elections ADD party;";
         try{
-            Parser testParser = new Parser(command);
+            Parser testParser = new Parser(command, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             AlterCMD testAlter = new AlterCMD(tokenizedCommand, 0);
             assert(testAlter.getIndex()==5);
@@ -287,7 +287,7 @@ public class Test {
     private void testDropCMD() throws DBException{
         String command1 = "DROP table elections ;";
         try{
-            Parser testParser1 = new Parser(command1);
+            Parser testParser1 = new Parser(command1, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
             DropCMD testDrop1 = new DropCMD(tokenizedCommand1, 0);
             assert(testDrop1.getIndex()==3);
@@ -298,7 +298,7 @@ public class Test {
         }
         String command2 = "DROP database politics;";
         try{
-            Parser testParser2 = new Parser(command2);
+            Parser testParser2 = new Parser(command2, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand2 = testParser2.getTokenizedCommand();
             DropCMD testDrop2 = new DropCMD(tokenizedCommand2, 0);
             assert(testDrop2.getIndex()==3);
@@ -310,33 +310,33 @@ public class Test {
     }
 
     private void testCreateCMD() throws DBException{
-        String command1 = "CREATE table elections (party, ward);";
-        try{
-            Parser testParser1 = new Parser(command1);
-            ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
-            CreateCMD testCreate1 = new CreateCMD(tokenizedCommand1, 0, null);
-            assert(testCreate1.getTableName().equals("elections"));
-        }
-        catch(DBException e){
-            throw new CommandException(command1, 0, "CREATE", e);
-        }
         String command2 = "CREATE database politics;";
         try{
-            Parser testParser2 = new Parser(command2);
+            Parser testParser2 = new Parser(command2, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand2 = testParser2.getTokenizedCommand();
-            CreateCMD testCreate2 = new CreateCMD(tokenizedCommand2, 0, null);
+            CreateCMD testCreate2 = new CreateCMD(tokenizedCommand2, 0, "."+ File.separator+"databases");
             assert(testCreate2.getIndex()==3);
             assert(testCreate2.getDatabaseName().equals("politics"));
         }
         catch(DBException e){
             throw new CommandException(command2, 0, "CREATE", e);
         }
+        /*String command1 = "CREATE table elections (party, ward);";
+        try{
+            Parser testParser1 = new Parser(command1, "."+ File.separator+"databases"+ File.separator+"politics");
+            ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
+            CreateCMD testCreate1 = new CreateCMD(tokenizedCommand1, 0, "."+ File.separator+"databases"+ File.separator+"politics");
+            assert(testCreate1.getTableName().equals("elections"));
+        }
+        catch(DBException e){
+            throw new CommandException(command1, 0, "CREATE", e);
+        }*/
     }
 
     private void testUseCMD()throws DBException{
         String command = "USE elections ;";
         try{
-            Parser testParser = new Parser(command);
+            Parser testParser = new Parser(command, "."+ File.separator+"databases");
             ArrayList<String> tokenizedCommand = testParser.getTokenizedCommand();
             UseCMD testUse = new UseCMD(tokenizedCommand, 0);
             assert(testUse.getDatabaseName().equals("elections"));
@@ -380,7 +380,7 @@ public class Test {
 
     private void testParser() throws DBException {
         String testCommand = "FROM\tparties SELECT *;\n";
-        Parser testParser = new Parser(testCommand);
+        Parser testParser = new Parser(testCommand, "."+ File.separator+"databases");
     }
 
     private void testTokenizer() throws DBException {

@@ -16,7 +16,7 @@ public class CreateCMD extends Parser implements DBCommand {
     private StorageType type;
     private String tableName;
     private String databaseName;
-    private String parentFolder;
+    private final String parentFolder;
     private ArrayList<String> attributeList;
     private Database database;
     private Table table;
@@ -25,7 +25,7 @@ public class CreateCMD extends Parser implements DBCommand {
         this.command = command;
         this.index = index;
         this.parentFolder = parentFolder;
-        attributeList = new ArrayList<String>();
+        attributeList = new ArrayList<>();
         if(command != null) {
             if (!parseCreate()) {
                 throw new CommandException(

@@ -3,6 +3,7 @@ package com.company.DBCommand;
 import com.company.DBExceptions.*;
 import com.company.Tokenizer;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Parser {
@@ -18,8 +19,9 @@ public class Parser {
     private ConditionList conditionListObject;
     private boolean parsedOK;
     private String exception;
+    private String currentFolder;
 
-    public Parser(String command) {
+    public Parser(String command, String currentFolder) {
         if(command!=null && command.length()>0) {
             try {
                 checkQuotes(command);
@@ -32,7 +34,9 @@ public class Parser {
                 assert(checkEndOfStatement());
                 conditionListArray = new ArrayList<>();
                 index = 0;
+                this.currentFolder = currentFolder;
                 parseCommand();
+                //if returned without error, parsed ok
                 parsedOK = true;
             } catch (DBException e) {
                 System.out.println("caught exception in parser constructor");
@@ -53,6 +57,7 @@ public class Parser {
 
     private String setException(DBException e) {
         exception = e.toString();
+        System.out.println("exception in setException is "+exception);
         return exception;
     }
 
@@ -194,7 +199,7 @@ public class Parser {
 
     private void parseCreate() throws DBException{
         try{
-            CreateCMD create = new CreateCMD(tokenizedCommand, index, null);
+            CreateCMD create = new CreateCMD(tokenizedCommand, index, currentFolder);
             index = create.getIndex();
             if(create.getType()==StorageType.DATABASE){
                 databaseName = create.getDatabaseName();
@@ -205,6 +210,7 @@ public class Parser {
                 throw new StorageTypeException(
                         create.getType(), index, "table or database");
             }
+            create.execute();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "create", e);
@@ -344,6 +350,13 @@ public class Parser {
         else{
             throw new EmptyData("tokenized command");
         }
+    }
+
+    public String getCurrentFolder() throws EmptyData {
+        if(currentFolder!=null) {
+            return currentFolder;
+        }
+        throw new EmptyData("current folder name");
     }
 
     public int getIndex(){

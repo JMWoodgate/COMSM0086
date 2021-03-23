@@ -33,10 +33,18 @@ public class FileIO {
     }
 
     public File makeFile(String parentFolder, String tableName) throws IOException, DBException{
-        if(folderName==null||parentFolder==null){
+        if(tableName==null||parentFolder==null){
             throw new EmptyData("table name in makeFile");
         }
-        File fileToMake = new File(parentFolder, folderName);
+        File folderToOpen = new File(folderName);
+        //checking that the folder we want to write the file into exists
+        if(!folderToOpen.exists()){
+            final boolean mkdir = folderToOpen.mkdir();
+            if(!mkdir){
+                throw new IOException();
+            }
+        }
+        File fileToMake = new File(parentFolder, tableName+".tab");
         if(!fileToMake.exists()){
             final boolean newFile = fileToMake.createNewFile();
             if(!newFile){
@@ -46,34 +54,13 @@ public class FileIO {
         return fileToMake;
     }
 
-    public void writeFile(String folderName, String fileName, Table table) throws IOException {
-        File folderToOpen = new File(folderName);
-        //checking that the folder we want to write the file into exists
-        if(!folderToOpen.exists()){
-            final boolean mkdir = folderToOpen.mkdir();
-            if(!mkdir){
-                throw new IOException();
-            }
-        }
-        //making a new file inside the specified folder
-        File fileToOpen = new File(folderToOpen, fileName + ".tab");
+    public void writeFile(String folderName, String fileName, Table table) throws IOException, DBException {
+        //making a new file inside the specified folder (creating new folder if it doesn't exist)
+        File fileToOpen = makeFile(folderName, fileName);
         //creating a new file writer
         FileWriter fileWriter = new FileWriter(fileToOpen);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        //if the file doesn't already exist, make it
-        if(!fileToOpen.exists()){
-            final boolean newFile = fileToOpen.createNewFile();
-            if(!newFile){
-                throw new IOException();
-            }
-        }
         //write the table to the file
-        writeToOpenFile(bufferedWriter, table);
-        bufferedWriter.close();
-    }
-
-    private void writeToOpenFile(BufferedWriter bufferedWriter, Table table)
-            throws IOException {
         //getting tables and rows from memory
         ArrayList<String> columns = table.getColumns();
         ArrayList<ArrayList<String>> rows = table.getRows();
@@ -86,6 +73,7 @@ public class FileIO {
             bufferedWriter.write("\n");
         }
         bufferedWriter.flush();
+        bufferedWriter.close();
     }
 
     public String formatString(ArrayList<String> stringToFormat){
