@@ -13,14 +13,16 @@ public class WildAttributeList extends Parser{
     private String attributeName;
     private final ArrayList<String> attributeList;
 
-    public WildAttributeList(ArrayList<String> command, int index) throws CommandException {
+    public WildAttributeList(ArrayList<String> command, int index)
+            throws CommandException {
         this.index = index;
         this.command = command;
         attributeList = new ArrayList<String>();
         try{
             parseAttributeList();
         }catch(DBException e){
-            throw new CommandException(command.get(index), index, "wild attribute list", e);
+            throw new CommandException(command.get(index), index,
+                    "wild attribute list", e);
         }
     }
 
@@ -43,14 +45,16 @@ public class WildAttributeList extends Parser{
                         return;
                     }
                     else if(!nextToken.equals("from")&&!nextToken.equals(")")){
-                        throw new CommandException(nextToken, index, "missing comma in attribute list");
+                        throw new CommandException(nextToken, index,
+                                "missing comma in attribute list");
                     }
                 }
             }else{
                 throw new EmptyData("command in attribute list");
             }
         }catch(DBException e){
-            throw new CommandException(command.get(index), index, "wild attribute list", e);
+            throw new CommandException(command.get(index), index,
+                    "wild attribute list", e);
         }
     }
 

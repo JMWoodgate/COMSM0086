@@ -20,6 +20,7 @@ public class Parser {
     private boolean parsedOK;
     private String exception;
     private String currentFolder;
+    private String homeDirectory;
 
     public Parser(String command, String currentFolder) {
         if(command!=null && command.length()>0) {
@@ -35,7 +36,8 @@ public class Parser {
                 conditionListArray = new ArrayList<>();
                 index = 0;
                 this.currentFolder = currentFolder;
-                parseCommand();
+                homeDirectory = "."+File.separator+"databases";
+                        parseCommand();
                 //if returned without error, parsed ok
                 parsedOK = true;
             } catch (DBException e) {
@@ -50,21 +52,6 @@ public class Parser {
 
     public Parser(){}
 
-    public String getException() {
-        System.out.println("exception in getException is "+exception);
-        return exception;
-    }
-
-    private String setException(DBException e) {
-        exception = e.toString();
-        System.out.println("exception in setException is "+exception);
-        return exception;
-    }
-
-    public boolean getParsedOK(){
-        System.out.println("entered getParsedOK with "+parsedOK);
-        return parsedOK;
-    }
 
     private void parseCommand() throws CommandException{
         try {
@@ -224,6 +211,8 @@ public class Parser {
             //updating the current index
             index = use.getIndex();
             databaseName = use.getDatabaseName();
+            //don't need to call execute, just need to update the folder name
+            currentFolder = homeDirectory+File.separator+databaseName;
         }catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "use", e);
@@ -323,6 +312,22 @@ public class Parser {
             }
         }
         return true;
+    }
+
+    public String getException() {
+        System.out.println("exception in getException is "+exception);
+        return exception;
+    }
+
+    private String setException(DBException e) {
+        exception = e.toString();
+        System.out.println("exception in setException is "+exception);
+        return exception;
+    }
+
+    public boolean getParsedOK(){
+        System.out.println("entered getParsedOK with "+parsedOK);
+        return parsedOK;
     }
 
     public ConditionList getConditionListObject() throws EmptyData {

@@ -32,15 +32,16 @@ public class FileIO {
         }
     }
 
-    public File makeFile(String parentFolder, String tableName) throws DBException, IOException {
+    public File makeFile(String parentFolder, String tableName)
+            throws DBException, IOException {
         if(tableName==null||parentFolder==null){
             throw new EmptyData("table name/parent folder in makeFile");
         }
         File folderToOpen = new File(parentFolder);
         //checking that the folder we want to write the file into exists
-        if(!folderToOpen.exists()){
+        if(!folderToOpen.exists()) {
             final boolean mkdir = folderToOpen.mkdir();
-            if(!mkdir){
+            if (!mkdir) {
                 throw new FileException("couldn't create directory");
             }
         }
@@ -50,13 +51,22 @@ public class FileIO {
             if(!newFile){
                 throw new FileException("couldn't create file");
             }
+        }else{
+            throw new FileExists(tableName);
         }
         return fileToMake;
     }
 
     public void writeFile(String folderName, String fileName, Table table) throws IOException, DBException {
-        //making a new file inside the specified folder (creating new folder if it doesn't exist)
-        File fileToOpen = makeFile(folderName, fileName);
+        //opening file, creating if it doesn't exist
+        System.out.println("writing file "+fileName+" in "+folderName);
+        File fileToOpen = new File(folderName, fileName+".tab");
+        if(!fileToOpen.exists()){
+            final boolean newFile = fileToOpen.createNewFile();
+            if(!newFile){
+                throw new FileException("couldn't create file");
+            }
+        }
         //creating a new file writer
         FileWriter fileWriter = new FileWriter(fileToOpen);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -65,6 +75,7 @@ public class FileIO {
         ArrayList<String> columns = table.getColumns();
         ArrayList<ArrayList<String>> rows = table.getRows();
         //formatting columns and writing to file
+        System.out.println("columns: "+columns);
         bufferedWriter.write(formatString(columns));
         bufferedWriter.write("\n");
         //formatting rows and adding one at a time to file

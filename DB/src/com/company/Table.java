@@ -18,13 +18,14 @@ public class Table {
                  ArrayList<String> dataFromFile) throws DBException {
         this.databaseName = databaseName;
         this.tableName = tableName;
-        numberOfRows = initNumberOfRows(dataFromFile);
-        numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
+
         fillTable(dataFromFile);
     }
 
     private void fillTable(ArrayList<String> dataFromFile)
-            throws EmptyData{
+            throws DBException {
+        numberOfRows = initNumberOfRows(dataFromFile);
+        numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
         if(dataFromFile!=null) {
             //getting column names, then storing in an array of columns
             ArrayList<String> columnNames = parseString(dataFromFile.get(0));

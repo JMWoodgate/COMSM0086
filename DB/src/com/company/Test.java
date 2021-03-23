@@ -26,7 +26,7 @@ public class Test {
             testInsertCMD();
             testAlterCMD();
             testDropCMD();
-            testCreateCMD();
+            //testCreateCMD();
             testUseCMD();
             testValue();
             testParser();
