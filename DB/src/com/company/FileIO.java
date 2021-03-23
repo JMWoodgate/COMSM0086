@@ -59,7 +59,6 @@ public class FileIO {
 
     public void writeFile(String folderName, String fileName, Table table) throws IOException, DBException {
         //opening file, creating if it doesn't exist
-        System.out.println("writing file "+fileName+" in "+folderName);
         File fileToOpen = new File(folderName, fileName+".tab");
         if(!fileToOpen.exists()){
             final boolean newFile = fileToOpen.createNewFile();
@@ -75,7 +74,6 @@ public class FileIO {
         ArrayList<String> columns = table.getColumns();
         ArrayList<ArrayList<String>> rows = table.getRows();
         //formatting columns and writing to file
-        System.out.println("columns: "+columns);
         bufferedWriter.write(formatString(columns));
         bufferedWriter.write("\n");
         //formatting rows and adding one at a time to file

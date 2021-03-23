@@ -36,37 +36,6 @@ public class CreateCMD extends Parser implements DBCommand {
         }
     }
 
-    public void execute() throws DBException {
-        if(type==StorageType.DATABASE){
-            try {
-                System.out.println("creating database "+databaseName+" in "+parentFolder);
-            FileIO fileIO = new FileIO(databaseName);
-            //creates new folder and returns an empty database object
-            database = fileIO.makeFolder(parentFolder,databaseName);
-        } catch(DBException e){
-            throw new FileException(e);
-        }
-        }else if(type==StorageType.TABLE){
-            try{
-                System.out.println("creating table "+tableName+ " in "+databaseName);
-                //make a new file within specified database
-                FileIO fileIO = new FileIO(databaseName);
-                //creates a new table within a specified folder
-                //returns error if file already exists
-                File newTableFile = fileIO.makeFile(databaseName, tableName);
-                System.out.println("attributeList: "+attributeList);
-                table = new Table(databaseName, tableName);
-                table.fillTableFromMemory(attributeList, null);
-                //writes to file (creates file if it doesn't exist)
-                fileIO.writeFile(databaseName, tableName, table);
-            } catch (DBException | IOException e) {
-                throw new FileException(e);
-            }
-        }else{
-            throw new StorageTypeException(StorageType.DATABASE, index, null);
-        }
-    }
-
     //CREATE <create Database> || <create Table>
     private boolean parseCreate() throws CommandException {
         index++;

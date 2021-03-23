@@ -1,4 +1,5 @@
 package com.company;
+import com.company.DBCommand.Interpreter;
 import com.company.DBCommand.Parser;
 import com.company.DBExceptions.DBException;
 import com.company.DBExceptions.EmptyData;
@@ -10,6 +11,7 @@ import java.util.*;
 class DBServer
 {
     private String folderName;
+    private Interpreter interpreter;
     public DBServer(int portNumber)
     {
         try {
@@ -26,6 +28,7 @@ class DBServer
                     throw new IOException();
                 }
             }
+            interpreter = new Interpreter(folderName);
             while(true) processNextConnection(serverSocket);
         } catch(IOException ioe) {
             System.err.println(ioe);
@@ -40,14 +43,15 @@ class DBServer
             BufferedWriter socketWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             System.out.println("Connection Established");
             while(true) processNextCommand(socketReader, socketWriter);
-        } catch(IOException | EmptyData ioe) {
+        } catch(IOException | DBException ioe) {
             System.err.println(ioe);
         } catch(NullPointerException npe) {
             System.out.println("Connection Lost");
         }
     }
 
-    private void processNextCommand(BufferedReader socketReader, BufferedWriter socketWriter) throws IOException, NullPointerException, EmptyData {
+    private void processNextCommand(BufferedReader socketReader, BufferedWriter socketWriter)
+            throws IOException, NullPointerException, DBException {
         /*String folderName = File.separator + "Users" + File.separator + "jessw" + File.separator
                 + "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
                 File.separator + "Testfiles" + File.separator;*/
@@ -82,6 +86,7 @@ class DBServer
         }*/
 
         while(parsedOK) {
+            System.out.println("in parsedOK");
             String incomingCommand = socketReader.readLine();
             parser = new Parser(incomingCommand, folderName);
             parsedOK = parser.getParsedOK();
@@ -97,7 +102,15 @@ class DBServer
             socketWriter.write("[OK] Thanks for your message: " + incomingCommand);
             socketWriter.write("\n" + ((char) 4) + "\n");
             socketWriter.flush();
-            folderName = parser.getCurrentFolder();
+            try {
+                folderName = parser.getCurrentFolder();
+                ArrayList<String> currentCommand = parser.getTokenizedCommand();
+                interpreter.interpretCommand(currentCommand.get(0), parser);
+                System.out.println("interpreted command");
+            }catch(DBException e){
+                System.out.println("caught error "+e);
+                e.printStackTrace();
+            }
         }
 
         /*System.out.println("Received message: " + incomingCommand);

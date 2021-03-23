@@ -21,6 +21,8 @@ public class Parser {
     private String exception;
     private String currentFolder;
     private String homeDirectory;
+    private StorageType type;
+    private ArrayList<String> attributeList;
 
     public Parser(String command, String currentFolder) {
         if(command!=null && command.length()>0) {
@@ -41,7 +43,6 @@ public class Parser {
                 //if returned without error, parsed ok
                 parsedOK = true;
             } catch (DBException e) {
-                System.out.println("caught exception in parser constructor");
                 parsedOK = false;
                 exception = setException(e);
             }
@@ -188,16 +189,17 @@ public class Parser {
         try{
             CreateCMD create = new CreateCMD(tokenizedCommand, index, currentFolder);
             index = create.getIndex();
-            if(create.getType()==StorageType.DATABASE){
+            type = create.getType();
+            if(type==StorageType.DATABASE){
                 databaseName = create.getDatabaseName();
             }else if(create.getType()==StorageType.TABLE){
                 tableName = create.getTableName();
+                attributeList = create.getAttributeList();
             }
             else{
                 throw new StorageTypeException(
                         create.getType(), index, "table or database");
             }
-            create.execute();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "create", e);
@@ -314,20 +316,28 @@ public class Parser {
         return true;
     }
 
+    public StorageType getType(){
+        return type;
+    }
+
     public String getException() {
-        System.out.println("exception in getException is "+exception);
         return exception;
     }
 
     private String setException(DBException e) {
         exception = e.toString();
-        System.out.println("exception in setException is "+exception);
         return exception;
     }
 
     public boolean getParsedOK(){
-        System.out.println("entered getParsedOK with "+parsedOK);
         return parsedOK;
+    }
+
+    public ArrayList<String> getAttributeList() throws EmptyData {
+        if(attributeList!=null){
+            return attributeList;
+        }
+        throw new EmptyData("wild attribute list");
     }
 
     public ConditionList getConditionListObject() throws EmptyData {
