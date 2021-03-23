@@ -3,13 +3,17 @@ package com.company;
 import com.company.DBExceptions.CommandException;
 import com.company.DBExceptions.DBException;
 import com.company.DBCommand.*;
+import com.company.DBExceptions.FileException;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Test {
 
     public Test() throws DBException{
         try {
+            testFiles();
             testParseConditions();
             testCondition();
             testWildAttributeList();
@@ -31,9 +35,30 @@ public class Test {
             testRow();
             testColumn();
         }
-        catch(DBException e){
+        catch(DBException | IOException e){
             System.out.println("DBException " + e);
             e.printStackTrace();
+        }
+    }
+
+    private void testFiles() throws DBException, IOException {
+        try{
+            //create parent folder ("databases")
+            String folderName = "."+ File.separator+"databases";
+            File parentFolder = new File(folderName);
+            if(!parentFolder.exists()) {
+                final boolean mkdir = parentFolder.mkdir();
+                //create new folder (for new database)
+                if (!mkdir) {
+                    throw new IOException();
+                }
+            }
+            //create new database folder inside parent folder
+            FileIO fileIO = new FileIO("newDatabase");
+            fileIO.makeFolder(folderName, "newDatabase");
+            fileIO.makeFile(folderName+File.separator+"newDatabase", "newTable");
+        }catch(DBException e){
+            throw new FileException(e);
         }
     }
 
@@ -289,7 +314,7 @@ public class Test {
         try{
             Parser testParser1 = new Parser(command1);
             ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
-            CreateCMD testCreate1 = new CreateCMD(tokenizedCommand1, 0);
+            CreateCMD testCreate1 = new CreateCMD(tokenizedCommand1, 0, null);
             assert(testCreate1.getTableName().equals("elections"));
         }
         catch(DBException e){
@@ -299,7 +324,7 @@ public class Test {
         try{
             Parser testParser2 = new Parser(command2);
             ArrayList<String> tokenizedCommand2 = testParser2.getTokenizedCommand();
-            CreateCMD testCreate2 = new CreateCMD(tokenizedCommand2, 0);
+            CreateCMD testCreate2 = new CreateCMD(tokenizedCommand2, 0, null);
             assert(testCreate2.getIndex()==3);
             assert(testCreate2.getDatabaseName().equals("politics"));
         }

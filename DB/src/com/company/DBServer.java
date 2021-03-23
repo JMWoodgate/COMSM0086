@@ -36,13 +36,22 @@ class DBServer
 
     private void processNextCommand(BufferedReader socketReader, BufferedWriter socketWriter) throws IOException, NullPointerException
     {
-        String folderName = File.separator + "Users" + File.separator + "jessw" + File.separator
+        /*String folderName = File.separator + "Users" + File.separator + "jessw" + File.separator
                 + "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
-                File.separator + "Testfiles" + File.separator;
+                File.separator + "Testfiles" + File.separator;*/
         //String newFolderName = File.separator + "Users" + File.separator + "jessw" + File.separator
         //+ "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
         //File.separator + "DB" + File.separator + "Testfiles" + File.separator;
 
+        /*String folderName = "."+File.separator+"databases";
+        File parentFolder = new File(folderName);
+        if(!parentFolder.exists()) {
+            final boolean mkdir = parentFolder.mkdir();
+            //create new folder (for new database)
+            if (!mkdir) {
+                throw new IOException();
+            }
+        }*/
         boolean parsedOK = true;
         Parser parser = null;
 
@@ -65,7 +74,7 @@ class DBServer
             parser = new Parser(incomingCommand);
             parsedOK = parser.getParsedOK();
             while (!parsedOK) {
-                socketWriter.write("[ERROR] Thanks for your message: " + incomingCommand);
+                socketWriter.write("[ERROR] from: " + incomingCommand);
                 socketWriter.write("\n" + parser.getException());
                 socketWriter.write("\n" + ((char) 4) + "\n");
                 socketWriter.flush();
@@ -73,7 +82,7 @@ class DBServer
                 parser = new Parser(incomingCommand);
                 parsedOK = parser.getParsedOK();
             }
-            socketWriter.write("[OK2] Thanks for your message: " + incomingCommand);
+            socketWriter.write("[OK] Thanks for your message: " + incomingCommand);
             socketWriter.write("\n" + ((char) 4) + "\n");
             socketWriter.flush();
         }

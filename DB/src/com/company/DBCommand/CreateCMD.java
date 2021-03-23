@@ -1,10 +1,12 @@
 package com.company.DBCommand;
 
-import com.company.DBExceptions.CommandException;
-import com.company.DBExceptions.DBException;
-import com.company.DBExceptions.EmptyData;
-import com.company.DBExceptions.StorageType;
+import com.company.DBExceptions.*;
+import com.company.Database;
+import com.company.FileIO;
+import com.company.Table;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CreateCMD extends Parser implements DBCommand {
@@ -14,11 +16,15 @@ public class CreateCMD extends Parser implements DBCommand {
     private StorageType type;
     private String tableName;
     private String databaseName;
+    private String parentFolder;
     private ArrayList<String> attributeList;
+    private Database database;
+    private Table table;
 
-    public CreateCMD(ArrayList<String> command, int index) throws DBException {
+    public CreateCMD(ArrayList<String> command, int index, String parentFolder) throws DBException {
         this.command = command;
         this.index = index;
+        this.parentFolder = parentFolder;
         attributeList = new ArrayList<String>();
         if(command != null) {
             if (!parseCreate()) {
@@ -30,7 +36,27 @@ public class CreateCMD extends Parser implements DBCommand {
         }
     }
 
-    public void execute(){}
+    public void execute() throws DBException {
+        if(type==StorageType.DATABASE){
+            try {
+            FileIO fileIO = new FileIO(databaseName);
+            //creates new folder and returns an empty database object
+            database = fileIO.makeFolder(parentFolder,databaseName);
+        } catch(DBException e){
+            throw new FileException(e);
+        }
+        }else if(type==StorageType.TABLE){
+            try{
+                FileIO fileIO = new FileIO(tableName);
+                //creates a new table within a specified folder
+                File newTableFile = fileIO.makeFile(databaseName, tableName);
+            } catch (DBException | IOException e) {
+                throw new FileException(e);
+            }
+        }else{
+            throw new StorageTypeException(StorageType.DATABASE, index, null);
+        }
+    }
 
     //CREATE <create Database> || <create Table>
     private boolean parseCreate() throws CommandException {

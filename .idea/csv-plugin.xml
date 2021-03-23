@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\DBCommand\CreateCMD.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\DBCommand\DeleteCMD.java">
           <value>
             <Attribute>
@@ -81,6 +88,13 @@
           </value>
         </entry>
         <entry key="\DB\src\com\company\Database.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\DB\src\com\company\FileIO.java">
           <value>
             <Attribute>
               <option name="separator" value=";" />

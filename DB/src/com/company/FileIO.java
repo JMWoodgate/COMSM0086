@@ -4,7 +4,6 @@ import com.company.DBExceptions.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FileIO {
 
@@ -14,23 +13,61 @@ public class FileIO {
         this.folderName = folderName;
     }
 
+    public Database makeFolder(String parentFolder, String folderName) throws DBException {
+        if(folderName==null||parentFolder==null){
+            throw new EmptyData("database name in makeFolder");
+        }
+        File folderToMake = new File(parentFolder, folderName);
+        //Check that folder doesn't already exist
+        if(!folderToMake.exists()){
+            final boolean mkdir = folderToMake.mkdir();
+            //create new folder (for new database)
+            if(!mkdir){
+                throw new FileException();
+            }
+            //create new database and return
+            return new Database(folderName);
+        }else{
+            throw new FileExists(folderName);
+        }
+    }
+
+    public File makeFile(String parentFolder, String tableName) throws IOException, DBException{
+        if(folderName==null||parentFolder==null){
+            throw new EmptyData("table name in makeFile");
+        }
+        File fileToMake = new File(parentFolder, folderName);
+        if(!fileToMake.exists()){
+            final boolean newFile = fileToMake.createNewFile();
+            if(!newFile){
+                throw new IOException();
+            }
+        }
+        return fileToMake;
+    }
+
     public void writeFile(String folderName, String fileName, Table table) throws IOException {
         File folderToOpen = new File(folderName);
+        //checking that the folder we want to write the file into exists
         if(!folderToOpen.exists()){
             final boolean mkdir = folderToOpen.mkdir();
             if(!mkdir){
                 throw new IOException();
             }
         }
+        //making a new file inside the specified folder
         File fileToOpen = new File(folderToOpen, fileName + ".tab");
+        //creating a new file writer
         FileWriter fileWriter = new FileWriter(fileToOpen);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        //if the file doesn't already exist, make it
         if(!fileToOpen.exists()){
             final boolean newFile = fileToOpen.createNewFile();
             if(!newFile){
                 throw new IOException();
             }
         }
+        //write the table to the file
         writeToOpenFile(bufferedWriter, table);
         bufferedWriter.close();
     }
@@ -65,10 +102,15 @@ public class FileIO {
 
     public Database readFolder(String folderName) throws FileException {
         File folder = new File(folderName);
-        //creating a list of files that are within the folder
-        File[] listOfFiles = folder.listFiles();
-        Database newDatabase = new Database(folderName);
-
+        File[] listOfFiles;
+        Database newDatabase;
+        if(folder.exists()) {
+            //creating a list of files that are within the folder
+            listOfFiles = folder.listFiles();
+            newDatabase = new Database(folderName);
+        }else{
+            throw new EmptyData(folderName);
+        }
         //checking the list isn't empty
         if(listOfFiles == null){
             throw new EmptyData(folderName);

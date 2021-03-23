@@ -194,7 +194,7 @@ public class Parser {
 
     private void parseCreate() throws DBException{
         try{
-            CreateCMD create = new CreateCMD(tokenizedCommand, index);
+            CreateCMD create = new CreateCMD(tokenizedCommand, index, null);
             index = create.getIndex();
             if(create.getType()==StorageType.DATABASE){
                 databaseName = create.getDatabaseName();
