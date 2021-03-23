@@ -32,23 +32,23 @@ public class FileIO {
         }
     }
 
-    public File makeFile(String parentFolder, String tableName) throws IOException, DBException{
+    public File makeFile(String parentFolder, String tableName) throws DBException, IOException {
         if(tableName==null||parentFolder==null){
-            throw new EmptyData("table name in makeFile");
+            throw new EmptyData("table name/parent folder in makeFile");
         }
-        File folderToOpen = new File(folderName);
+        File folderToOpen = new File(parentFolder);
         //checking that the folder we want to write the file into exists
         if(!folderToOpen.exists()){
             final boolean mkdir = folderToOpen.mkdir();
             if(!mkdir){
-                throw new IOException();
+                throw new FileException("couldn't create directory");
             }
         }
         File fileToMake = new File(parentFolder, tableName+".tab");
         if(!fileToMake.exists()){
             final boolean newFile = fileToMake.createNewFile();
             if(!newFile){
-                throw new IOException();
+                throw new FileException("couldn't create file");
             }
         }
         return fileToMake;

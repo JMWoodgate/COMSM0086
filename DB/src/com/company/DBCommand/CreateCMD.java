@@ -38,19 +38,17 @@ public class CreateCMD extends Parser implements DBCommand {
 
     public void execute() throws DBException {
         if(type==StorageType.DATABASE){
-            System.out.println("executing create database");
             try {
             FileIO fileIO = new FileIO(databaseName);
-            System.out.println("created database");
             //creates new folder and returns an empty database object
             database = fileIO.makeFolder(parentFolder,databaseName);
-            System.out.println("returned from makeFolder");
         } catch(DBException e){
             throw new FileException(e);
         }
         }else if(type==StorageType.TABLE){
             try{
-                FileIO fileIO = new FileIO(tableName);
+                //make a new file within specified database
+                FileIO fileIO = new FileIO(databaseName);
                 //creates a new table within a specified folder
                 File newTableFile = fileIO.makeFile(databaseName, tableName);
             } catch (DBException | IOException e) {
@@ -76,6 +74,8 @@ public class CreateCMD extends Parser implements DBCommand {
                 case ("table"):
                     type = StorageType.TABLE;
                     tableName = parseTableName(command, index);
+                    //store the database name (location for the new table file)
+                    databaseName = parentFolder;
                     //skip to after tableName
                     index += 2;
                     nextToken = command.get(index);

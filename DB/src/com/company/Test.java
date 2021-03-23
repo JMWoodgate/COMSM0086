@@ -14,7 +14,7 @@ public class Test {
     public Test() throws DBException{
         try {
             //testFiles();
-            /*testParseConditions();
+            testParseConditions();
             testCondition();
             testWildAttributeList();
             testNameValueList();
@@ -25,7 +25,7 @@ public class Test {
             testSelectCMD();
             testInsertCMD();
             testAlterCMD();
-            testDropCMD();*/
+            testDropCMD();
             testCreateCMD();
             testUseCMD();
             testValue();
@@ -321,7 +321,7 @@ public class Test {
         catch(DBException e){
             throw new CommandException(command2, 0, "CREATE", e);
         }
-        /*String command1 = "CREATE table elections (party, ward);";
+        String command1 = "CREATE table elections (party, ward);";
         try{
             Parser testParser1 = new Parser(command1, "."+ File.separator+"databases"+ File.separator+"politics");
             ArrayList<String> tokenizedCommand1 = testParser1.getTokenizedCommand();
@@ -330,7 +330,7 @@ public class Test {
         }
         catch(DBException e){
             throw new CommandException(command1, 0, "CREATE", e);
-        }*/
+        }
     }
 
     private void testUseCMD()throws DBException{
