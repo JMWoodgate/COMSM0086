@@ -427,7 +427,7 @@ public class Test {
         elements.add("place");
         Row testRow = new Row(tableName, elements, 3);
         assert(testRow.getElements().equals(elements));
-        assert(testRow.getPrimaryKey().equals("1"));
+        assert(testRow.getID()==1);
         assert(testRow.getElement(1).equals("Hi"));
         assert(testRow.setElement("Them", 1));
         assert(testRow.getElement(1).equals("Them"));

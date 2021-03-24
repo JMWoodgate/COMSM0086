@@ -20,8 +20,16 @@ public class Table {
     }
 
     public void addRow(ArrayList<String> rowData) throws EmptyData {
+        int lastID;
+        //checking if this is the first row
+        if(rows.size()<0) {
+            lastID = rows.get(numberOfRows).getID();
+        }else{
+            lastID = 0;
+        }
         if(rowData!=null) {
-            rows.add(new Row(tableName, rowData, numberOfColumns));
+            rows.add(new Row(tableName, rowData, numberOfColumns, lastID));
+            numberOfRows++;
         }throw new EmptyData("rowData in addRow in Table");
     }
 
@@ -29,6 +37,7 @@ public class Table {
         if(columnNames!=null){
             //add one for id
             numberOfColumns = columnNames.size()+1;
+            System.out.println("number of columns in fillTableFromMemory "+numberOfColumns);
             columns = new ArrayList<>();
             //have to add id column
             columns.add(new Column(tableName, "id", 0));
@@ -40,9 +49,11 @@ public class Table {
         if(rowData!=null){
             numberOfRows = rowData.size();
             rows = new ArrayList<>();
+            int id = 0;
             for (int i = 1; i <= numberOfRows; i++) {
                 ArrayList<String> currentRow = parseString(rowData.get(i));
-                rows.add(new Row(tableName, currentRow, numberOfColumns));
+                rows.add(new Row(tableName, currentRow, numberOfColumns, id));
+                id++;
             }
         }
     }
@@ -59,7 +70,6 @@ public class Table {
             for (int i = 0; i < numberOfColumns; i++) {
                 columns.add(new Column(tableName, columnNames.get(i), i));
             }
-
             //storing data in array of rows
             rows = new ArrayList<>();
             for (int i = 1; i <= numberOfRows; i++) {

@@ -71,8 +71,12 @@ public class Interpreter {
         valueListString = parser.getValueListString();
         //need to put the values into the correct table, both in memory and on file
         if(database.getTables().containsKey(tableName)) {
+            System.out.println("getting table from database "+tableName);
             table = database.getTable(tableName);
+            System.out.println("got table, adding row "+valueListString);
             table.addRow(valueListString);
+            System.out.println("added row, printing table");
+            table.printTable();
         }else{
             throw new EmptyData("table does not exist in memory");
         }

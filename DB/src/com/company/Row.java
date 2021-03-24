@@ -11,20 +11,36 @@ public class Row {
     private final String tableName;
     private final ArrayList<String> elements;
     private final int numberOfColumns;
+    private final int id;
 
-    public Row(String tableName, ArrayList<String> elements, int numberOfColumns){
+    public Row(String tableName, ArrayList<String> elements,
+               int numberOfColumns){
         this.tableName = tableName;
         this.elements = elements;
         this.numberOfColumns = numberOfColumns;
+        id = Integer.parseInt(elements.get(0));
+    }
+
+    public Row(String tableName, ArrayList<String> elements,
+               int numberOfColumns, int lastID){
+        this.tableName = tableName;
+        this.elements = elements;
+        id = lastID+1;
+        addID();
+        this.numberOfColumns = numberOfColumns;
+    }
+
+    private void addID(){
+        String newID = Integer.toString(id);
+        elements.add(0, newID);
+    }
+
+    public int getID(){
+        return id;
     }
 
     public ArrayList<String> getElements(){
         return elements;
-    }
-
-    public String getPrimaryKey(){
-
-        return elements.get(0);
     }
 
     public String getElement(int columnIndex)
