@@ -335,7 +335,7 @@ public class Parser {
         return exception;
     }
 
-    public String setException(DBException e) {
+    public String setException(Exception e) {
         exception = e.toString();
         return exception;
     }

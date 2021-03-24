@@ -45,25 +45,8 @@ class DBServer
 
     private void processNextCommand(BufferedReader socketReader, BufferedWriter socketWriter)
             throws IOException, NullPointerException, DBException {
-        /*String folderName = File.separator + "Users" + File.separator + "jessw" + File.separator
-                + "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
-                File.separator + "Testfiles" + File.separator;*/
-        //String newFolderName = File.separator + "Users" + File.separator + "jessw" + File.separator
-        //+ "Documents" + File.separator + "Java" + File.separator + "COMSM0086" +
-        //File.separator + "DB" + File.separator + "Testfiles" + File.separator;
-
-        /*String folderName = "."+File.separator+"databases";
-        File parentFolder = new File(folderName);
-        if(!parentFolder.exists()) {
-            final boolean mkdir = parentFolder.mkdir();
-            //create new folder (for new database)
-            if (!mkdir) {
-                throw new IOException();
-            }
-        }*/
         boolean parsedOK = true;
         Parser parser = null;
-
         /*try {
             FileIO fileIO = new FileIO(folderName);
             Database database = fileIO.readFolder(folderName);
@@ -85,32 +68,24 @@ class DBServer
             if (!parsedOK) {
                 parser = exceptionLoop(socketWriter, socketReader, parser, incomingCommand);
             }
+            folderName = parser.getCurrentFolder();
+            ArrayList<String> currentCommand = parser.getTokenizedCommand();
+            interpreter.interpretCommand(currentCommand.get(0), parser);
+            while(!interpreter.getInterpretedOK()){
+                parser.setException(interpreter.getException());
+                exceptionLoop(socketWriter, socketReader, parser, incomingCommand);
+            }
             socketWriter.write("[OK] Thanks for your message: " + incomingCommand);
             socketWriter.write("\n" + ((char) 4) + "\n");
             socketWriter.flush();
-            try {
-                folderName = parser.getCurrentFolder();
-                ArrayList<String> currentCommand = parser.getTokenizedCommand();
-                interpreter.interpretCommand(currentCommand.get(0), parser);
-            }catch(DBException e){
-                System.out.println("caught exception from interpreter");
-                parser.setException(e);
-                System.out.println("set exception "+parser.getException());
-                parser = exceptionLoop(socketWriter, socketReader, parser, incomingCommand);
-                System.out.println("returned from exception loop with "+parser.getTokenizedCommand());
-            }
         }
-
-        /*System.out.println("Received message: " + incomingCommand);
-        socketWriter.write("[OK1] Thanks for your message: " + incomingCommand);
-        socketWriter.write("\n" + ((char)4) + "\n");
-        socketWriter.flush();*/
     }
 
     private Parser exceptionLoop(BufferedWriter socketWriter, BufferedReader socketReader,
                                   Parser parser, String incomingCommand) throws IOException {
         boolean parsedOK = false;
         while (!parsedOK) {
+            socketWriter.flush();
             socketWriter.write("[ERROR] from: " + incomingCommand);
             socketWriter.write("\n" + parser.getException());
             socketWriter.write("\n" + ((char) 4) + "\n");

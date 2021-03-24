@@ -26,12 +26,15 @@ public class Interpreter {
     private HashMap<String, Database> databaseMap;
     private Table table;
     private ArrayList<String> valueListString;
+    private boolean interpretedOK;
+    private Exception exception;
 
     public Interpreter(String homeDirectory) throws FileException {
         this.homeDirectory = homeDirectory;
         database = new Database(homeDirectory);
         FileIO fileIO = new FileIO(homeDirectory);
         databaseMap = fileIO.readAllFolders(homeDirectory);
+        interpretedOK = true;
     }
 
     public void interpretCommand(String command, Parser parser) throws DBException {
@@ -62,7 +65,8 @@ public class Interpreter {
                 default:
             }
         } catch(DBException | IOException e){
-            throw new CommandException(command, 0, "interpreting command", e);
+            interpretedOK = false;
+            exception = e;
         }
     }
 
@@ -73,6 +77,7 @@ public class Interpreter {
         if(database.getTables().containsKey(tableName)) {
             table = database.getTable(tableName);
             table.addRow(valueListString);
+            System.out.println("printing table from interpretInsert:");
             table.printTable();
             //make a new file within specified database
             FileIO fileIO = new FileIO(databaseName);
@@ -168,5 +173,13 @@ public class Interpreter {
         } catch(DBException e){
             throw new FileException(e);
         }
+    }
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public boolean getInterpretedOK(){
+        return interpretedOK;
     }
 }
