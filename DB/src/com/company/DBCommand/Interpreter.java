@@ -26,10 +26,11 @@ public class Interpreter {
     private HashMap<String, Database> databaseMap;
     private Table table;
 
-    public Interpreter(String homeDirectory){
+    public Interpreter(String homeDirectory) throws FileException {
         this.homeDirectory = homeDirectory;
         database = new Database(homeDirectory);
-        databaseMap = new HashMap<>();
+        FileIO fileIO = new FileIO(homeDirectory);
+        databaseMap = fileIO.readAllFolders(homeDirectory);
     }
 
     public void interpretCommand(String command, Parser parser) throws DBException {
@@ -65,7 +66,6 @@ public class Interpreter {
 
     private void interpretDrop(String command, Parser parser) throws DBException {
         StorageType type = parser.getType();
-        System.out.println("entered interpretDrop");
         if(type==StorageType.DATABASE){
             //get database name from parser
             databaseName = parser.getDatabaseName();
@@ -75,9 +75,7 @@ public class Interpreter {
             FileIO fileToDelete = new FileIO(currentFolder);
             fileToDelete.deleteFolder();
             //delete database from memory
-            System.out.println("deleting database "+databaseName);
             if(databaseMap.containsKey(databaseName)) {
-                System.out.println("found database "+databaseName);
                 databaseMap.remove(databaseName);
             }else{
                 throw new EmptyData("database does not exist in memory");
@@ -91,10 +89,7 @@ public class Interpreter {
                     throw new FileException("couldn't delete table "+tableName);
                 }
             }
-            System.out.println("deleting table "+tableName);
-            System.out.println("from database "+databaseName+" "+database.getDatabaseName());
             if(database.getTables().containsKey(tableName)) {
-                System.out.println("found table "+tableName);
                 database.removeTable(tableName);
             }else{
                 throw new EmptyData("table does not exist in memory");
@@ -123,14 +118,19 @@ public class Interpreter {
                 throw new FileException(e);
             }
         }else if(type==StorageType.TABLE) {
+            System.out.println("got type table");
             tableName = parser.getTableName();
             attributeList = parser.getAttributeList();
             try{
                 //make a new file within specified database
                 FileIO fileIO = new FileIO(databaseName);
                 //creates a new table within a specified folder (returns error if file already exists)
+                System.out.println("current folder "+currentFolder+" current database "+databaseName);
+                System.out.println("tableName "+tableName);
                 File newTableFile = fileIO.makeFile(currentFolder, tableName);
                 table = new Table(databaseName, tableName);
+                System.out.println("made new table, about to fill with "+attributeList);
+                //writing column names to file
                 table.fillTableFromMemory(attributeList, null);
                 System.out.println("adding table to "+database.getDatabaseName());
                 database.addTable(table);

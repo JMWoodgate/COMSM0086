@@ -18,14 +18,15 @@ public class Database {
     }
 
     public void removeTable(String tableName) throws DBException {
-        System.out.println("entered removeTable");
-        if(tables!=null) {
-            if(tables.containsKey(tableName)) {
-                tables.remove(tableName);
-            }else{
-                throw new EmptyData("table does not exist in memory");
-            }
-        }throw new EmptyData("hashmap of tables in database");
+        if(tables==null) {
+            throw new EmptyData("hashmap of tables in database");
+        }
+        if(tables.containsKey(tableName)) {
+            tables.remove(tableName);
+            assert(!tables.containsKey(tableName));
+        }else{
+            throw new EmptyData("table does not exist in memory");
+        }
     }
 
     public Table getTable(String tableName) throws EmptyData {
@@ -55,9 +56,7 @@ public class Database {
     public void addTable(Table newTable)
         throws EmptyData{
         if(newTable!=null) {
-            System.out.println("adding table "+newTable.getTableName());
             tables.put(newTable.getTableName(), newTable);
-            System.out.println("added table "+tables.get(newTable.getTableName()).getTableName());
             numberOfTables++;
         }
         else{

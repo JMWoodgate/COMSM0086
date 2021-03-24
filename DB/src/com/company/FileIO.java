@@ -119,7 +119,9 @@ public class FileIO {
         return formatString;
     }
 
-    public HashMap<String, Database> readAllFolders(String homeDirectory) throws FileException {
+    public HashMap<String, Database> readAllFolders(String homeDirectory)
+            throws FileException {
+        Database database;
         File homeFolder = new File(homeDirectory);
         File[] listOfFiles;
         HashMap<String, Database> databaseMap = new HashMap<>();
@@ -137,6 +139,13 @@ public class FileIO {
             return databaseMap;
         }else{
             //loop through folders and read each one, store in hashmap
+            for(File currentFile : listOfFiles){
+                if(currentFile.isDirectory()){
+                    String filePath = currentFile.getPath();
+                    database = readFolder(filePath);
+                    databaseMap.put(database.getDatabaseName(), database);
+                }
+            }
         }
         return databaseMap;
     }
@@ -148,44 +157,42 @@ public class FileIO {
         if(folder.exists()) {
             //creating a list of files that are within the folder
             listOfFiles = folder.listFiles();
-            newDatabase = new Database(folderName);
+            newDatabase = new Database(folder.getName());
         }else{
-            throw new EmptyData(folderName);
+            throw new EmptyData(folderName+" in readFolder");
         }
         //checking the list isn't empty
         if(listOfFiles == null){
-            throw new EmptyData(folderName);
+            throw new EmptyData(folderName+" in readFolder");
         }
-        if(listOfFiles.length > 0) {
-            //iterating through the list of files
-            for(int i = 0; i < listOfFiles.length; i++) {
-                //checking if it is a file
-                if(listOfFiles[i].isFile()) {
-                    //selecting current file
-                    File fileToOpen = listOfFiles[i];
-                    //saving the name in a string
-                    String fileName = fileToOpen.getName();
-                    //creating a variable to store the data in
-                    ArrayList<String> dataFromFile = new ArrayList<>();
-                    try {
-                        //reading the data from the file
-                        dataFromFile = readFile(fileToOpen);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //creating a new table
-                    Table newTable = null;
-                    try {
-                        //sending the data we read to our new table
-                        fileName = removeExtension(fileName);
-                        newTable = new Table(folderName, fileName);
-                        newTable.fillTableFromFile(dataFromFile);
-                    } catch (DBException e) {
-                        e.printStackTrace();
-                    }
-                    //adding the new table to the list of tables in our database
-                    newDatabase.addTable(newTable);
+        //iterating through the list of files
+        for (File listOfFile : listOfFiles) {
+            //checking if it is a file
+            if (listOfFile.isFile()) {
+                //selecting current file
+                File fileToOpen = listOfFile;
+                //saving the name in a string
+                String fileName = fileToOpen.getName();
+                //creating a variable to store the data in
+                ArrayList<String> dataFromFile = new ArrayList<>();
+                try {
+                    //reading the data from the file
+                    dataFromFile = readFile(fileToOpen);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                //creating a new table
+                Table newTable = null;
+                try {
+                    //sending the data we read to our new table
+                    fileName = removeExtension(fileName);
+                    newTable = new Table(folder.getName(), fileName);
+                    newTable.fillTableFromFile(dataFromFile);
+                } catch (DBException e) {
+                    e.printStackTrace();
+                }
+                //adding the new table to the list of tables in our database
+                newDatabase.addTable(newTable);
             }
         }
         return newDatabase;

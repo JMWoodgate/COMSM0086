@@ -8,6 +8,6 @@ public class EmptyData extends FileException{
     }
 
     public String toString(){
-        return "Error storing data from " + fileName;
+        return "Error storing data from: " + fileName;
     }
 }

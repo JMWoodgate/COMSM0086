@@ -3,6 +3,7 @@ import com.company.DBCommand.Interpreter;
 import com.company.DBCommand.Parser;
 import com.company.DBExceptions.DBException;
 import com.company.DBExceptions.EmptyData;
+import com.company.DBExceptions.FileException;
 
 import java.io.*;
 import java.net.*;
@@ -20,17 +21,9 @@ class DBServer
             System.out.println("Server Listening");
             //create databases directory to store info
             folderName = "."+ File.separator+"databases";
-            File parentFolder = new File(folderName);
-            if(!parentFolder.exists()) {
-                final boolean mkdir = parentFolder.mkdir();
-                //create new folder (for new database)
-                if (!mkdir) {
-                    throw new IOException();
-                }
-            }
             interpreter = new Interpreter(folderName);
             while(true) processNextConnection(serverSocket);
-        } catch(IOException ioe) {
+        } catch(IOException | FileException ioe) {
             System.err.println(ioe);
         }
     }
