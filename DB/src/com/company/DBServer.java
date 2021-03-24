@@ -86,7 +86,6 @@ class DBServer
         }*/
 
         while(parsedOK) {
-            System.out.println("in parsedOK");
             String incomingCommand = socketReader.readLine();
             parser = new Parser(incomingCommand, folderName);
             parsedOK = parser.getParsedOK();
@@ -106,7 +105,6 @@ class DBServer
                 folderName = parser.getCurrentFolder();
                 ArrayList<String> currentCommand = parser.getTokenizedCommand();
                 interpreter.interpretCommand(currentCommand.get(0), parser);
-                System.out.println("interpreted command");
             }catch(DBException e){
                 System.out.println("caught error "+e);
                 e.printStackTrace();

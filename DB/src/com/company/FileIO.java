@@ -4,6 +4,7 @@ import com.company.DBExceptions.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FileIO {
 
@@ -93,7 +94,6 @@ public class FileIO {
         //write the table to the file
         //getting tables and rows from memory
         ArrayList<String> columns = table.getColumns();
-        System.out.println("columns in writeFile");
         ArrayList<ArrayList<String>> rows = table.getRows();
         //formatting columns and writing to file
         bufferedWriter.write(formatString(columns));
@@ -117,6 +117,28 @@ public class FileIO {
         }
         formatString = stringBuilder.toString();
         return formatString;
+    }
+
+    public HashMap<String, Database> readAllFolders(String homeDirectory) throws FileException {
+        File homeFolder = new File(homeDirectory);
+        File[] listOfFiles;
+        HashMap<String, Database> databaseMap = new HashMap<>();
+        if(homeFolder.exists()){
+            listOfFiles = homeFolder.listFiles();
+        }else{
+            final boolean mkdir = homeFolder.mkdir();
+            //create new folder (for new database)
+            if (!mkdir) {
+                throw new FileException("could not create home directory");
+            }
+            return databaseMap;
+        }
+        if(listOfFiles == null){
+            return databaseMap;
+        }else{
+            //loop through folders and read each one, store in hashmap
+        }
+        return databaseMap;
     }
 
     public Database readFolder(String folderName) throws FileException {

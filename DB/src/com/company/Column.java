@@ -10,7 +10,6 @@ public class Column {
     private int columnIndex;
 
     public Column(String tableName, String columnName, int columnIndex){
-        System.out.println("making new column "+columnName+" in "+tableName+" at "+columnIndex);
         this.tableName = tableName;
         this.columnName = columnName;
         this.columnIndex = columnIndex;
