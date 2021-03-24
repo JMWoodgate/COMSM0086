@@ -13,6 +13,7 @@ public class InsertCMD extends Parser implements DBCommand{
     private int index;
     private final StorageType type;
     private String tableName;
+    private ArrayList<String> valueListString;
 
     public InsertCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
@@ -43,11 +44,19 @@ public class InsertCMD extends Parser implements DBCommand{
             nextToken = command.get(index);
             checkNextToken(nextToken, "(", index);
             ValueList valueList = new ValueList(command, index);
+            valueListString = valueList.getValueListString();
             index = valueList.getIndex();
             return true;
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "INSERT", e);
         }
+    }
+
+    public ArrayList<String> getValueListString() throws DBException{
+        if(valueListString!=null){
+            return valueListString;
+        }
+        throw new EmptyData("get value list string");
     }
 
     public StorageType getType(){
@@ -60,8 +69,6 @@ public class InsertCMD extends Parser implements DBCommand{
         }
         throw new EmptyData("table name");
     }
-
-    public void execute(){}
 
     public int getIndex(){
         return index;

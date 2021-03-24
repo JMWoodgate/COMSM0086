@@ -23,6 +23,7 @@ public class Parser {
     private String homeDirectory;
     private StorageType type;
     private ArrayList<String> attributeList;
+    private ArrayList<String> valueListString;
 
     public Parser(String command, String currentFolder) {
         if(command!=null && command.length()>0) {
@@ -149,6 +150,7 @@ public class Parser {
             InsertCMD insert = new InsertCMD(tokenizedCommand, index);
             index = insert.getIndex();
             tableName = insert.getTableName();
+            valueListString = insert.getValueListString();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "insert", e);
@@ -316,6 +318,13 @@ public class Parser {
             }
         }
         return true;
+    }
+
+    public ArrayList<String> getValueListString() throws DBException{
+        if(valueListString!=null){
+            return valueListString;
+        }
+        throw new EmptyData("get value list string");
     }
 
     public StorageType getType(){

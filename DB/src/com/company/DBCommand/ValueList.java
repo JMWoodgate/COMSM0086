@@ -10,7 +10,7 @@ public class ValueList {
 
     private final ArrayList<String> command;
     private int index;
-    private ArrayList<Value> valueList;
+    private ArrayList<Value> valueArrayList;
     private ArrayList<String> valueListString;
 
     public ValueList(ArrayList<String> command, int index) throws DBException{
@@ -30,15 +30,15 @@ public class ValueList {
         throw new EmptyData("get value list string");
     }
 
-    public ArrayList<Value> getValueList() throws DBException{
-        if(valueList!=null){
-            return valueList;
+    public ArrayList<Value> getValueArrayList() throws DBException{
+        if(valueArrayList!=null){
+            return valueArrayList;
         }
         throw new EmptyData("get value list");
     }
 
     private void parseValueList() throws DBException {
-        valueList = new ArrayList<Value>();
+        valueArrayList = new ArrayList<Value>();
         valueListString = new ArrayList<String>();
         try {
             //move past first bracket
@@ -47,7 +47,7 @@ public class ValueList {
             while (!command.get(index).equals(")")) {
                 //getting first value & storing in list
                 Value value = new Value(command, index);
-                valueList.add(value);
+                valueArrayList.add(value);
                 //also storing string in a list for ease of access
                 valueListString.add(value.getValue());
                 //if stringLiteral has a special character,

@@ -19,6 +19,12 @@ public class Table {
         this.tableName = tableName;
     }
 
+    public void addRow(ArrayList<String> rowData) throws EmptyData {
+        if(rowData!=null) {
+            rows.add(new Row(tableName, rowData, numberOfColumns));
+        }throw new EmptyData("rowData in addRow in Table");
+    }
+
     public void fillTableFromMemory(ArrayList<String> columnNames, ArrayList<String> rowData){
         if(columnNames!=null){
             //add one for id
