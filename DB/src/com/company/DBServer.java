@@ -82,14 +82,8 @@ class DBServer
             String incomingCommand = socketReader.readLine();
             parser = new Parser(incomingCommand, folderName);
             parsedOK = parser.getParsedOK();
-            while (!parsedOK) {
-                socketWriter.write("[ERROR] from: " + incomingCommand);
-                socketWriter.write("\n" + parser.getException());
-                socketWriter.write("\n" + ((char) 4) + "\n");
-                socketWriter.flush();
-                incomingCommand = socketReader.readLine();
-                parser = new Parser(incomingCommand, folderName);
-                parsedOK = parser.getParsedOK();
+            if (!parsedOK) {
+                parser = exceptionLoop(socketWriter, socketReader, parser, incomingCommand);
             }
             socketWriter.write("[OK] Thanks for your message: " + incomingCommand);
             socketWriter.write("\n" + ((char) 4) + "\n");
@@ -99,8 +93,11 @@ class DBServer
                 ArrayList<String> currentCommand = parser.getTokenizedCommand();
                 interpreter.interpretCommand(currentCommand.get(0), parser);
             }catch(DBException e){
-                System.out.println("caught error "+e);
-                e.printStackTrace();
+                System.out.println("caught exception from interpreter");
+                parser.setException(e);
+                System.out.println("set exception "+parser.getException());
+                parser = exceptionLoop(socketWriter, socketReader, parser, incomingCommand);
+                System.out.println("returned from exception loop with "+parser.getTokenizedCommand());
             }
         }
 
@@ -108,8 +105,21 @@ class DBServer
         socketWriter.write("[OK1] Thanks for your message: " + incomingCommand);
         socketWriter.write("\n" + ((char)4) + "\n");
         socketWriter.flush();*/
+    }
 
-
+    private Parser exceptionLoop(BufferedWriter socketWriter, BufferedReader socketReader,
+                                  Parser parser, String incomingCommand) throws IOException {
+        boolean parsedOK = false;
+        while (!parsedOK) {
+            socketWriter.write("[ERROR] from: " + incomingCommand);
+            socketWriter.write("\n" + parser.getException());
+            socketWriter.write("\n" + ((char) 4) + "\n");
+            socketWriter.flush();
+            incomingCommand = socketReader.readLine();
+            parser = new Parser(incomingCommand, folderName);
+            parsedOK = parser.getParsedOK();
+        }
+        return parser;
     }
 
     public static void main(String[] args) {

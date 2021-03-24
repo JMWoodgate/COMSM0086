@@ -21,16 +21,17 @@ public class Table {
 
     public void addRow(ArrayList<String> rowData) throws EmptyData {
         int lastID;
+        if(rowData==null) {
+            throw new EmptyData("rowData in addRow in Table");
+        }
         //checking if this is the first row
-        if(rows.size()<0) {
-            lastID = rows.get(numberOfRows).getID();
+        if(rows.size()>0) {
+            lastID = rows.get(numberOfRows-1).getID();
         }else{
             lastID = 0;
         }
-        if(rowData!=null) {
-            rows.add(new Row(tableName, rowData, numberOfColumns, lastID));
-            numberOfRows++;
-        }throw new EmptyData("rowData in addRow in Table");
+        rows.add(new Row(tableName, rowData, numberOfColumns, lastID));
+        numberOfRows++;
     }
 
     public void fillTableFromMemory(ArrayList<String> columnNames, ArrayList<String> rowData){

@@ -61,22 +61,23 @@ public class Interpreter {
                     break;
                 default:
             }
-        } catch(DBException e){
+        } catch(DBException | IOException e){
             throw new CommandException(command, 0, "interpreting command", e);
         }
     }
 
-    private void interpretInsert(Parser parser) throws DBException {
+    private void interpretInsert(Parser parser) throws DBException, IOException {
         tableName = parser.getTableName();
         valueListString = parser.getValueListString();
         //need to put the values into the correct table, both in memory and on file
         if(database.getTables().containsKey(tableName)) {
-            System.out.println("getting table from database "+tableName);
             table = database.getTable(tableName);
-            System.out.println("got table, adding row "+valueListString);
             table.addRow(valueListString);
-            System.out.println("added row, printing table");
             table.printTable();
+            //make a new file within specified database
+            FileIO fileIO = new FileIO(databaseName);
+            //writes to file (creates file if it doesn't exist)
+            fileIO.writeFile(currentFolder, tableName, table);
         }else{
             throw new EmptyData("table does not exist in memory");
         }
