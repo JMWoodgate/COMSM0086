@@ -90,6 +90,8 @@ public class Interpreter {
             System.out.println("returning results from * "+results);
             return results;
         }
+        //checking that all the attributes in the query exist
+        checkAttributes();
         conditionListArray = parser.getConditionListArray();
         if(conditionListArray!=null) {
             conditionListObject = parser.getConditionListObject();
@@ -100,16 +102,22 @@ public class Interpreter {
         return results;
     }
 
-    private String checkAttributeValues(){
-        ArrayList<String> existingAttributes = table.getColumns();
+    private void checkAttributes() throws EmptyData {
+        ArrayList<String> tableAttributes = table.getColumns();
         for(String attribute : attributeList){
-            for(int i = 0; i < existingAttributes.size(); i++){
-                if(attribute.equals(existingAttributes.get(i))){
-
-                }
+            if(!isIn(attribute, tableAttributes)){
+                throw new EmptyData("column '"+attribute+"' does not exist");
             }
         }
-        return null;
+    }
+
+    private boolean isIn(String attribute, ArrayList<String> tableAttributes){
+        for(int i = 0; i < tableAttributes.size(); i++){
+            if(attribute.equals(tableAttributes.get(i))){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void interpretInsert(Parser parser) throws DBException, IOException {
