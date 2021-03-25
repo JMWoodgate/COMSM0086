@@ -56,6 +56,7 @@ public class Interpreter {
                     interpretInsert(parser);
                     break;
                 case "select":
+                    interpretSelect(parser);
                     break;
                 case "update":
                     break;
@@ -66,26 +67,35 @@ public class Interpreter {
                 default:
             }
         } catch(DBException | IOException e){
-            System.out.println("caught error from switch interpreter");
             interpretedOK = false;
             exception = e;
         }
     }
 
+    private void interpretSelect(Parser parser) throws DBException, IOException {
+        tableName = parser.getTableName();
+        attributeList = parser.getAttributeList();
+        if(!database.getTables().containsKey(tableName)){
+            throw new EmptyData("table does not exist in memory");
+        }
+        table = database.getTable(tableName);
+        //need to get wild attribute list out of table and print to terminal
+        //if conditions set, need to do this based on conditions
+    }
+
     private void interpretInsert(Parser parser) throws DBException, IOException {
         tableName = parser.getTableName();
         valueListString = parser.getValueListString();
-        //need to put the values into the correct table, both in memory and on file
-        if(database.getTables().containsKey(tableName)) {
-            table = database.getTable(tableName);
-            table.addRow(valueListString);
-            //make a new file within specified database
-            FileIO fileIO = new FileIO(databaseName);
-            //writes to file (creates file if it doesn't exist)
-            fileIO.writeFile(currentFolder, tableName, table);
-        }else{
+        if(!database.getTables().containsKey(tableName)) {
             throw new EmptyData("table does not exist in memory");
         }
+        //need to put the values into the correct table, both in memory and on file
+        table = database.getTable(tableName);
+        table.addRow(valueListString);
+        //make a new file within specified database
+        FileIO fileIO = new FileIO(databaseName);
+        //writes to file (creates file if it doesn't exist)
+        fileIO.writeFile(currentFolder, tableName, table);
     }
 
     private void interpretDrop(Parser parser) throws DBException {
