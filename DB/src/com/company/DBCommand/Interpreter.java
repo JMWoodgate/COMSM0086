@@ -92,13 +92,14 @@ public class Interpreter {
         resultsTable = new Table(databaseName, tableName);
         //if wild, table is the whole thing, otherwise need to fill with relevant attributes
         if(attributeList.get(0).equals("*")){
-            resultsTable = table;
-            attributeList = resultsTable.getColumns();
+            //get every column name, then delete id
+            attributeList = table.getColumns();
+            attributeList.remove(0);
         }else {
             //checking that all the attributes in the query exist
             checkAttributes();
-            resultsTable.fillTableFromMemory(attributeList, null);
         }
+        resultsTable.fillTableFromMemory(attributeList, null);
         //get results from relevant columns
         results = getSelectResults(parser);
         //if condition, need to throw out rows not matching
@@ -162,7 +163,6 @@ public class Interpreter {
     }
 
     private void equal(Value value) throws DBException{
-        System.out.println("entered equal, attribute name "+attributeName);
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         String valueString = value.getValue();
         //for each row of the table, need to check the relevant column
@@ -193,7 +193,6 @@ public class Interpreter {
             }
         }
         results = resultsTable.getTable();
-        System.out.println("returning results from getSelectResults: "+results);
         return results;
     }
 
