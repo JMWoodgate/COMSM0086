@@ -29,7 +29,7 @@ public class Interpreter {
     private boolean interpretedOK;
     private Exception exception;
 
-    public Interpreter(String homeDirectory) throws FileException {
+    public Interpreter(String homeDirectory) throws DBException, IOException {
         this.homeDirectory = homeDirectory;
         database = new Database(homeDirectory);
         FileIO fileIO = new FileIO(homeDirectory);
@@ -58,7 +58,6 @@ public class Interpreter {
                     break;
                 case "select":
                     results = interpretSelect(parser);
-                    System.out.println("results in switch: "+results);
                     break;
                 case "update":
                     break;
@@ -84,32 +83,42 @@ public class Interpreter {
         }
         table = database.getTable(tableName);
         attributeList = parser.getAttributeList();
-        System.out.println("attribute list: "+attributeList);
         if(attributeList.get(0).equals("*")){
             results = table.getTable();
-            System.out.println("returning results from * "+results);
             return results;
         }
         //checking that all the attributes in the query exist
         checkAttributes();
-        //need to get the column values for each selected attribute, and pair them by index to form new rows
-        conditionListArray = parser.getConditionListArray();
-        if(conditionListArray!=null) {
-            conditionListObject = parser.getConditionListObject();
-        }
-        //need to get wild attribute list out of table and print to terminal
-        //if conditions set, need to do this based on conditions
-        System.out.println("returning results from end of interpretSelect "+results);
+        results = getResults(parser);
         return results;
     }
 
-    private ArrayList<String> getColumnValues(String columnName) throws DBException {
-        //get all values for chosen column
-        //need to get the index of the column from the name
-        ArrayList<String> columnValues = new ArrayList<>();
-        int columnIndex = table.getColumnIndex(columnName);
-        columnValues = table.getColumnValues(columnIndex);
-        return columnValues;
+    private String getResults(Parser parser) throws DBException {
+        String results;
+        //make a temporary results table and fill with column names
+        Table resultsTable = new Table(databaseName, tableName);
+        resultsTable.fillTableFromMemory(attributeList, null);
+        //get the first column values so that we know how many rows to make
+        ArrayList<String> columnValues = table.getColumnValues(0);
+        //add the number of rows to our list that we have values
+        resultsTable.addEmptyRows(columnValues.size(), attributeList.size()+1);
+        //for each column in our selected list, get the values
+        for (int j=0; j<attributeList.size(); j++) {
+            //get the relevant column values
+            //need to get the selected column index from our table
+            int columnIndex = table.getColumnIndex(attributeList.get(j));
+            columnValues = table.getColumnValues(columnIndex);
+            //for each column value, need to populate the rows
+            for(int i=0; i<columnValues.size();i++){
+                resultsTable.addElement(columnValues.get(i), i, j+1);
+            }
+        }
+        if(parser.getHasCondition()) {
+            conditionListArray = parser.getConditionListArray();
+            conditionListObject = parser.getConditionListObject();
+        }
+        results = resultsTable.getTable();
+        return results;
     }
 
     private void checkAttributes() throws EmptyData {

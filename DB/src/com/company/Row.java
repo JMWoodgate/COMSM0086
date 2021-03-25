@@ -13,6 +13,17 @@ public class Row {
     private final int numberOfColumns;
     private final int id;
 
+    public Row(String tableName, int numberOfColumns, int id){
+        this.tableName = tableName;
+        elements = new ArrayList<>();
+        for(int i = 0; i<numberOfColumns-1; i++){
+            elements.add(null);
+        }
+        this.numberOfColumns = numberOfColumns;
+        this.id = id;
+        addID();
+    }
+
     public Row(String tableName, ArrayList<String> elements,
                int numberOfColumns){
         this.tableName = tableName;
@@ -55,6 +66,7 @@ public class Row {
 
     public boolean setElement(String newElement, int columnIndex)
             throws DBException {
+        System.out.println("entered setElement with "+newElement+" at column "+columnIndex);
         if(columnIndex<numberOfColumns
         && columnIndex>=0){
             if(newElement!=null) {

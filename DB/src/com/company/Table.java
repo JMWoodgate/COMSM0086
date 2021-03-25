@@ -19,6 +19,26 @@ public class Table {
         this.tableName = tableName;
     }
 
+    public void addElement(String element, int rowIndex, int columnIndex)
+            throws DBException {
+        if(rows==null){
+            throw new EmptyData("no rows to add element to");
+        }
+        rows.get(rowIndex).setElement(element, columnIndex);
+    }
+
+    public int addEmptyRows(int rowsToAdd, int columnsToAdd){
+        if(rows==null){
+            rows = new ArrayList<>();
+        }
+        while(numberOfRows<rowsToAdd){
+            numberOfRows++;
+            rows.add(new Row(tableName, columnsToAdd, numberOfRows));
+        }
+        printTable();
+        return numberOfRows;
+    }
+
     public void addRow(ArrayList<String> rowData) throws DBException {
         int lastID;
         if(rowData==null) {
@@ -141,7 +161,7 @@ public class Table {
     }
 
     public ArrayList<String> getColumnValues(int columnIndex)
-            throws IndexOutOfBounds {
+            throws DBException {
         ArrayList<String> columnValues = new ArrayList<>();
         for(int i = 0; i < numberOfRows; i++){
             columnValues.add(rows.get(i).getElement(columnIndex));

@@ -25,6 +25,8 @@ class DBServer
             while(true) processNextConnection(serverSocket);
         } catch(IOException | FileException ioe) {
             System.err.println(ioe);
+        } catch (DBException e) {
+            e.printStackTrace();
         }
     }
 

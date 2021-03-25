@@ -23,6 +23,7 @@ public class Parser {
     private StorageType type;
     private ArrayList<String> attributeList;
     private ArrayList<String> valueListString;
+    private boolean hasCondition;
 
     public Parser(String command, String currentFolder) {
         if(command!=null && command.length()>0) {
@@ -136,6 +137,7 @@ public class Parser {
             tableName = select.getTableName();
             attributeList = select.getAttributeList();
             if(select.getHasCondition()) {
+                hasCondition = true;
                 conditionListArray = select.getConditionListArray();
                 conditionListObject = select.getConditionListObject();
             }
@@ -338,6 +340,10 @@ public class Parser {
     public String setException(Exception e) {
         exception = e.toString();
         return exception;
+    }
+
+    public boolean getHasCondition(){
+        return hasCondition;
     }
 
     public boolean getParsedOK(){

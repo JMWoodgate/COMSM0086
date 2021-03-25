@@ -120,7 +120,7 @@ public class FileIO {
     }
 
     public HashMap<String, Database> readAllFolders(String homeDirectory)
-            throws FileException {
+            throws DBException, IOException {
         Database database;
         File homeFolder = new File(homeDirectory);
         File[] listOfFiles;
@@ -150,7 +150,7 @@ public class FileIO {
         return databaseMap;
     }
 
-    public Database readFolder(String folderName) throws FileException {
+    public Database readFolder(String folderName) throws DBException, IOException {
         File folder = new File(folderName);
         File[] listOfFiles;
         Database newDatabase;
@@ -166,31 +166,22 @@ public class FileIO {
             throw new EmptyData(folderName+" in readFolder");
         }
         //iterating through the list of files
-        for (File listOfFile : listOfFiles) {
+        for (File fileToOpen : listOfFiles) {
             //checking if it is a file
-            if (listOfFile.isFile()) {
+            if (fileToOpen.isFile()) {
                 //selecting current file
-                File fileToOpen = listOfFile;
                 //saving the name in a string
                 String fileName = fileToOpen.getName();
                 //creating a variable to store the data in
                 ArrayList<String> dataFromFile = new ArrayList<>();
-                try {
-                    //reading the data from the file
-                    dataFromFile = readFile(fileToOpen);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                //reading the data from the file
+                dataFromFile = readFile(fileToOpen);
                 //creating a new table
                 Table newTable = null;
-                try {
-                    //sending the data we read to our new table
-                    fileName = removeExtension(fileName);
-                    newTable = new Table(folder.getName(), fileName);
-                    newTable.fillTableFromFile(dataFromFile);
-                } catch (DBException e) {
-                    e.printStackTrace();
-                }
+                //sending the data we read to our new table
+                fileName = removeExtension(fileName);
+                newTable = new Table(folder.getName(), fileName);
+                newTable.fillTableFromFile(dataFromFile);
                 //adding the new table to the list of tables in our database
                 newDatabase.addTable(newTable);
             }
@@ -218,18 +209,10 @@ public class FileIO {
         //opening file and assigning a buffered reader
         if (fileToOpen.exists()) {
             FileReader reader = null;
-            try {
-                reader = new FileReader(fileToOpen);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            reader = new FileReader(fileToOpen);
             BufferedReader buffReader = null;
-            if (reader != null) {
-                buffReader = new BufferedReader(reader);
-            }
-            assert buffReader != null;
+            buffReader = new BufferedReader(reader);
             dataFromFile = new ArrayList<>();
-
             //reading from the file line by line, and storing each line in an ArrayList
             do {
                 currentLine = buffReader.readLine();
