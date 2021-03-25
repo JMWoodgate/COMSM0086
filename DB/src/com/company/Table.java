@@ -19,16 +19,23 @@ public class Table {
         this.tableName = tableName;
     }
 
-    public void addRow(ArrayList<String> rowData) throws EmptyData {
-        System.out.println("entered addRow");
+    public void addRow(ArrayList<String> rowData) throws DBException {
         int lastID;
         if(rowData==null) {
             throw new EmptyData("rowData in addRow in Table");
         }
         //if there are no columns, first row must be column headers
-        if(columns==null){
+        if(numberOfColumns==0){
             fillTableFromMemory(rowData, null);
             return;
+        }
+        //check right number of values for columns
+        if(rowData.size()!=numberOfColumns-1){
+            throw new CommandException(rowData.toString(),
+                    rowData.size(), "check number of values/columns");
+        }
+        if(rows==null){
+            rows = new ArrayList<>();
         }
         //checking if this is the first row
         if(rows.size()>0) {
@@ -44,7 +51,6 @@ public class Table {
         if(columnNames!=null){
             //add one for id
             numberOfColumns = columnNames.size()+1;
-            System.out.println("number of columns in fillTableFromMemory "+numberOfColumns);
             columns = new ArrayList<>();
             //have to add id column
             columns.add(new Column(tableName, "id", 0));
@@ -208,10 +214,6 @@ public class Table {
         return numberOfRows;
     }
 
-    public void setNumberOfRows(int numberOfRows){
-        this.numberOfRows = numberOfRows;
-    }
-
     private int initNumberOfColumns(String firstLine)
             throws EmptyName {
         if(firstLine!=null) {
@@ -226,9 +228,5 @@ public class Table {
 
     public int getNumberOfColumns(){
         return numberOfColumns;
-    }
-
-    public void setNumberOfColumns(int numberOfColumns){
-        this.numberOfColumns = numberOfColumns;
     }
 }

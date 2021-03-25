@@ -77,12 +77,8 @@ public class Interpreter {
         valueListString = parser.getValueListString();
         //need to put the values into the correct table, both in memory and on file
         if(database.getTables().containsKey(tableName)) {
-            System.out.println("found table in memory");
             table = database.getTable(tableName);
-            System.out.println("got table from database in memory");
             table.addRow(valueListString);
-            System.out.println("printing table from interpretInsert:");
-            table.printTable();
             //make a new file within specified database
             FileIO fileIO = new FileIO(databaseName);
             //writes to file (creates file if it doesn't exist)
@@ -160,8 +156,10 @@ public class Interpreter {
             //creates a new table within a specified folder (returns error if file already exists)
             File newTableFile = fileIO.makeFile(currentFolder, tableName);
             table = new Table(databaseName, tableName);
-            //writing column names to file
-            table.fillTableFromMemory(attributeList, null);
+            if(attributeList.size()>1) {
+                //writing column names to file
+                table.fillTableFromMemory(attributeList, null);
+            }
             database.addTable(table);
             //writes to file (creates file if it doesn't exist)
             fileIO.writeFile(currentFolder, tableName, table);
