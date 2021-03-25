@@ -18,55 +18,51 @@ public class SelectCMD extends Parser implements DBCommand{
     private ConditionList conditionListObject;
     private boolean hasCondition;
 
-    public SelectCMD(ArrayList<String> command, int index) throws DBException {
+    public SelectCMD(ArrayList<String> command, int index) throws DBException{
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
         attributeList = new ArrayList<String>();
         conditionListArray = new ArrayList<>();
-        if(command != null) {
-            if (!parseSelect()) {
-                throw new CommandException(
-                        command.get(index), index, "table name");
-            }
-        }else{
+        if(command == null) {
             throw new EmptyData("SELECT command");
+        }
+        if(!parseSelect()) {
+            throw new CommandException(
+                    command.get(index), index, "table name");
         }
     }
 
     //SELECT <WildAttributeList> FROM <TableName> |
     //SELECT <WildAttributeList> FROM <TableName> WHERE <Condition>
     private boolean parseSelect() throws DBException{
-        try {
-            index++;
-            WildAttributeList wildAttributeList = new WildAttributeList(command, index);
-            //updating index and storing attributes
-            index = wildAttributeList.getIndex();
-            attributeList = wildAttributeList.getAttributeList();
-            checkNextToken(command.get(index), "from", index);
-            tableName = parseTableName(command, index);
-            index+=2;
-            switch(command.get(index)){
-                case(";"):
-                    hasCondition = false;
-                    break;
-                case("where"):
-                    hasCondition = true;
-                    index++;
-                    //get conditions, store as object and array for testing
-                    conditionListObject = new ConditionList(command, index);
-                    conditionListArray = conditionListObject.getConditionList();
-                    index = conditionListObject.getIndex();
-                    break;
-                default:
-                    throw new CommandException(command.get(index), index, "; or WHERE");
-            }
-            //point index to end of command
-            index++;
-            return true;
-        } catch(DBException e){
-            throw new CommandException(command.get(index), index, "SELECT", e);
+        index++;
+        WildAttributeList wildAttributeList = new WildAttributeList(command, index);
+        //updating index and storing attributes
+        index = wildAttributeList.getIndex();
+        attributeList = wildAttributeList.getAttributeList();
+        checkNextToken(command.get(index), "from", index);
+        tableName = parseTableName(command, index);
+        index+=2;
+        switch(command.get(index)){
+            case(";"):
+                hasCondition = false;
+                break;
+            case("where"):
+                hasCondition = true;
+                index++;
+                //get conditions, store as object and array for testing
+                conditionListObject = new ConditionList(command, index);
+                conditionListArray = conditionListObject.getConditionList();
+                index = conditionListObject.getIndex();
+                break;
+            default:
+                throw new CommandException(
+                        command.get(index), index, "; or WHERE");
         }
+        //point index to end of command
+        index++;
+        return true;
     }
 
     public boolean getHasCondition(){

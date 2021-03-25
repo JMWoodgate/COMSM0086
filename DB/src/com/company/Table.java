@@ -39,6 +39,14 @@ public class Table {
         return numberOfRows;
     }
 
+    public void deleteRow(int rowIndex) throws DBException{
+        if(rows==null){
+            throw new EmptyData("no rows to delete");
+        }
+        rows.remove(rowIndex);
+        numberOfRows--;
+    }
+
     public void addRow(ArrayList<String> rowData) throws DBException {
         int lastID;
         if(rowData==null) {

@@ -24,7 +24,8 @@ public class Condition extends Parser{
         try{
             parseCondition();
         }catch(DBException e){
-            throw new CommandException(command.get(index), index, "condition", e);
+            throw new CommandException(
+                    command.get(index), index, "condition", e);
         }
     }
 

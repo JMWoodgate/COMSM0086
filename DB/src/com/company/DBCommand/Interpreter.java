@@ -3,6 +3,7 @@ package com.company.DBCommand;
 import com.company.DBExceptions.*;
 import com.company.Database;
 import com.company.FileIO;
+import com.company.Row;
 import com.company.Table;
 
 import java.io.File;
@@ -23,8 +24,9 @@ public class Interpreter {
     private String parentFolder;
     private final String homeDirectory;
     private Database database;
-    private HashMap<String, Database> databaseMap;
+    private final HashMap<String, Database> databaseMap;
     private Table table;
+    private Table resultsTable;
     private ArrayList<String> valueListString;
     private boolean interpretedOK;
     private Exception exception;
@@ -89,33 +91,97 @@ public class Interpreter {
         }
         //checking that all the attributes in the query exist
         checkAttributes();
-        results = getResults(parser);
+        //make a new results table and fill with column names
+        resultsTable = new Table(databaseName, tableName);
+        resultsTable.fillTableFromMemory(attributeList, null);
+        //get results from relevant columns
+        results = getSelectResults(parser);
+        //if condition, need to throw out rows not matching
+        if(parser.getHasCondition()) {
+            results = conditionalSelectResults(parser);
+            return results;
+        }
         return results;
     }
 
-    private String getResults(Parser parser) throws DBException {
+    private String conditionalSelectResults(Parser parser) throws DBException{
+        String results = null;
+        conditionListArray = parser.getConditionListArray();
+        conditionListObject = parser.getConditionListObject();
+        //the results table should be filled with our selected columns
+        //need to go over the columns we've selected and throw out the rows that don't
+        //match the condition
+        //do conditions need to be stored in a tree-like structure so that we can
+        //evaluate them in the correct order?
+        for(int i=0; i<conditionListObject.getConditionList().size();i++){
+            Condition currentCondition = conditionListObject.getConditionList().get(i);
+            attributeName = currentCondition.getAttribute();
+            String op = currentCondition.getOp();
+            Value value = currentCondition.getValueObject();
+            conditionSwitch(op, value);
+        }
+        results = resultsTable.getTable();
+        return results;
+    }
+
+    private void conditionSwitch(String op, Value value)
+            throws DBException{
+        switch(op){
+            case("=="):
+                equal(value);
+                break;
+            case("!="):
+                unequal(value);
+            case("<"):
+            case(">"):
+            case("<="):
+            case(">="):
+            case("LIKE"):
+            default:
+                throw new EmptyData("problem with condition");
+        }
+    }
+
+    private void unequal(Value value) throws DBException{
+        int columnIndex = resultsTable.getColumnIndex(attributeName);
+        String valueString = value.getValue();
+        //for each row of the table, need to check the relevant column
+        for(int i=0; i<resultsTable.getNumberOfRows();i++){
+            ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
+            if(currentRow.get(columnIndex).equals(valueString)){
+                resultsTable.deleteRow(i);
+            }
+        }
+    }
+
+    private void equal(Value value) throws DBException{
+        int columnIndex = resultsTable.getColumnIndex(attributeName);
+        String valueString = value.getValue();
+        //for each row of the table, need to check the relevant column
+        for(int i=0; i<resultsTable.getNumberOfRows();i++){
+            ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
+            if(!currentRow.get(columnIndex).equals(valueString)){
+                resultsTable.deleteRow(i);
+            }
+        }
+    }
+
+    private String getSelectResults(Parser parser) throws DBException {
         String results;
-        //make a temporary results table and fill with column names
-        Table resultsTable = new Table(databaseName, tableName);
-        resultsTable.fillTableFromMemory(attributeList, null);
         //get the first column values so that we know how many rows to make
         ArrayList<String> columnValues = table.getColumnValues(0);
         //add the number of rows to our list that we have values
         resultsTable.addEmptyRows(columnValues.size(), attributeList.size()+1);
         //for each column in our selected list, get the values
         for (int j=0; j<attributeList.size(); j++) {
-            //get the relevant column values
             //need to get the selected column index from our table
             int columnIndex = table.getColumnIndex(attributeList.get(j));
+            //get the relevant column values
             columnValues = table.getColumnValues(columnIndex);
             //for each column value, need to populate the rows
             for(int i=0; i<columnValues.size();i++){
                 resultsTable.addElement(columnValues.get(i), i, j+1);
             }
-        }
-        if(parser.getHasCondition()) {
-            conditionListArray = parser.getConditionListArray();
-            conditionListObject = parser.getConditionListObject();
         }
         results = resultsTable.getTable();
         return results;
