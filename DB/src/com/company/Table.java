@@ -27,7 +27,7 @@ public class Table {
         rows.get(rowIndex).setElement(element, columnIndex);
     }
 
-    public int addEmptyRows(int rowsToAdd, int columnsToAdd){
+    public void addEmptyRows(int rowsToAdd, int columnsToAdd){
         if(rows==null){
             rows = new ArrayList<>();
         }
@@ -35,8 +35,6 @@ public class Table {
             numberOfRows++;
             rows.add(new Row(tableName, columnsToAdd, numberOfRows));
         }
-        printTable();
-        return numberOfRows;
     }
 
     public void deleteRow(int rowIndex) throws DBException{
@@ -233,11 +231,10 @@ public class Table {
         return tableName;
     }
 
-    public boolean setTableName(String newTableName)
+    public void setTableName(String newTableName)
             throws EmptyName {
         if(newTableName!=null){
             tableName = newTableName;
-            return true;
         }
         else{
             throw new EmptyName(StorageType.TABLE, databaseName);

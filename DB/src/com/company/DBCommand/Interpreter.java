@@ -73,7 +73,6 @@ public class Interpreter {
             interpretedOK = false;
             exception = e;
         }
-        System.out.println("returning results from switch: "+results);
         return results;
     }
 
@@ -85,15 +84,21 @@ public class Interpreter {
         }
         table = database.getTable(tableName);
         attributeList = parser.getAttributeList();
-        if(attributeList.get(0).equals("*")){
+        if(attributeList.get(0).equals("*")&&!parser.getHasCondition()){
             results = table.getTable();
             return results;
         }
-        //checking that all the attributes in the query exist
-        checkAttributes();
         //make a new results table and fill with column names
         resultsTable = new Table(databaseName, tableName);
-        resultsTable.fillTableFromMemory(attributeList, null);
+        //if wild, table is the whole thing, otherwise need to fill with relevant attributes
+        if(attributeList.get(0).equals("*")){
+            resultsTable = table;
+            attributeList = resultsTable.getColumns();
+        }else {
+            //checking that all the attributes in the query exist
+            checkAttributes();
+            resultsTable.fillTableFromMemory(attributeList, null);
+        }
         //get results from relevant columns
         results = getSelectResults(parser);
         //if condition, need to throw out rows not matching
@@ -108,14 +113,14 @@ public class Interpreter {
         String results = null;
         conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
-        //the results table should be filled with our selected columns
-        //need to go over the columns we've selected and throw out the rows that don't
-        //match the condition
         //do conditions need to be stored in a tree-like structure so that we can
         //evaluate them in the correct order?
         for(int i=0; i<conditionListObject.getConditionList().size();i++){
+            //get one condition at a time
             Condition currentCondition = conditionListObject.getConditionList().get(i);
+            //get the attribute name - what if it is * ????
             attributeName = currentCondition.getAttribute();
+            //get the condition variables
             String op = currentCondition.getOp();
             Value value = currentCondition.getValueObject();
             conditionSwitch(op, value);
@@ -132,6 +137,7 @@ public class Interpreter {
                 break;
             case("!="):
                 unequal(value);
+                break;
             case("<"):
             case(">"):
             case("<="):
@@ -150,11 +156,13 @@ public class Interpreter {
             ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
             if(currentRow.get(columnIndex).equals(valueString)){
                 resultsTable.deleteRow(i);
+                i--;
             }
         }
     }
 
     private void equal(Value value) throws DBException{
+        System.out.println("entered equal, attribute name "+attributeName);
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         String valueString = value.getValue();
         //for each row of the table, need to check the relevant column
@@ -162,6 +170,7 @@ public class Interpreter {
             ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
             if(!currentRow.get(columnIndex).equals(valueString)){
                 resultsTable.deleteRow(i);
+                i--;
             }
         }
     }
@@ -184,6 +193,7 @@ public class Interpreter {
             }
         }
         results = resultsTable.getTable();
+        System.out.println("returning results from getSelectResults: "+results);
         return results;
     }
 

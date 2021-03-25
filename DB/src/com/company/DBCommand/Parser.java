@@ -87,6 +87,7 @@ public class Parser {
                     parseJoin();
                     break;
                 default:
+                    throw new CommandException(tokenizer.nextToken(index), index, "command");
             }
         } catch(DBException e){
             throw new CommandException(tokenizer.nextToken(index), index, "command", e);

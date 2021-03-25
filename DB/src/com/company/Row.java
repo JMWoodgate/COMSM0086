@@ -66,7 +66,6 @@ public class Row {
 
     public boolean setElement(String newElement, int columnIndex)
             throws DBException {
-        System.out.println("entered setElement with "+newElement+" at column "+columnIndex);
         if(columnIndex<numberOfColumns
         && columnIndex>=0){
             if(newElement!=null) {
