@@ -92,6 +92,7 @@ public class Interpreter {
         }
         //checking that all the attributes in the query exist
         checkAttributes();
+        //need to get the column values for each selected attribute, and pair them by index to form new rows
         conditionListArray = parser.getConditionListArray();
         if(conditionListArray!=null) {
             conditionListObject = parser.getConditionListObject();
@@ -100,6 +101,15 @@ public class Interpreter {
         //if conditions set, need to do this based on conditions
         System.out.println("returning results from end of interpretSelect "+results);
         return results;
+    }
+
+    private ArrayList<String> getColumnValues(String columnName) throws DBException {
+        //get all values for chosen column
+        //need to get the index of the column from the name
+        ArrayList<String> columnValues = new ArrayList<>();
+        int columnIndex = table.getColumnIndex(columnName);
+        columnValues = table.getColumnValues(columnIndex);
+        return columnValues;
     }
 
     private void checkAttributes() throws EmptyData {

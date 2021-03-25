@@ -140,6 +140,24 @@ public class Table {
         }
     }
 
+    public ArrayList<String> getColumnValues(int columnIndex)
+            throws IndexOutOfBounds {
+        ArrayList<String> columnValues = new ArrayList<>();
+        for(int i = 0; i < numberOfRows; i++){
+            columnValues.add(rows.get(i).getElement(columnIndex));
+        }
+        return columnValues;
+    }
+
+    public int getColumnIndex(String columnName) throws EmptyData {
+        for(int i = 0; i < numberOfColumns; i++){
+            if(columns.get(i).getColumnName().equals(columnName)){
+                return i;
+            }
+        }throw new EmptyData(
+                "can't find column "+columnName+" in getColumnIndex");
+    }
+
     public String getSpecificColumn(int index)
             throws IndexOutOfBounds{
         if(index <= numberOfColumns && index >= 0) {
