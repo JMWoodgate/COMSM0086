@@ -134,6 +134,7 @@ public class Parser {
             SelectCMD select = new SelectCMD(tokenizedCommand, index);
             index = select.getIndex();
             tableName = select.getTableName();
+            attributeList = select.getAttributeList();
             if(select.getHasCondition()) {
                 conditionListArray = select.getConditionListArray();
                 conditionListObject = select.getConditionListObject();

@@ -37,9 +37,10 @@ public class Interpreter {
         interpretedOK = true;
     }
 
-    public void interpretCommand(String command, Parser parser) throws DBException {
+    public String interpretCommand(String command, Parser parser) throws DBException {
+        interpretedOK = true;
+        String results = null;
         try {
-            interpretedOK = true;
             switch (command) {
                 case "use":
                     interpretUse(parser);
@@ -56,7 +57,8 @@ public class Interpreter {
                     interpretInsert(parser);
                     break;
                 case "select":
-                    interpretSelect(parser);
+                    results = interpretSelect(parser);
+                    System.out.println("results in switch: "+results);
                     break;
                 case "update":
                     break;
@@ -70,36 +72,44 @@ public class Interpreter {
             interpretedOK = false;
             exception = e;
         }
+        System.out.println("returning results from switch: "+results);
+        return results;
     }
 
-    private void interpretSelect(Parser parser) throws DBException, IOException {
+    private String interpretSelect(Parser parser) throws DBException, IOException {
+        String results = null;
         tableName = parser.getTableName();
         if(!database.getTables().containsKey(tableName)){
             throw new EmptyData("table does not exist in memory");
         }
         table = database.getTable(tableName);
         attributeList = parser.getAttributeList();
+        System.out.println("attribute list: "+attributeList);
+        if(attributeList.get(0).equals("*")){
+            results = table.getTable();
+            System.out.println("returning results from * "+results);
+            return results;
+        }
         conditionListArray = parser.getConditionListArray();
         if(conditionListArray!=null) {
             conditionListObject = parser.getConditionListObject();
         }
         //need to get wild attribute list out of table and print to terminal
         //if conditions set, need to do this based on conditions
+        System.out.println("returning results from end of interpretSelect "+results);
+        return results;
     }
 
-    private void checkAttributeValues(){
+    private String checkAttributeValues(){
         ArrayList<String> existingAttributes = table.getColumns();
-        HashMap<Integer, String> ;
-        if(attributeList.get(0).equals("*")){
-            //select everything
-        }
         for(String attribute : attributeList){
-            for(int i; i < existingAttributes.size(); i++){
+            for(int i = 0; i < existingAttributes.size(); i++){
                 if(attribute.equals(existingAttributes.get(i))){
 
                 }
             }
         }
+        return null;
     }
 
     private void interpretInsert(Parser parser) throws DBException, IOException {

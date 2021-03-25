@@ -61,32 +61,34 @@ class DBServer
             e.printStackTrace();
         }*/
 
-        while(parsedOK) {
-            String incomingCommand = socketReader.readLine();
+        String results = null;
+        String incomingCommand = socketReader.readLine();
+        parser = new Parser(incomingCommand, folderName);
+        parsedOK = parser.getParsedOK();
+        while (!parsedOK) {
+            socketWriter.write("[ERROR] from: " + incomingCommand);
+            socketWriter.write("\n" + parser.getException());
+            socketWriter.write("\n" + ((char) 4) + "\n");
+            socketWriter.flush();
+            incomingCommand = socketReader.readLine();
             parser = new Parser(incomingCommand, folderName);
             parsedOK = parser.getParsedOK();
-            while (!parsedOK) {
-                socketWriter.write("[ERROR] from: " + incomingCommand);
-                socketWriter.write("\n" + parser.getException());
-                socketWriter.write("\n" + ((char) 4) + "\n");
-                socketWriter.flush();
-                incomingCommand = socketReader.readLine();
-                parser = new Parser(incomingCommand, folderName);
-                parsedOK = parser.getParsedOK();
+        }
+        folderName = parser.getCurrentFolder();
+        ArrayList<String> currentCommand = parser.getTokenizedCommand();
+        results = interpreter.interpretCommand(currentCommand.get(0), parser);
+        if(!interpreter.getInterpretedOK()){
+            socketWriter.write("[ERROR] from: " + incomingCommand);
+            socketWriter.write("\n" + interpreter.getException());
+            socketWriter.write("\n" + ((char) 4) + "\n");
+            socketWriter.flush();
+        }else {
+            socketWriter.write("[OK] Thanks for your message: " + incomingCommand);
+            if(results!=null){
+                socketWriter.write("\n"+results);
             }
-            folderName = parser.getCurrentFolder();
-            ArrayList<String> currentCommand = parser.getTokenizedCommand();
-            interpreter.interpretCommand(currentCommand.get(0), parser);
-            if(!interpreter.getInterpretedOK()){
-                socketWriter.write("[ERROR] from: " + incomingCommand);
-                socketWriter.write("\n" + interpreter.getException());
-                socketWriter.write("\n" + ((char) 4) + "\n");
-                socketWriter.flush();
-            }else {
-                socketWriter.write("[OK] Thanks for your message: " + incomingCommand);
-                socketWriter.write("\n" + ((char) 4) + "\n");
-                socketWriter.flush();
-            }
+            socketWriter.write("\n" + ((char) 4) + "\n");
+            socketWriter.flush();
         }
     }
 
