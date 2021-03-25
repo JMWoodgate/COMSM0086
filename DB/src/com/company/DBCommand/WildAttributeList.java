@@ -17,7 +17,7 @@ public class WildAttributeList extends Parser{
             throws CommandException {
         this.index = index;
         this.command = command;
-        attributeList = new ArrayList<String>();
+        attributeList = new ArrayList<>();
         try{
             parseAttributeList();
         }catch(DBException e){

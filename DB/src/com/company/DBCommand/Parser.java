@@ -14,7 +14,6 @@ public class Parser {
     private int commandSize;
     private String tableName;
     private String databaseName;
-    private String attributeName;
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private boolean parsedOK;
@@ -229,8 +228,7 @@ public class Parser {
         String nextToken = command.get(index);
         if(isAlphaNumerical(nextToken)||nextToken.equals("*")) {
             //getting the attribute name
-            attributeName = nextToken;
-            return attributeName;
+            return nextToken;
         }
         throw new CommandException(nextToken, index, "attribute name");
     }
@@ -267,6 +265,7 @@ public class Parser {
         }
     }
 
+    //what if there is a bracket inside a string literal?
     public void checkBrackets(String command) throws DBException {
         int open = 0;
         int close = 0;

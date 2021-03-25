@@ -74,13 +74,32 @@ public class Interpreter {
 
     private void interpretSelect(Parser parser) throws DBException, IOException {
         tableName = parser.getTableName();
-        attributeList = parser.getAttributeList();
         if(!database.getTables().containsKey(tableName)){
             throw new EmptyData("table does not exist in memory");
         }
         table = database.getTable(tableName);
+        attributeList = parser.getAttributeList();
+        conditionListArray = parser.getConditionListArray();
+        if(conditionListArray!=null) {
+            conditionListObject = parser.getConditionListObject();
+        }
         //need to get wild attribute list out of table and print to terminal
         //if conditions set, need to do this based on conditions
+    }
+
+    private void checkAttributeValues(){
+        ArrayList<String> existingAttributes = table.getColumns();
+        HashMap<Integer, String> ;
+        if(attributeList.get(0).equals("*")){
+            //select everything
+        }
+        for(String attribute : attributeList){
+            for(int i; i < existingAttributes.size(); i++){
+                if(attribute.equals(existingAttributes.get(i))){
+
+                }
+            }
+        }
     }
 
     private void interpretInsert(Parser parser) throws DBException, IOException {
