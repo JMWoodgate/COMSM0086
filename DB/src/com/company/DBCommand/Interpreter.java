@@ -39,6 +39,7 @@ public class Interpreter {
 
     public void interpretCommand(String command, Parser parser) throws DBException {
         try {
+            interpretedOK = true;
             switch (command) {
                 case "use":
                     interpretUse(parser);
@@ -65,6 +66,7 @@ public class Interpreter {
                 default:
             }
         } catch(DBException | IOException e){
+            System.out.println("caught error from switch interpreter");
             interpretedOK = false;
             exception = e;
         }
@@ -75,7 +77,9 @@ public class Interpreter {
         valueListString = parser.getValueListString();
         //need to put the values into the correct table, both in memory and on file
         if(database.getTables().containsKey(tableName)) {
+            System.out.println("found table in memory");
             table = database.getTable(tableName);
+            System.out.println("got table from database in memory");
             table.addRow(valueListString);
             System.out.println("printing table from interpretInsert:");
             table.printTable();
@@ -132,6 +136,9 @@ public class Interpreter {
         databaseName = parser.getDatabaseName();
         //gets the relative pathname to the database
         currentFolder = parser.getCurrentFolder();
+        if(!databaseMap.containsKey(databaseName)){
+            throw new EmptyData("database does not exist");
+        }
         database = databaseMap.get(databaseName);
     }
 
@@ -181,5 +188,9 @@ public class Interpreter {
 
     public boolean getInterpretedOK(){
         return interpretedOK;
+    }
+
+    public void setInterpretedOK(boolean interpretedOK){
+        this.interpretedOK = interpretedOK;
     }
 }

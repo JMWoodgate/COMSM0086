@@ -20,9 +20,15 @@ public class Table {
     }
 
     public void addRow(ArrayList<String> rowData) throws EmptyData {
+        System.out.println("entered addRow");
         int lastID;
         if(rowData==null) {
             throw new EmptyData("rowData in addRow in Table");
+        }
+        //if there are no columns, first row must be column headers
+        if(columns==null){
+            fillTableFromMemory(rowData, null);
+            return;
         }
         //checking if this is the first row
         if(rows.size()>0) {
@@ -64,22 +70,17 @@ public class Table {
             throws DBException {
         numberOfRows = initNumberOfRows(dataFromFile);
         numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
-        if(dataFromFile!=null) {
-            //getting column names, then storing in an array of columns
-            ArrayList<String> columnNames = parseString(dataFromFile.get(0));
-            columns = new ArrayList<>();
-            for (int i = 0; i < numberOfColumns; i++) {
-                columns.add(new Column(tableName, columnNames.get(i), i));
-            }
-            //storing data in array of rows
-            rows = new ArrayList<>();
-            for (int i = 1; i <= numberOfRows; i++) {
-                ArrayList<String> currentRow = parseString(dataFromFile.get(i));
-                rows.add(new Row(tableName, currentRow, numberOfColumns));
-            }
+        //getting column names, then storing in an array of columns
+        ArrayList<String> columnNames = parseString(dataFromFile.get(0));
+        columns = new ArrayList<>();
+        for (int i = 0; i < numberOfColumns; i++) {
+            columns.add(new Column(tableName, columnNames.get(i), i));
         }
-        else{
-            throw new EmptyData(tableName);
+        //storing data in array of rows
+        rows = new ArrayList<>();
+        for (int i = 1; i <= numberOfRows; i++) {
+            ArrayList<String> currentRow = parseString(dataFromFile.get(i));
+            rows.add(new Row(tableName, currentRow, numberOfColumns));
         }
     }
 
