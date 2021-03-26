@@ -232,7 +232,7 @@ public class Test {
             ArrayList<String> attributeList = testUpdate.getAttributeList();
             assert(attributeList.get(0).equals("party"));
             assert(attributeList.get(1).equals("ward"));
-            attributeList = testUpdate.getValueList();
+            attributeList = testUpdate.getValueListString();
             assert(attributeList.get(0).equals("'name'"));
             assert(attributeList.get(1).equals("9"));
         }

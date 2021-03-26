@@ -17,6 +17,8 @@ public class Interpreter {
     private String databaseName;
     private String attributeName;
     private ArrayList<String> attributeList;
+    private ArrayList<String> valueListString;
+    private ArrayList<Value> valueListObject;
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private String currentFolder;
@@ -26,7 +28,6 @@ public class Interpreter {
     private final HashMap<String, Database> databaseMap;
     private Table table;
     private Table resultsTable;
-    private ArrayList<String> valueListString;
     private boolean interpretedOK;
     private Exception exception;
 
@@ -61,6 +62,7 @@ public class Interpreter {
                     results = interpretSelect(parser);
                     break;
                 case "update":
+                    interpretUpdate(parser);
                     break;
                 case "delete":
                     break;
@@ -75,6 +77,30 @@ public class Interpreter {
         return results;
     }
 
+    private void interpretUpdate(Parser parser) throws DBException{
+        getTableFromMemory(parser);
+        //valueList and attributeList can be paired by index
+        valueListObject = parser.getValueListObject();
+        valueListString = parser.getValueListString();
+        attributeList = parser.getAttributeList();
+        conditionListObject = parser.getConditionListObject();
+        conditionListArray = parser.getConditionListArray();
+        //get results table with all columns
+        initResultsTable();
+        System.out.println("initialised results table: "+resultsTable.getTable());
+        //first select all rows that meet the condition
+        selectWithCondition(parser);
+        System.out.println("got rows: "+resultsTable.getTable());
+        //then change values
+        changeValues();
+    }
+
+    private void changeValues(){
+        //need to find the specific rows and columns in the original table and change them
+        //need to know which column we are changing
+        //need to know which column/row we are comparing it to
+    }
+
     private String interpretSelect(Parser parser) throws DBException, IOException {
         String results = null;
         getTableFromMemory(parser);
@@ -84,16 +110,7 @@ public class Interpreter {
             results = table.getTable();
             return results;
         }
-        //make a new results table and fill with column names
-        resultsTable = new Table(databaseName, tableName);
-        //if wild, table is the whole thing, otherwise need to fill with relevant attributes
-        if(attributeList.get(0).equals("*")){
-            //get every column name
-            attributeList = table.getColumns();
-        }else {
-            //checking that all the attributes in the query exist
-            checkAttributes();
-        }
+        initResultsTable();
         //if condition, need to throw out rows not matching
         if(parser.getHasCondition()) {
             results = selectWithCondition(parser);
@@ -102,9 +119,9 @@ public class Interpreter {
             //fill table with relevant columns
             resultsTable.fillTableFromMemory(attributeList, null, false);
             //get results from relevant columns
-            results = getSelectResults(attributeList, false);
+            results = selectColumns(attributeList, false);
+            return results;
         }
-        return results;
     }
 
     private String selectWithCondition(Parser parser) throws DBException {
@@ -112,11 +129,12 @@ public class Interpreter {
         //create table with all columns
         resultsTable.fillTableFromMemory(table.getColumns(), null, false);
         //populate table with results from all columns
-        getSelectResults(resultsTable.getColumns(), true);
+        selectColumns(resultsTable.getColumns(), true);
         //first get the rows that don't match the condition
-        conditionalSelectResults(parser);
+        executeConditions(parser);
         //then get remove the unselected columns
         results = removeUnselectedColumns(attributeList, resultsTable);
+        //then change the values
         return results;
     }
 
@@ -142,8 +160,7 @@ public class Interpreter {
         currentTable.deleteColumn(columnName);
     }
 
-    private void conditionalSelectResults(Parser parser) throws DBException{
-        String results = null;
+    private void executeConditions(Parser parser) throws DBException{
         conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
         //do conditions need to be stored in a tree-like structure so that we can
@@ -158,7 +175,6 @@ public class Interpreter {
             Value value = currentCondition.getValueObject();
             conditionSwitch(op, value);
         }
-        results = resultsTable.getTable();
     }
 
     private void conditionSwitch(String op, Value value)
@@ -206,32 +222,42 @@ public class Interpreter {
         }
     }
 
-    private String getSelectResults(ArrayList<String> selectedAttributes, boolean hasID) throws DBException {
+    private String selectColumns(ArrayList<String> selectedAttributes, boolean hasID)
+            throws DBException {
         String results;
         //get the first column's values so that we know how many rows to make
         ArrayList<String> columnValues = table.getColumnValues(0);
         //add the number of rows to our list that we have values
         resultsTable.addEmptyRows(columnValues.size(), selectedAttributes.size(), false);
         //for each column in our selected list, get the values
-        for (int j=0; j<selectedAttributes.size(); j++) {
+        for (int i=0; i<selectedAttributes.size(); i++) {
             //need to get the selected column's index from our table
-            int columnIndex = table.getColumnIndex(selectedAttributes.get(j));
+            int columnIndex = table.getColumnIndex(selectedAttributes.get(i));
             //get the relevant column values
             columnValues = table.getColumnValues(columnIndex);
-            //for each column value, populate the rows
-            for(int i=0; i<columnValues.size();i++){
-                resultsTable.addElement(columnValues.get(i), i, j);
-            }
+            populateRows(columnValues, i);
         }
-        //if there is an ID column in the table, need to set the id in each row for later reference
         if(hasID){
-            ArrayList<String> idColumn = table.getColumnValues(0);
-            for(int i=0; i<columnValues.size();i++){
-                resultsTable.setRowID(Integer.parseInt(idColumn.get(i)), i);
-            }
+            setIDs(columnValues);
         }
         results = resultsTable.getTable();
         return results;
+    }
+
+    //for each column value, populate the rows
+    private void populateRows(ArrayList<String> columnValues, int columnIndex)
+            throws DBException {
+        for(int i=0; i<columnValues.size();i++){
+            resultsTable.addElement(columnValues.get(i), i, columnIndex);
+        }
+    }
+
+    //if there is an ID column in the table, need to set the id in each row for later reference
+    private void setIDs(ArrayList<String> columnValues) throws DBException {
+        ArrayList<String> idColumn = table.getColumnValues(0);
+        for(int i=0;i<columnValues.size();i++){
+            resultsTable.setRowID(Integer.parseInt(idColumn.get(i)), i);
+        }
     }
 
     private void checkAttributes() throws EmptyData {
@@ -260,14 +286,6 @@ public class Interpreter {
         FileIO fileIO = new FileIO(databaseName);
         //writes to file (creates file if it doesn't exist)
         fileIO.writeFile(currentFolder, tableName, table);
-    }
-
-    private void getTableFromMemory(Parser parser) throws DBException{
-        tableName = parser.getTableName();
-        if(!database.getTables().containsKey(tableName)){
-            throw new EmptyData("table does not exist in memory");
-        }
-        table = database.getTable(tableName);
     }
 
     private void interpretDrop(Parser parser) throws DBException {
@@ -360,6 +378,27 @@ public class Interpreter {
         } catch(DBException e){
             throw new FileException(e);
         }
+    }
+
+    private void initResultsTable() throws DBException {
+        //make a new results table and fill with column names
+        resultsTable = new Table(databaseName, tableName);
+        //if wild, table is the whole thing, otherwise need to fill with relevant attributes
+        if(attributeList.get(0).equals("*")){
+            //get every column name
+            attributeList = table.getColumns();
+        }else {
+            //checking that all the attributes in the query exist
+            checkAttributes();
+        }
+    }
+
+    private void getTableFromMemory(Parser parser) throws DBException{
+        tableName = parser.getTableName();
+        if(!database.getTables().containsKey(tableName)){
+            throw new EmptyData("table does not exist in memory");
+        }
+        table = database.getTable(tableName);
     }
 
     public Exception getException() {

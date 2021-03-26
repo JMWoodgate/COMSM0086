@@ -14,16 +14,17 @@ public class UpdateCMD extends Parser implements DBCommand{
     private final StorageType type;
     private String tableName;
     private ArrayList<String> attributeList;
-    private ArrayList<String> valueList;
+    private ArrayList<String> valueListString;
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
+    private ArrayList<Value> valueListObject;
 
     public UpdateCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
-        valueList = new ArrayList<String>();
-        attributeList = new ArrayList<String>();
+        valueListString = new ArrayList<>();
+        attributeList = new ArrayList<>();
         conditionListArray = new ArrayList<>();
         if(command != null) {
             if (!parseUpdate()) {
@@ -48,7 +49,8 @@ public class UpdateCMD extends Parser implements DBCommand{
             NameValueList nameValueList = new NameValueList(command, index);
             //get attribute names and values
             attributeList = nameValueList.getAttributeList();
-            valueList = nameValueList.getValueList();
+            valueListString = nameValueList.getValueList();
+            valueListObject = nameValueList.getValueListObject();
             index = nameValueList.getIndex();
             nextToken = command.get(index);
             //check for where
@@ -85,9 +87,16 @@ public class UpdateCMD extends Parser implements DBCommand{
         throw new EmptyData("attribute list");
     }
 
-    public ArrayList<String> getValueList() throws EmptyData {
-        if(valueList!=null){
-            return valueList;
+    public ArrayList<Value> getValueListObject() throws EmptyData {
+        if(valueListObject!=null){
+            return valueListObject;
+        }
+        throw new EmptyData("value list");
+    }
+
+    public ArrayList<String> getValueListString() throws EmptyData {
+        if(valueListString!=null){
+            return valueListString;
         }
         throw new EmptyData("value list");
     }

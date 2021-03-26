@@ -14,12 +14,14 @@ public class NameValueList extends Parser{
     private final ArrayList<String> attributeList;
     private String valueString;
     private final ArrayList<String> valueList;
+    private ArrayList<Value> valueListObject;
 
     public NameValueList(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
-        valueList = new ArrayList<String>();
-        attributeList = new ArrayList<String>();
+        valueList = new ArrayList<>();
+        attributeList = new ArrayList<>();
+        valueListObject = new ArrayList<>();
         try{
             parseNameValueList();
         }catch(DBException e){
@@ -61,6 +63,7 @@ public class NameValueList extends Parser{
             index++;
             //get the value
             Value value = new Value(command, index);
+            valueListObject.add(value);
             valueString = value.getValue();
             valueList.add(valueString);
             index = value.getIndex()+1;
@@ -79,6 +82,13 @@ public class NameValueList extends Parser{
     public ArrayList<String> getValueList() throws EmptyData {
         if(valueList!=null){
             return valueList;
+        }
+        throw new EmptyData("value list");
+    }
+
+    public ArrayList<Value> getValueListObject() throws EmptyData {
+        if(valueListObject!=null){
+            return valueListObject;
         }
         throw new EmptyData("value list");
     }

@@ -23,6 +23,7 @@ public class Parser {
     private StorageType type;
     private ArrayList<String> attributeList;
     private ArrayList<String> valueListString;
+    private ArrayList<Value> valueListObject;
     private boolean hasCondition;
 
     public Parser(String command, String currentFolder) {
@@ -125,6 +126,9 @@ public class Parser {
             tableName = update.getTableName();
             conditionListArray = update.getConditionListArray();
             conditionListObject = update.getConditionListObject();
+            attributeList = update.getAttributeList();
+            valueListString = update.getValueListString();
+            valueListObject = update.getValueListObject();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "update", e);
@@ -321,6 +325,13 @@ public class Parser {
             }
         }
         return true;
+    }
+
+    public ArrayList<Value> getValueListObject() throws EmptyData {
+        if(valueListObject!=null){
+            return valueListObject;
+        }
+        throw new EmptyData("value list");
     }
 
     public ArrayList<String> getValueListString() throws DBException{

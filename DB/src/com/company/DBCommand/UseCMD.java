@@ -27,8 +27,6 @@ public class UseCMD extends Parser implements DBCommand{
         }
     }
 
-    public void execute(){}
-
     public String getDatabaseName() throws EmptyData {
         if(databaseName!=null) {
             return databaseName;
