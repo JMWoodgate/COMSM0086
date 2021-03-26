@@ -3,7 +3,6 @@ package com.company.DBCommand;
 import com.company.DBExceptions.*;
 import com.company.Database;
 import com.company.FileIO;
-import com.company.Row;
 import com.company.Table;
 
 import java.io.File;
@@ -80,7 +79,6 @@ public class Interpreter {
         String results = null;
         getTableFromMemory(parser);
         attributeList = parser.getAttributeList();
-        System.out.println("attribute list at start is "+attributeList);
         //if * and no condition, return the whole table
         if(attributeList.get(0).equals("*")&&!parser.getHasCondition()){
             results = table.getTable();
@@ -97,54 +95,55 @@ public class Interpreter {
             //checking that all the attributes in the query exist
             checkAttributes();
         }
-        //fill table with all columns
-        resultsTable.fillTableFromMemory(table.getColumns(), null, false);
-        System.out.println("results table after being filled from memory is "+resultsTable.getTable());
         //if condition, need to throw out rows not matching
         if(parser.getHasCondition()) {
-            //first get all the columns
-            results = getSelectResults(resultsTable.getColumns(), true);
-            System.out.println("results table after being filled from getSelectResults is "+resultsTable.getTable());
-            //first get the rows that don't match the condition
-            results = conditionalSelectResults(parser);
-            System.out.println("results from conditionalSelect "+results);
-            System.out.println("attributeList is "+attributeList);
-            //then get results from relevant columns
-            results = removeUnselectedColumns(attributeList, resultsTable);
-            System.out.println("results from removeUnselectedColumns "+results);
+            results = selectWithCondition(parser);
             return results;
         }else{
+            //fill table with relevant columns
+            resultsTable.fillTableFromMemory(attributeList, null, false);
             //get results from relevant columns
             results = getSelectResults(attributeList, false);
         }
         return results;
     }
 
+    private String selectWithCondition(Parser parser) throws DBException {
+        String results;
+        //create table with all columns
+        resultsTable.fillTableFromMemory(table.getColumns(), null, false);
+        //populate table with results from all columns
+        getSelectResults(resultsTable.getColumns(), true);
+        //first get the rows that don't match the condition
+        conditionalSelectResults(parser);
+        //then get remove the unselected columns
+        results = removeUnselectedColumns(attributeList, resultsTable);
+        return results;
+    }
+
     private String removeUnselectedColumns(ArrayList<String> selectedAttributes,
                                            Table currentTable) throws EmptyData {
         ArrayList<String> existingColumns = currentTable.getColumns();
-        System.out.println("current table "+currentTable.getTable());
-        System.out.println("existing columns "+existingColumns);
-        System.out.println("selected attributes "+selectedAttributes);
-        for(int i=0; i<existingColumns.size();i++){
-            System.out.println("checking column "+existingColumns.get(i));
+        int i=0;
+        while(i<existingColumns.size()&&i>=0){
             //checking each column in our current table to see if it is in our selected attributes
             if(!attributeIsIn(existingColumns.get(i), selectedAttributes)){
-                System.out.println("deleting column "+existingColumns.get(i));
-                deleteColumn(i, currentTable);
+                deleteColumn(existingColumns.get(i), currentTable);
             }
+            i++;
         }
         return currentTable.getTable();
     }
 
-    private void deleteColumn(int columnIndex, Table currentTable) throws EmptyData {
+    private void deleteColumn(String columnName, Table currentTable) throws EmptyData {
+        //deletes each element in the chosen column row by row
         for(int i=0; i<currentTable.getNumberOfRows();i++){
-            currentTable.deleteElement(i, columnIndex);
+            currentTable.deleteElement(i, columnName);
         }
-        currentTable.deleteColumn(columnIndex);
+        currentTable.deleteColumn(columnName);
     }
 
-    private String conditionalSelectResults(Parser parser) throws DBException{
+    private void conditionalSelectResults(Parser parser) throws DBException{
         String results = null;
         conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
@@ -155,14 +154,12 @@ public class Interpreter {
             Condition currentCondition = conditionListObject.getConditionList().get(i);
             //get the attribute name
             attributeName = currentCondition.getAttribute();
-            System.out.println("attribute name in conditionalSelectResults "+attributeName);
             //get the condition variables
             String op = currentCondition.getOp();
             Value value = currentCondition.getValueObject();
             conditionSwitch(op, value);
         }
         results = resultsTable.getTable();
-        return results;
     }
 
     private void conditionSwitch(String op, Value value)
@@ -212,22 +209,22 @@ public class Interpreter {
 
     private String getSelectResults(ArrayList<String> selectedAttributes, boolean hasID) throws DBException {
         String results;
-        //get the first column values so that we know how many rows to make
+        //get the first column's values so that we know how many rows to make
         ArrayList<String> columnValues = table.getColumnValues(0);
         //add the number of rows to our list that we have values
         resultsTable.addEmptyRows(columnValues.size(), selectedAttributes.size(), false);
         //for each column in our selected list, get the values
         for (int j=0; j<selectedAttributes.size(); j++) {
-            //need to get the selected column index from our table
+            //need to get the selected column's index from our table
             int columnIndex = table.getColumnIndex(selectedAttributes.get(j));
             //get the relevant column values
             columnValues = table.getColumnValues(columnIndex);
-            //for each column value, need to populate the rows
+            //for each column value, populate the rows
             for(int i=0; i<columnValues.size();i++){
                 resultsTable.addElement(columnValues.get(i), i, j);
             }
         }
-        //if there is an ID column in the table, need to set the id in each row
+        //if there is an ID column in the table, need to set the id in each row for later reference
         if(hasID){
             for(int i=0; i<columnValues.size();i++){
                 resultsTable.setRowID(Integer.parseInt(columnValues.get(i)), i);
@@ -247,8 +244,8 @@ public class Interpreter {
     }
 
     private boolean attributeIsIn(String attribute, ArrayList<String> tableAttributes){
-        for(int i = 0; i < tableAttributes.size(); i++){
-            if(attribute.equals(tableAttributes.get(i))){
+        for (String tableAttribute : tableAttributes) {
+            if (attribute.equals(tableAttribute)) {
                 return true;
             }
         }

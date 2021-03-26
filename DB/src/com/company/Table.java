@@ -19,19 +19,21 @@ public class Table {
         this.tableName = tableName;
     }
 
-    public void deleteColumn(int columnIndex) throws EmptyData {
-        if(columns!=null && columnIndex>numberOfColumns){
-            throw new EmptyData("couldn't delete column "+columnIndex);
+    public void deleteColumn(String columnName) throws EmptyData {
+        if(columns==null || columnName==null){
+            throw new EmptyData("couldn't delete column "+columnName);
         }
+        int columnIndex = getColumnIndex(columnName);
         columns.remove(columnIndex);
         numberOfColumns--;
     }
 
-    public void deleteElement(int rowIndex, int columnIndex)
+    public void deleteElement(int rowIndex, String columnName)
             throws EmptyData {
         if(rows==null){
             throw new EmptyData("no rows to delete from");
         }
+        int columnIndex = getColumnIndex(columnName);
         rows.get(rowIndex).deleteElement(columnIndex);
     }
 
