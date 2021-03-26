@@ -88,9 +88,8 @@ public class Interpreter {
         resultsTable = new Table(databaseName, tableName);
         //if wild, table is the whole thing, otherwise need to fill with relevant attributes
         if(attributeList.get(0).equals("*")){
-            //get every column name, then delete id
+            //get every column name
             attributeList = table.getColumns();
-            attributeList.remove(0);
         }else {
             //checking that all the attributes in the query exist
             checkAttributes();
@@ -226,8 +225,9 @@ public class Interpreter {
         }
         //if there is an ID column in the table, need to set the id in each row for later reference
         if(hasID){
+            ArrayList<String> idColumn = table.getColumnValues(0);
             for(int i=0; i<columnValues.size();i++){
-                resultsTable.setRowID(Integer.parseInt(columnValues.get(i)), i);
+                resultsTable.setRowID(Integer.parseInt(idColumn.get(i)), i);
             }
         }
         results = resultsTable.getTable();
