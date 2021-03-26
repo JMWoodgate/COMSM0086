@@ -106,7 +106,7 @@ public class Interpreter {
             results = getSelectResults(resultsTable.getColumns(), true);
             System.out.println("results table after being filled from getSelectResults is "+resultsTable.getTable());
             //first get the rows that don't match the condition
-            results = conditionalSelectResults(parser, attributeName);
+            results = conditionalSelectResults(parser);
             System.out.println("results from conditionalSelect "+results);
             System.out.println("attributeList is "+attributeList);
             //then get results from relevant columns
@@ -123,9 +123,14 @@ public class Interpreter {
     private String removeUnselectedColumns(ArrayList<String> selectedAttributes,
                                            Table currentTable) throws EmptyData {
         ArrayList<String> existingColumns = currentTable.getColumns();
+        System.out.println("current table "+currentTable.getTable());
+        System.out.println("existing columns "+existingColumns);
+        System.out.println("selected attributes "+selectedAttributes);
         for(int i=0; i<existingColumns.size();i++){
+            System.out.println("checking column "+existingColumns.get(i));
             //checking each column in our current table to see if it is in our selected attributes
             if(!attributeIsIn(existingColumns.get(i), selectedAttributes)){
+                System.out.println("deleting column "+existingColumns.get(i));
                 deleteColumn(i, currentTable);
             }
         }
@@ -139,7 +144,7 @@ public class Interpreter {
         currentTable.deleteColumn(columnIndex);
     }
 
-    private String conditionalSelectResults(Parser parser, String attributeName) throws DBException{
+    private String conditionalSelectResults(Parser parser) throws DBException{
         String results = null;
         conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
@@ -267,7 +272,6 @@ public class Interpreter {
         }
         table = database.getTable(tableName);
     }
-
 
     private void interpretDrop(Parser parser) throws DBException {
         StorageType type = parser.getType();
