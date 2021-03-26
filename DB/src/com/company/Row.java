@@ -1,8 +1,5 @@
 package com.company;
-import com.company.DBExceptions.DBException;
-import com.company.DBExceptions.EmptyName;
-import com.company.DBExceptions.IndexOutOfBounds;
-import com.company.DBExceptions.StorageType;
+import com.company.DBExceptions.*;
 
 import java.util.ArrayList;
 
@@ -10,9 +7,10 @@ public class Row {
 
     private final String tableName;
     private final ArrayList<String> elements;
-    private final int numberOfColumns;
-    private final int id;
+    private int numberOfColumns;
+    private int id;
 
+    //adding an empty row with a specified id
     public Row(String tableName, int numberOfColumns, int id){
         this.tableName = tableName;
         elements = new ArrayList<>();
@@ -24,14 +22,24 @@ public class Row {
         addID();
     }
 
+    //adding a row with the id already in the first index of elements
     public Row(String tableName, ArrayList<String> elements,
                int numberOfColumns){
         this.tableName = tableName;
-        this.elements = elements;
+        if(elements==null) {
+            this.elements = new ArrayList<>();
+            for(int i = 0; i<numberOfColumns; i++){
+                this.elements.add(null);
+            }
+            id = 0;
+        }else{
+            this.elements = elements;
+            id = Integer.parseInt(elements.get(0));
+        }
         this.numberOfColumns = numberOfColumns;
-        id = Integer.parseInt(elements.get(0));
     }
 
+    //adding a row with the id of the previous row+1
     public Row(String tableName, ArrayList<String> elements,
                int numberOfColumns, int lastID){
         this.tableName = tableName;
@@ -41,9 +49,14 @@ public class Row {
         this.numberOfColumns = numberOfColumns;
     }
 
+    //inserts id into first index of elements
     private void addID(){
         String newID = Integer.toString(id);
         elements.add(0, newID);
+    }
+
+    public void setID(int id){
+        this.id = id;
     }
 
     public int getID(){
@@ -62,6 +75,15 @@ public class Row {
         else{
             throw new IndexOutOfBounds(StorageType.COLUMN, columnIndex);
         }
+    }
+
+    public void deleteElement(int columnIndex) throws EmptyData {
+        if(columnIndex>numberOfColumns){
+            throw new EmptyData(
+                    "couldn't delete element from column "+columnIndex+" at row id "+id);
+        }
+        elements.remove(columnIndex);
+        numberOfColumns--;
     }
 
     public boolean setElement(String newElement, int columnIndex)

@@ -19,6 +19,22 @@ public class Table {
         this.tableName = tableName;
     }
 
+    public void deleteColumn(int columnIndex) throws EmptyData {
+        if(columns!=null && columnIndex>numberOfColumns){
+            throw new EmptyData("couldn't delete column "+columnIndex);
+        }
+        columns.remove(columnIndex);
+        numberOfColumns--;
+    }
+
+    public void deleteElement(int rowIndex, int columnIndex)
+            throws EmptyData {
+        if(rows==null){
+            throw new EmptyData("no rows to delete from");
+        }
+        rows.get(rowIndex).deleteElement(columnIndex);
+    }
+
     public void addElement(String element, int rowIndex, int columnIndex)
             throws DBException {
         if(rows==null){
@@ -27,13 +43,20 @@ public class Table {
         rows.get(rowIndex).setElement(element, columnIndex);
     }
 
-    public void addEmptyRows(int rowsToAdd, int columnsToAdd){
+    public void addEmptyRows(int rowsToAdd, int columnsToAdd, boolean addID){
         if(rows==null){
             rows = new ArrayList<>();
         }
-        while(numberOfRows<rowsToAdd){
-            numberOfRows++;
-            rows.add(new Row(tableName, columnsToAdd, numberOfRows));
+        if(addID) {
+            while (numberOfRows < rowsToAdd) {
+                numberOfRows++;
+                rows.add(new Row(tableName, columnsToAdd, numberOfRows));
+            }
+        }else{
+            while (numberOfRows < rowsToAdd) {
+                numberOfRows++;
+                rows.add(new Row(tableName, null, columnsToAdd));
+            }
         }
     }
 
@@ -52,11 +75,12 @@ public class Table {
         }
         //if there are no columns, first row must be column headers
         if(numberOfColumns==0){
-            fillTableFromMemory(rowData, null);
+            fillTableFromMemory(rowData, null, true);
             return;
         }
         //check right number of values for columns
-        if(rowData.size()!=numberOfColumns-1){
+        //can have less columns, but not more
+        if(rowData.size()>=numberOfColumns){
             throw new CommandException(rowData.toString(),
                     rowData.size(), "check number of values/columns");
         }
@@ -73,16 +97,25 @@ public class Table {
         numberOfRows++;
     }
 
-    public void fillTableFromMemory(ArrayList<String> columnNames, ArrayList<String> rowData){
+    public void fillTableFromMemory(ArrayList<String> columnNames, ArrayList<String> rowData, boolean addID){
         if(columnNames!=null){
-            //add one for id
-            numberOfColumns = columnNames.size()+1;
             columns = new ArrayList<>();
-            //have to add id column
-            columns.add(new Column(tableName, "id", 0));
-            //then add the rest of the columns
-            for (int i = 0; i < columnNames.size(); i++) {
-                columns.add(new Column(tableName, columnNames.get(i), i+1));
+            if(addID) {
+                //add one for id
+                numberOfColumns = columnNames.size()+1;
+                //have to add id column
+                columns.add(new Column(tableName, "id", 0));
+                //then add the rest of the columns
+                for (int i = 0; i < columnNames.size(); i++) {
+                    columns.add(new Column(tableName, columnNames.get(i), i+1));
+                }
+            }
+            else{
+                numberOfColumns = columnNames.size();
+                //then add the rest of the columns
+                for (int i = 0; i < columnNames.size(); i++) {
+                    columns.add(new Column(tableName, columnNames.get(i), i));
+                }
             }
         }
         if(rowData!=null){
@@ -229,6 +262,14 @@ public class Table {
 
     public String getTableName(){
         return tableName;
+    }
+
+    public void setRowID(int ID, int rowNumber) throws EmptyData {
+        if(rowNumber <= numberOfRows){
+            rows.get(rowNumber).setID(ID);
+        }else{
+            throw new EmptyData("setting row ID of row that doesn't exist");
+        }
     }
 
     public void setTableName(String newTableName)

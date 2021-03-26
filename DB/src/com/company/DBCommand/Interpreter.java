@@ -78,12 +78,10 @@ public class Interpreter {
 
     private String interpretSelect(Parser parser) throws DBException, IOException {
         String results = null;
-        tableName = parser.getTableName();
-        if(!database.getTables().containsKey(tableName)){
-            throw new EmptyData("table does not exist in memory");
-        }
-        table = database.getTable(tableName);
+        getTableFromMemory(parser);
         attributeList = parser.getAttributeList();
+        System.out.println("attribute list at start is "+attributeList);
+        //if * and no condition, return the whole table
         if(attributeList.get(0).equals("*")&&!parser.getHasCondition()){
             results = table.getTable();
             return results;
@@ -99,18 +97,49 @@ public class Interpreter {
             //checking that all the attributes in the query exist
             checkAttributes();
         }
-        resultsTable.fillTableFromMemory(attributeList, null);
-        //get results from relevant columns
-        results = getSelectResults(parser);
+        //fill table with all columns
+        resultsTable.fillTableFromMemory(table.getColumns(), null, false);
+        System.out.println("results table after being filled from memory is "+resultsTable.getTable());
         //if condition, need to throw out rows not matching
         if(parser.getHasCondition()) {
-            results = conditionalSelectResults(parser);
+            //first get all the columns
+            results = getSelectResults(resultsTable.getColumns(), true);
+            System.out.println("results table after being filled from getSelectResults is "+resultsTable.getTable());
+            //first get the rows that don't match the condition
+            results = conditionalSelectResults(parser, attributeName);
+            System.out.println("results from conditionalSelect "+results);
+            System.out.println("attributeList is "+attributeList);
+            //then get results from relevant columns
+            results = removeUnselectedColumns(attributeList, resultsTable);
+            System.out.println("results from removeUnselectedColumns "+results);
             return results;
+        }else{
+            //get results from relevant columns
+            results = getSelectResults(attributeList, false);
         }
         return results;
     }
 
-    private String conditionalSelectResults(Parser parser) throws DBException{
+    private String removeUnselectedColumns(ArrayList<String> selectedAttributes,
+                                           Table currentTable) throws EmptyData {
+        ArrayList<String> existingColumns = currentTable.getColumns();
+        for(int i=0; i<existingColumns.size();i++){
+            //checking each column in our current table to see if it is in our selected attributes
+            if(!attributeIsIn(existingColumns.get(i), selectedAttributes)){
+                deleteColumn(i, currentTable);
+            }
+        }
+        return currentTable.getTable();
+    }
+
+    private void deleteColumn(int columnIndex, Table currentTable) throws EmptyData {
+        for(int i=0; i<currentTable.getNumberOfRows();i++){
+            currentTable.deleteElement(i, columnIndex);
+        }
+        currentTable.deleteColumn(columnIndex);
+    }
+
+    private String conditionalSelectResults(Parser parser, String attributeName) throws DBException{
         String results = null;
         conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
@@ -119,8 +148,9 @@ public class Interpreter {
         for(int i=0; i<conditionListObject.getConditionList().size();i++){
             //get one condition at a time
             Condition currentCondition = conditionListObject.getConditionList().get(i);
-            //get the attribute name - what if it is * ????
+            //get the attribute name
             attributeName = currentCondition.getAttribute();
+            System.out.println("attribute name in conditionalSelectResults "+attributeName);
             //get the condition variables
             String op = currentCondition.getOp();
             Value value = currentCondition.getValueObject();
@@ -175,21 +205,27 @@ public class Interpreter {
         }
     }
 
-    private String getSelectResults(Parser parser) throws DBException {
+    private String getSelectResults(ArrayList<String> selectedAttributes, boolean hasID) throws DBException {
         String results;
         //get the first column values so that we know how many rows to make
         ArrayList<String> columnValues = table.getColumnValues(0);
         //add the number of rows to our list that we have values
-        resultsTable.addEmptyRows(columnValues.size(), attributeList.size()+1);
+        resultsTable.addEmptyRows(columnValues.size(), selectedAttributes.size(), false);
         //for each column in our selected list, get the values
-        for (int j=0; j<attributeList.size(); j++) {
+        for (int j=0; j<selectedAttributes.size(); j++) {
             //need to get the selected column index from our table
-            int columnIndex = table.getColumnIndex(attributeList.get(j));
+            int columnIndex = table.getColumnIndex(selectedAttributes.get(j));
             //get the relevant column values
             columnValues = table.getColumnValues(columnIndex);
             //for each column value, need to populate the rows
             for(int i=0; i<columnValues.size();i++){
-                resultsTable.addElement(columnValues.get(i), i, j+1);
+                resultsTable.addElement(columnValues.get(i), i, j);
+            }
+        }
+        //if there is an ID column in the table, need to set the id in each row
+        if(hasID){
+            for(int i=0; i<columnValues.size();i++){
+                resultsTable.setRowID(Integer.parseInt(columnValues.get(i)), i);
             }
         }
         results = resultsTable.getTable();
@@ -199,13 +235,13 @@ public class Interpreter {
     private void checkAttributes() throws EmptyData {
         ArrayList<String> tableAttributes = table.getColumns();
         for(String attribute : attributeList){
-            if(!isIn(attribute, tableAttributes)){
+            if(!attributeIsIn(attribute, tableAttributes)){
                 throw new EmptyData("column '"+attribute+"' does not exist");
             }
         }
     }
 
-    private boolean isIn(String attribute, ArrayList<String> tableAttributes){
+    private boolean attributeIsIn(String attribute, ArrayList<String> tableAttributes){
         for(int i = 0; i < tableAttributes.size(); i++){
             if(attribute.equals(tableAttributes.get(i))){
                 return true;
@@ -215,19 +251,23 @@ public class Interpreter {
     }
 
     private void interpretInsert(Parser parser) throws DBException, IOException {
-        tableName = parser.getTableName();
         valueListString = parser.getValueListString();
-        if(!database.getTables().containsKey(tableName)) {
-            throw new EmptyData("table does not exist in memory");
-        }
-        //need to put the values into the correct table, both in memory and on file
-        table = database.getTable(tableName);
+        getTableFromMemory(parser);
         table.addRow(valueListString);
         //make a new file within specified database
         FileIO fileIO = new FileIO(databaseName);
         //writes to file (creates file if it doesn't exist)
         fileIO.writeFile(currentFolder, tableName, table);
     }
+
+    private void getTableFromMemory(Parser parser) throws DBException{
+        tableName = parser.getTableName();
+        if(!database.getTables().containsKey(tableName)){
+            throw new EmptyData("table does not exist in memory");
+        }
+        table = database.getTable(tableName);
+    }
+
 
     private void interpretDrop(Parser parser) throws DBException {
         StorageType type = parser.getType();
@@ -299,7 +339,7 @@ public class Interpreter {
             table = new Table(databaseName, tableName);
             if(attributeList.size()>1) {
                 //writing column names to file
-                table.fillTableFromMemory(attributeList, null);
+                table.fillTableFromMemory(attributeList, null, true);
             }
             database.addTable(table);
             //writes to file (creates file if it doesn't exist)

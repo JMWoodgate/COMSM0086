@@ -164,6 +164,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\DB\src\com\company\Row.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\DB\src\com\company\Table.java">
           <value>
             <Attribute>
