@@ -65,6 +65,7 @@ public class Interpreter {
                     interpretUpdate(parser);
                     break;
                 case "delete":
+                    interpretDelete(parser);
                     break;
                 case "join":
                     break;
@@ -77,7 +78,26 @@ public class Interpreter {
         return results;
     }
 
-    private void interpretUpdate(Parser parser) throws DBException{
+    private void interpretDelete(Parser parser) throws DBException, IOException{
+        getTableFromMemory(parser);
+        conditionListArray = parser.getConditionListArray();
+        conditionListObject = parser.getConditionListObject();
+        //get condition
+        Condition currentCondition = conditionListObject.getConditionList().get(0);
+        String conditionAttribute = currentCondition.getAttribute();
+        String conditionOp = currentCondition.getOp();
+        String conditionValue = currentCondition.getValueString();
+        ArrayList<Integer> rowIndexes = findRowIndexes(
+                conditionAttribute, conditionValue, conditionOp);
+        //delete all rows in the rowIndexes
+        for (Integer rowIndex : rowIndexes) {
+            table.deleteRow(rowIndex);
+            System.out.println("table now: "+table.getTable());
+        }
+        updateFile();
+    }
+
+    private void interpretUpdate(Parser parser) throws DBException, IOException {
         getTableFromMemory(parser);
         //valueList and attributeList can be paired by index
         valueListObject = parser.getValueListObject();
@@ -96,28 +116,37 @@ public class Interpreter {
                     conditionValue, valueListString.get(i),
                     attributeList.get(i));
         }
+        updateFile();
     }
 
     private void changeValues(String conditionAttribute, String conditionOp,
                               String conditionValue, String newValue,
                               String attributeToChange)
             throws DBException {
-        ArrayList<Integer> rowIndexes = new ArrayList<>();
-        //iterate through columns until we find the target one, then iterate through rows
-        for(int i=0; i<table.getNumberOfColumns();i++) {
-            if (table.getColumns().get(i).equals(conditionAttribute)) {
-                //get row indexes of rows that match the condition
-                rowIndexes = findRowIndexes(conditionValue, i, conditionOp);
-            }
-        }
+        ArrayList<Integer> rowIndexes = findRowIndexes(
+                conditionAttribute, conditionValue, conditionOp);
         int columnIndex = table.getColumnIndex(attributeToChange);
-        //
+
         for (Integer rowIndex : rowIndexes) {
             table.changeElement(newValue, rowIndex, columnIndex);
         }
     }
 
-    private ArrayList<Integer> findRowIndexes(String conditionValue, int columnIndex, String op)
+    private ArrayList<Integer> findRowIndexes(
+            String conditionAttribute, String conditionValue, String conditionOp)
+            throws DBException {
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
+        //iterate through columns until we find the target one, then iterate through rows
+        for(int i=0; i<table.getNumberOfColumns();i++) {
+            if (table.getColumns().get(i).equals(conditionAttribute)) {
+                //get row indexes of rows that match the condition
+                rowIndexes = rowsMatchingCondition(conditionValue, i, conditionOp);
+            }
+        }return rowIndexes;
+    }
+
+    private ArrayList<Integer> rowsMatchingCondition(
+            String conditionValue, int columnIndex, String op)
             throws DBException {
         ArrayList<Integer> rowIndexes = new ArrayList<>();
         //iterates through one row at a time
@@ -318,10 +347,7 @@ public class Interpreter {
         valueListString = parser.getValueListString();
         getTableFromMemory(parser);
         table.addRow(valueListString);
-        //make a new file within specified database
-        FileIO fileIO = new FileIO(databaseName);
-        //writes to file (creates file if it doesn't exist)
-        fileIO.writeFile(currentFolder, tableName, table);
+        updateFile();
     }
 
     private void interpretDrop(Parser parser) throws DBException {
@@ -414,6 +440,13 @@ public class Interpreter {
         } catch(DBException e){
             throw new FileException(e);
         }
+    }
+
+    private void updateFile() throws DBException, IOException{
+        //make a new file within specified database
+        FileIO fileIO = new FileIO(databaseName);
+        //writes to file (creates file if it doesn't exist)
+        fileIO.writeFile(currentFolder, tableName, table);
     }
 
     private void initResultsTable() throws DBException {
