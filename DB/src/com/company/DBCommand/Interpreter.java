@@ -310,14 +310,12 @@ public class Interpreter {
     }
 
     private void equalOrUnequal(Value value, String op) throws DBException{
-        System.out.println("entered equalOrUnequal");
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         String valueString = value.getValue();
         //for each row of the table, need to check the relevant column
         for(int i=0; i<resultsTable.getNumberOfRows();i++){
             ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
             i = equalOrUnequalSwitch(currentRow, valueString, op, columnIndex, i);
-            System.out.println("table now: "+resultsTable.getTable());
         }
     }
 
@@ -326,7 +324,6 @@ public class Interpreter {
         switch(op){
             case("=="):
                 if(!currentRow.get(columnIndex).equals(valueString)){
-                    System.out.println("deleting row "+resultsTable.getSpecificRow(rowIndex));
                     resultsTable.deleteRow(rowIndex);
                     rowIndex--;
                 }
