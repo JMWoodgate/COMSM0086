@@ -90,10 +90,8 @@ public class Interpreter {
         ArrayList<Integer> rowIndexes = findRowIndexes(
                 conditionAttribute, conditionValue, conditionOp);
         //delete all rows in the rowIndexes
-        //issue if there are multiple rows to be deleted that match the condition (fine if it is just one row)
         for (int i=rowIndexes.size()-1; i>=0; i--) {
             table.deleteRow(rowIndexes.get(i));
-            System.out.println("table now: "+table.getTable());
         }
         updateFile();
     }
@@ -124,10 +122,12 @@ public class Interpreter {
                               String conditionValue, String newValue,
                               String attributeToChange)
             throws DBException {
+        //get all the row indexes that match the condition
         ArrayList<Integer> rowIndexes = findRowIndexes(
                 conditionAttribute, conditionValue, conditionOp);
+        //get the column index we're changing
         int columnIndex = table.getColumnIndex(attributeToChange);
-
+        //for each row that matches condition, change the column value
         for (Integer rowIndex : rowIndexes) {
             table.changeElement(newValue, rowIndex, columnIndex);
         }
@@ -198,7 +198,7 @@ public class Interpreter {
         selectColumns(resultsTable.getColumns(), true);
         //first get the rows that don't match the condition
         executeConditions(parser);
-        //then get remove the unselected columns
+        //then remove the unselected columns
         results = removeUnselectedColumns(attributeList, resultsTable);
         //then change the values
         return results;
@@ -247,45 +247,100 @@ public class Interpreter {
             throws DBException{
         switch(op){
             case("=="):
-                equal(value);
-                break;
             case("!="):
-                unequal(value);
+                equalOrUnequal(value, op);
                 break;
             case("<"):
             case(">"):
             case("<="):
             case(">="):
+                greaterOrLess(value, op);
+                break;
             case("LIKE"):
             default:
                 throw new EmptyData("problem with condition");
         }
     }
 
-    private void unequal(Value value) throws DBException{
+    private void greaterOrLess(Value value, String op) throws DBException{
         int columnIndex = resultsTable.getColumnIndex(attributeName);
-        String valueString = value.getValue();
-        //for each row of the table, need to check the relevant column
-        for(int i=0; i<resultsTable.getNumberOfRows();i++){
-            ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
-            if(currentRow.get(columnIndex).equals(valueString)){
-                resultsTable.deleteRow(i);
-                i--;
+        LiteralType type = value.getLiteralType();
+        if(type==LiteralType.INTEGER||type==LiteralType.FLOAT){
+            for(int i=0; i<resultsTable.getNumberOfRows();i++){
+                ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
+                int currentInt = Integer.parseUnsignedInt(currentRow.get(columnIndex));
+                i = greaterOrLessSwitch(value, currentInt, op, i);
             }
+        }else{
+            throw new EmptyData("not a valid condition for value type");
         }
     }
 
-    private void equal(Value value) throws DBException{
+    private int greaterOrLessSwitch(Value value, int currentInt,
+                                     String op, int rowIndex) throws DBException{
+        switch(op){
+            case("<"):
+                if(currentInt>=value.getIntLiteral()){
+                    resultsTable.deleteRow(rowIndex);
+                    rowIndex--;
+                }
+                break;
+            case(">"):
+                if(currentInt<=value.getIntLiteral()){
+                    resultsTable.deleteRow(rowIndex);
+                    rowIndex--;
+                }
+                break;
+            case("<="):
+                if(currentInt>value.getIntLiteral()){
+                    resultsTable.deleteRow(rowIndex);
+                    rowIndex--;
+                }
+                break;
+            case(">="):
+                if(currentInt<value.getIntLiteral()){
+                    resultsTable.deleteRow(rowIndex);
+                    rowIndex--;
+                }
+                break;
+            default:
+                throw new EmptyData("did not expect operator "+op);
+        }
+        return rowIndex;
+    }
+
+    private void equalOrUnequal(Value value, String op) throws DBException{
+        System.out.println("entered equalOrUnequal");
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         String valueString = value.getValue();
         //for each row of the table, need to check the relevant column
         for(int i=0; i<resultsTable.getNumberOfRows();i++){
             ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
-            if(!currentRow.get(columnIndex).equals(valueString)){
-                resultsTable.deleteRow(i);
-                i--;
-            }
+            i = equalOrUnequalSwitch(currentRow, valueString, op, columnIndex, i);
+            System.out.println("table now: "+resultsTable.getTable());
         }
+    }
+
+    private int equalOrUnequalSwitch(ArrayList<String> currentRow, String valueString,
+                                      String op, int columnIndex, int rowIndex) throws DBException{
+        switch(op){
+            case("=="):
+                if(!currentRow.get(columnIndex).equals(valueString)){
+                    System.out.println("deleting row "+resultsTable.getSpecificRow(rowIndex));
+                    resultsTable.deleteRow(rowIndex);
+                    rowIndex--;
+                }
+                break;
+            case("!="):
+                if(currentRow.get(columnIndex).equals(valueString)){
+                    resultsTable.deleteRow(rowIndex);
+                    rowIndex--;
+                }
+                break;
+            default:
+                throw new EmptyData("did not expect op "+op);
+        }
+        return rowIndex;
     }
 
     private String selectColumns(ArrayList<String> selectedAttributes, boolean hasID)
