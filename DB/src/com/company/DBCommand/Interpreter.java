@@ -95,10 +95,31 @@ public class Interpreter {
         changeValues();
     }
 
-    private void changeValues(){
+    private void changeValues(String currentAttribute, String currentValue)
+            throws DBException {
         //need to find the specific rows and columns in the original table and change them
         //need to know which column we are changing
         //need to know which column/row we are comparing it to
+        //iterate through columns until we find the target one, then iterate through rows
+        for(int i=0; i<table.getNumberOfColumns();i++){
+            if(table.getColumns().get(i).equals(currentAttribute)){
+                int columnIndex = i;
+                findRow(currentValue, i);
+            }
+        }
+    }
+
+    private int findRow(String currentValue, int columnIndex)
+            throws DBException {
+        //iterates through one row at a time
+        for(int i=0; i<table.getNumberOfRows();i++){
+            ArrayList<String> currentRow = table.getSpecificRow(i);
+            //if the value we're looking for exists at the column index of the current row,
+            // return the row index
+            if(currentRow.get(columnIndex).equals(currentValue)){
+                return i;
+            }
+        }throw new EmptyData("couldn't find value "+currentValue+" under column "+columnIndex);
     }
 
     private String interpretSelect(Parser parser) throws DBException, IOException {
