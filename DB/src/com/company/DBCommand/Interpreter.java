@@ -85,41 +85,56 @@ public class Interpreter {
         attributeList = parser.getAttributeList();
         conditionListObject = parser.getConditionListObject();
         conditionListArray = parser.getConditionListArray();
-        //get results table with all columns
-        initResultsTable();
-        System.out.println("initialised results table: "+resultsTable.getTable());
-        //first select all rows that meet the condition
-        selectWithCondition(parser);
-        System.out.println("got rows: "+resultsTable.getTable());
-        //then change values
-        changeValues();
-    }
-
-    private void changeValues(String currentAttribute, String currentValue)
-            throws DBException {
-        //need to find the specific rows and columns in the original table and change them
-        //need to know which column we are changing
-        //need to know which column/row we are comparing it to
-        //iterate through columns until we find the target one, then iterate through rows
-        for(int i=0; i<table.getNumberOfColumns();i++){
-            if(table.getColumns().get(i).equals(currentAttribute)){
-                int columnIndex = i;
-                findRow(currentValue, i);
-            }
+        //get condition
+        Condition currentCondition = conditionListObject.getConditionList().get(0);
+        String conditionAttribute = currentCondition.getAttribute();
+        String conditionOp = currentCondition.getOp();
+        String conditionValue = currentCondition.getValueString();
+        //iterate through the attributes to change, changing those that meet the condition
+        for(int i=0;i<attributeList.size();i++){
+            changeValues(conditionAttribute,  conditionOp,
+                    conditionValue, valueListString.get(i),
+                    attributeList.get(i));
         }
     }
 
-    private int findRow(String currentValue, int columnIndex)
+    private void changeValues(String conditionAttribute, String conditionOp,
+                              String conditionValue, String newValue,
+                              String attributeToChange)
             throws DBException {
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
+        //iterate through columns until we find the target one, then iterate through rows
+        for(int i=0; i<table.getNumberOfColumns();i++) {
+            if (table.getColumns().get(i).equals(conditionAttribute)) {
+                //get row indexes of rows that match the condition
+                rowIndexes = findRowIndexes(conditionValue, i, conditionOp);
+            }
+        }
+        int columnIndex = table.getColumnIndex(attributeToChange);
+        //
+        for (Integer rowIndex : rowIndexes) {
+            table.changeElement(newValue, rowIndex, columnIndex);
+        }
+    }
+
+    private ArrayList<Integer> findRowIndexes(String conditionValue, int columnIndex, String op)
+            throws DBException {
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
         //iterates through one row at a time
         for(int i=0; i<table.getNumberOfRows();i++){
             ArrayList<String> currentRow = table.getSpecificRow(i);
             //if the value we're looking for exists at the column index of the current row,
             // return the row index
-            if(currentRow.get(columnIndex).equals(currentValue)){
-                return i;
+            if(op.equals("==")) {
+                if (currentRow.get(columnIndex).equals(conditionValue)) {
+                    rowIndexes.add(i);
+                }
+            }else if(op.equals("!=")) {
+                if (!currentRow.get(columnIndex).equals(conditionValue)) {
+                    rowIndexes.add(i);
+                }
             }
-        }throw new EmptyData("couldn't find value "+currentValue+" under column "+columnIndex);
+        }return rowIndexes;
     }
 
     private String interpretSelect(Parser parser) throws DBException, IOException {
@@ -269,7 +284,7 @@ public class Interpreter {
     private void populateRows(ArrayList<String> columnValues, int columnIndex)
             throws DBException {
         for(int i=0; i<columnValues.size();i++){
-            resultsTable.addElement(columnValues.get(i), i, columnIndex);
+            resultsTable.changeElement(columnValues.get(i), i, columnIndex);
         }
     }
 

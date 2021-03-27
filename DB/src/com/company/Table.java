@@ -37,7 +37,7 @@ public class Table {
         rows.get(rowIndex).deleteElement(columnIndex);
     }
 
-    public void addElement(String element, int rowIndex, int columnIndex)
+    public void changeElement(String element, int rowIndex, int columnIndex)
             throws DBException {
         if(rows==null){
             throw new EmptyData("no rows to add element to");
