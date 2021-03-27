@@ -90,8 +90,9 @@ public class Interpreter {
         ArrayList<Integer> rowIndexes = findRowIndexes(
                 conditionAttribute, conditionValue, conditionOp);
         //delete all rows in the rowIndexes
-        for (Integer rowIndex : rowIndexes) {
-            table.deleteRow(rowIndex);
+        //issue if there are multiple rows to be deleted that match the condition (fine if it is just one row)
+        for (int i=rowIndexes.size()-1; i>=0; i--) {
+            table.deleteRow(rowIndexes.get(i));
             System.out.println("table now: "+table.getTable());
         }
         updateFile();
