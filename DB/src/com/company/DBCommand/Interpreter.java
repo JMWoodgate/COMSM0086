@@ -201,7 +201,6 @@ public class Interpreter {
         boolean matchFound = matcher.find();
         if(matchFound){
             rowIndexes.add(rowIndex);
-            System.out.println("match found: "+valueString+" in "+element);
         }
         return rowIndexes;
     }
@@ -375,9 +374,32 @@ public class Interpreter {
                 greaterOrLess(value, op);
                 break;
             case("like"):
+                likeComparison(value);
                 break;
             default:
                 throw new EmptyData("problem with condition");
+        }
+    }
+
+    private void likeComparison(Value value)
+            throws DBException {
+        int columnIndex = resultsTable.getColumnIndex(attributeName);
+        //get rid of quotes
+        StringBuilder formatString = new StringBuilder(value.getValue());
+        formatString.deleteCharAt(0);
+        formatString.deleteCharAt(formatString.length()-1);
+        String valueString = formatString.toString();
+        //for each row of the table, need to check the relevant column
+        for(int i=0; i<resultsTable.getNumberOfRows();i++){
+            ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
+            String element = currentRow.get(columnIndex);
+            Pattern pattern = Pattern.compile(valueString, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(element);
+            boolean matchFound = matcher.find();
+            if(!matchFound){
+                resultsTable.deleteRow(i);
+                i--;
+            }
         }
     }
 
