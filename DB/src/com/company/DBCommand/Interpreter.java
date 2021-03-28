@@ -155,7 +155,7 @@ public class Interpreter {
             ArrayList<String> currentRow = table.getSpecificRow(i);
             //if the value we're looking for exists at the column index of the current row,
             // return the row index
-            if(op.equals("==")) {
+            /*if(op.equals("==")) {
                 if (currentRow.get(columnIndex).equals(conditionValue)) {
                     rowIndexes.add(i);
                 }
@@ -163,9 +163,73 @@ public class Interpreter {
                 if (!currentRow.get(columnIndex).equals(conditionValue)) {
                     rowIndexes.add(i);
                 }
-            }
+            }*/
+            rowIndexes = conditionSwitch(op, value, currentRow.get(columnIndex), i);
         }return rowIndexes;
     }
+
+    private ArrayList<Integer> conditionSwitch(
+            String op, Value value, String element, int rowIndex)
+            throws DBException{
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
+        switch(op){
+            case("=="):
+            case("!="):
+                rowIndexes=equalOrUnequal(op, value, element, rowIndex);
+                break;
+            case("<"):
+            case(">"):
+            case("<="):
+            case(">="):
+                greaterOrLess(value, op);
+                break;
+            case("LIKE"):
+            default:
+                throw new EmptyData("problem with condition");
+        }
+        return rowIndexes;
+    }
+
+    private ArrayList<Integer> greaterOrLess(Value value) throws DBException{
+        LiteralType type = value.getLiteralType();
+    }
+
+    private ArrayList<Integer> equalOrUnequal
+            (String op, Value value, String element, int rowIndex)
+            throws DBException{
+        ArrayList<Integer> rowIndexes;
+        switch(op){
+            case("=="):
+                rowIndexes = equal(value.getValue(), element, rowIndex);
+                break;
+            case("!="):
+                rowIndexes = unequal(value.getValue(), element, rowIndex);
+                break;
+            default:
+                throw new EmptyData("did not expect op "+op);
+        }
+        return rowIndexes;
+    }
+
+    private ArrayList<Integer> unequal
+            (String value, String element, int rowIndex) {
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
+        if (!element.equals(value)) {
+            rowIndexes.add(rowIndex);
+        }
+        return rowIndexes;
+    }
+
+
+    private ArrayList<Integer> equal
+            (String value, String element, int rowIndex) {
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
+        if (element.equals(value)) {
+            rowIndexes.add(rowIndex);
+        }
+        return rowIndexes;
+    }
+
 
     private String interpretSelect(Parser parser) throws DBException, IOException {
         String results = null;
@@ -197,7 +261,7 @@ public class Interpreter {
         //populate table with results from all columns
         selectColumns(resultsTable.getColumns(), true);
         //first get the rows that don't match the condition
-        executeConditions(parser);
+        executeSelectConditions(parser);
         //then remove the unselected columns
         results = removeUnselectedColumns(attributeList, resultsTable);
         //then change the values
@@ -226,7 +290,7 @@ public class Interpreter {
         currentTable.deleteColumn(columnName);
     }
 
-    private void executeConditions(Parser parser) throws DBException{
+    private void executeSelectConditions(Parser parser) throws DBException{
         conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
         //do conditions need to be stored in a tree-like structure so that we can
@@ -239,11 +303,11 @@ public class Interpreter {
             //get the condition variables
             String op = currentCondition.getOp();
             Value value = currentCondition.getValueObject();
-            conditionSwitch(op, value);
+            selectConditionSwitch(op, value);
         }
     }
 
-    private void conditionSwitch(String op, Value value)
+    private void selectConditionSwitch(String op, Value value)
             throws DBException{
         switch(op){
             case("=="):
@@ -320,7 +384,8 @@ public class Interpreter {
     }
 
     private int equalOrUnequalSwitch(ArrayList<String> currentRow, String valueString,
-                                      String op, int columnIndex, int rowIndex) throws DBException{
+                                      String op, int columnIndex, int rowIndex)
+            throws DBException{
         switch(op){
             case("=="):
                 if(!currentRow.get(columnIndex).equals(valueString)){
