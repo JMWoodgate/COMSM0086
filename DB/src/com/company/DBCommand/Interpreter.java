@@ -190,34 +190,34 @@ public class Interpreter {
             throws DBException{
         LiteralType type = value.getLiteralType();
         if(type==LiteralType.INTEGER||type==LiteralType.FLOAT){
-            int currentInt = Integer.parseUnsignedInt(element);
-            rowIndexes = greaterOrLessSwitch(value, currentInt, op, rowIndex, rowIndexes);
+            float currentNumber = Float.parseFloat(element);
+            rowIndexes = greaterOrLessSwitch(value, currentNumber, op, rowIndex, rowIndexes);
         }
         return rowIndexes;
     }
 
     private ArrayList<Integer> greaterOrLessSwitch
-            (Value value, int currentInt, String op, int rowIndex,
+            (Value value, float currentNumber, String op, int rowIndex,
              ArrayList<Integer> rowIndexes)
             throws DBException{
         switch(op){
             case("<"):
-                if(currentInt<value.getIntLiteral()){
+                if(currentNumber<value.getFloatLiteral()){
                     rowIndexes.add(rowIndex);
                 }
                 break;
             case(">"):
-                if(currentInt>value.getIntLiteral()){
+                if(currentNumber>value.getFloatLiteral()){
                     rowIndexes.add(rowIndex);
                 }
                 break;
             case("<="):
-                if(currentInt<=value.getIntLiteral()){
+                if(currentNumber<=value.getFloatLiteral()){
                     rowIndexes.add(rowIndex);
                 }
                 break;
             case(">="):
-                if(currentInt>=value.getIntLiteral()){
+                if(currentNumber>=value.getFloatLiteral()){
                     rowIndexes.add(rowIndex);
                 }
                 break;
@@ -364,37 +364,37 @@ public class Interpreter {
         if(type==LiteralType.INTEGER||type==LiteralType.FLOAT){
             for(int i=0; i<resultsTable.getNumberOfRows();i++){
                 ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
-                int currentInt = Integer.parseUnsignedInt(currentRow.get(columnIndex));
-                i = greaterOrLessSwitch(value, currentInt, op, i);
+                float currentNumber = Float.parseFloat(currentRow.get(columnIndex));
+                i = greaterOrLessSwitch(value, currentNumber, op, i);
             }
         }else{
             throw new EmptyData("not a valid condition for value type");
         }
     }
 
-    private int greaterOrLessSwitch(Value value, int currentInt,
+    private int greaterOrLessSwitch(Value value, float currentNumber,
                                      String op, int rowIndex) throws DBException{
         switch(op){
             case("<"):
-                if(currentInt>=value.getIntLiteral()){
+                if(currentNumber>=value.getFloatLiteral()){
                     resultsTable.deleteRow(rowIndex);
                     rowIndex--;
                 }
                 break;
             case(">"):
-                if(currentInt<=value.getIntLiteral()){
+                if(currentNumber<=value.getFloatLiteral()){
                     resultsTable.deleteRow(rowIndex);
                     rowIndex--;
                 }
                 break;
             case("<="):
-                if(currentInt>value.getIntLiteral()){
+                if(currentNumber>value.getFloatLiteral()){
                     resultsTable.deleteRow(rowIndex);
                     rowIndex--;
                 }
                 break;
             case(">="):
-                if(currentInt<value.getIntLiteral()){
+                if(currentNumber<value.getFloatLiteral()){
                     resultsTable.deleteRow(rowIndex);
                     rowIndex--;
                 }
@@ -437,7 +437,8 @@ public class Interpreter {
         return rowIndex;
     }
 
-    private String selectColumns(ArrayList<String> selectedAttributes, boolean hasID)
+    private String selectColumns(
+            ArrayList<String> selectedAttributes, boolean hasID)
             throws DBException {
         String results;
         //get the first column's values so that we know how many rows to make
@@ -460,15 +461,18 @@ public class Interpreter {
     }
 
     //for each column value, populate the rows
-    private void populateRows(ArrayList<String> columnValues, int columnIndex)
+    private void populateRows(
+            ArrayList<String> columnValues, int columnIndex)
             throws DBException {
         for(int i=0; i<columnValues.size();i++){
             resultsTable.changeElement(columnValues.get(i), i, columnIndex);
         }
     }
 
-    //if there is an ID column in the table, need to set the id in each row for later reference
-    private void setIDs(ArrayList<String> columnValues) throws DBException {
+    //if there is an ID column in the table, need to set the id in each row
+    // for later reference
+    private void setIDs(
+            ArrayList<String> columnValues) throws DBException {
         ArrayList<String> idColumn = table.getColumnValues(0);
         for(int i=0;i<columnValues.size();i++){
             resultsTable.setRowID(Integer.parseInt(idColumn.get(i)), i);
@@ -484,7 +488,8 @@ public class Interpreter {
         }
     }
 
-    private boolean attributeIsIn(String attribute, ArrayList<String> tableAttributes){
+    private boolean attributeIsIn(
+            String attribute, ArrayList<String> tableAttributes){
         for (String tableAttribute : tableAttributes) {
             if (attribute.equals(tableAttribute)) {
                 return true;

@@ -30,7 +30,7 @@ public class Value {
                 throw new EmptyData("Command");
             }
         } catch(DBException e){
-            throw new CommandException(command.get(index), index, "value", e);
+            throw new CommandException(null, index, "value", e);
         }
     }
 
@@ -83,7 +83,7 @@ public class Value {
         }
     }
 
-    private boolean stringLiteral(ArrayList<String> tokenizedCommand, int index) throws DBException {
+    private boolean stringLiteral(ArrayList<String> tokenizedCommand, int index) {
         String token = tokenizedCommand.get(index);
         if(token.charAt(0)!='\''){
             return false;
@@ -141,6 +141,7 @@ public class Value {
             try{
                 //getting the integer value from the string
                 intLiteral = Integer.parseInt(token);
+                floatLiteral = intLiteral;
                 return true;
             } catch (NumberFormatException e) {
                 //if we can't get an integer from the string, return false
