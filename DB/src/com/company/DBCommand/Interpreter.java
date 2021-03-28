@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Interpreter {
 
@@ -177,9 +179,29 @@ public class Interpreter {
             case(">="):
                 rowIndexes=greaterOrLess(value, op, element, rowIndex, rowIndexes);
                 break;
-            case("LIKE"):
+            case("like"):
+                rowIndexes=likeComparison(value, element, rowIndex, rowIndexes);
+                break;
             default:
                 throw new EmptyData("problem with condition");
+        }
+        return rowIndexes;
+    }
+
+    private ArrayList<Integer> likeComparison(
+            Value value, String element, int rowIndex, ArrayList<Integer> rowIndexes)
+            throws DBException {
+        //get rid of quotes
+        StringBuilder formatString = new StringBuilder(value.getValue());
+        formatString.deleteCharAt(0);
+        formatString.deleteCharAt(formatString.length()-1);
+        String valueString = formatString.toString();
+        Pattern pattern = Pattern.compile(valueString, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(element);
+        boolean matchFound = matcher.find();
+        if(matchFound){
+            rowIndexes.add(rowIndex);
+            System.out.println("match found: "+valueString+" in "+element);
         }
         return rowIndexes;
     }
@@ -352,7 +374,8 @@ public class Interpreter {
             case(">="):
                 greaterOrLess(value, op);
                 break;
-            case("LIKE"):
+            case("like"):
+                break;
             default:
                 throw new EmptyData("problem with condition");
         }
