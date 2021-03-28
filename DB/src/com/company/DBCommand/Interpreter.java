@@ -155,18 +155,8 @@ public class Interpreter {
         //iterates through one row at a time
         for(int i=0; i<table.getNumberOfRows();i++){
             ArrayList<String> currentRow = table.getSpecificRow(i);
-            //if the value we're looking for exists at the column index of the current row,
-            // return the row index
-            //commented out code works with value string
-            /*if(op.equals("==")) {
-                if (currentRow.get(columnIndex).equals(conditionValue)) {
-                    rowIndexes.add(i);
-                }
-            }else if(op.equals("!=")) {
-                if (!currentRow.get(columnIndex).equals(conditionValue)) {
-                    rowIndexes.add(i);
-                }
-            }*/
+            //if the value we're looking for exists at the column index
+            //of the current row, return the row index
             rowIndexes = conditionSwitch(op, value, currentRow.get(columnIndex),
                     i, rowIndexes);
         }return rowIndexes;
@@ -212,22 +202,22 @@ public class Interpreter {
             throws DBException{
         switch(op){
             case("<"):
-                if(currentInt>=value.getIntLiteral()){
+                if(currentInt<value.getIntLiteral()){
                     rowIndexes.add(rowIndex);
                 }
                 break;
             case(">"):
-                if(currentInt<=value.getIntLiteral()){
-                    rowIndexes.add(rowIndex);
-                }
-                break;
-            case("<="):
                 if(currentInt>value.getIntLiteral()){
                     rowIndexes.add(rowIndex);
                 }
                 break;
+            case("<="):
+                if(currentInt<=value.getIntLiteral()){
+                    rowIndexes.add(rowIndex);
+                }
+                break;
             case(">="):
-                if(currentInt<value.getIntLiteral()){
+                if(currentInt>=value.getIntLiteral()){
                     rowIndexes.add(rowIndex);
                 }
                 break;
