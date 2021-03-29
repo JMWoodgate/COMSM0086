@@ -20,17 +20,13 @@ public class Value {
     public Value(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
-        try {
-            if (command != null) {
-                //storing the token
-                value = command.get(index);
-                //checks the token and sets the type of value
-                setLiteralType();
-            } else {
-                throw new EmptyData("Command");
-            }
-        } catch(DBException e){
-            throw new CommandException(null, index, "value", e);
+        if (command != null) {
+            //storing the token
+            value = command.get(index);
+            //checks the token and sets the type of value
+            setLiteralType();
+        } else {
+            throw new EmptyData("Command");
         }
     }
 
@@ -99,7 +95,8 @@ public class Value {
         return true;
     }
 
-    private String concatStringLiteral(ArrayList<String> tokenizedCommand, int index){
+    private String concatStringLiteral(
+            ArrayList<String> tokenizedCommand, int index){
         //store the first token of the stringLiteral
         String currentToken = tokenizedCommand.get(index);
         String stringLiteral = currentToken;

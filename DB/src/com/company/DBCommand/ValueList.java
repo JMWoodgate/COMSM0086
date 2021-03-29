@@ -16,11 +16,7 @@ public class ValueList {
     public ValueList(ArrayList<String> command, int index) throws DBException{
         this.command = command;
         this.index = index;
-        try{
-            parseValueList();
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index, "value list", e);
-        }
+        parseValueList();
     }
 
     public ArrayList<String> getValueListString() throws DBException{
@@ -40,31 +36,27 @@ public class ValueList {
     private void parseValueList() throws DBException {
         valueArrayList = new ArrayList<Value>();
         valueListString = new ArrayList<String>();
-        try {
-            //move past first bracket
-            index++;
-            //looping until the end of valueList
-            while (!command.get(index).equals(")")) {
-                //getting first value & storing in list
-                Value value = new Value(command, index);
-                valueArrayList.add(value);
-                //also storing string in a list for ease of access
-                valueListString.add(value.getValue());
-                //if stringLiteral has a special character,
-                // index will be further than expected
-                index = value.getIndex()+1;
-                //if no comma and haven't reached end of list, syntax error
-                if(!command.get(index).equals(",")&&!command.get(index).equals(")")){
-                    throw new CommandException(command.get(index), index, ", in value list");
-                }
-                //exit if we've reached end of command
-                if(command.get(index).equals(")")){
-                    return;
-                }
-                index++;
+        //move past first bracket
+        index++;
+        //looping until the end of valueList
+        while (!command.get(index).equals(")")) {
+            //getting first value & storing in list
+            Value value = new Value(command, index);
+            valueArrayList.add(value);
+            //also storing string in a list for ease of access
+            valueListString.add(value.getValue());
+            //if stringLiteral has a special character,
+            // index will be further than expected
+            index = value.getIndex()+1;
+            //if no comma and haven't reached end of list, syntax error
+            if(!command.get(index).equals(",")&&!command.get(index).equals(")")){
+                throw new CommandException(command.get(index), index, ", in value list");
             }
-        } catch(DBException e){
-            throw new CommandException(command.get(index), index, "value list");
+            //exit if we've reached end of command
+            if(command.get(index).equals(")")){
+                return;
+            }
+            index++;
         }
     }
 
