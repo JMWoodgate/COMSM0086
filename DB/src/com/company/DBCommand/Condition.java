@@ -31,60 +31,52 @@ public class Condition extends Parser{
 
     // <attributeName> <operator> <value>
     private void parseCondition() throws DBException{
-        try {
-            //get attribute name
-            attributeName = parseAttributeName(command, index);
-            index++;
-            //get operator
-            op = parseOp();
-            index++;
-            //get value and store as object as well as string
-            valueObject = new Value(command, index);
-            valueString = valueObject.getValue();
-            //update index
-            index = valueObject.getIndex()+1;
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index, "condition", e);
-        }
+        //get attribute name
+        attributeName = parseAttributeName(command, index);
+        index++;
+        //get operator
+        op = parseOp();
+        index++;
+        //get value and store as object as well as string
+        valueObject = new Value(command, index);
+        valueString = valueObject.getValue();
+        //update index
+        index = valueObject.getIndex()+1;
     }
 
     private String parseOp() throws DBException{
-        try {
-            switch (command.get(index)) {
-                case (">"):
-                    index++;
-                    if(command.get(index).equals("=")){
-                        return ">=";
-                    }
-                    index--;
-                    return ">";
-                case ("<"):
-                    index++;
-                    if(command.get(index).equals("=")){
-                        return "<=";
-                    }
-                    index--;
-                    return "<";
-                case ("!"):
-                    index++;
-                    if(command.get(index).equals("=")){
-                        return "!=";
-                    }
-                    index--;
-                case ("="):
-                    index++;
-                    if(command.get(index).equals("=")){
-                        return "==";
-                    }
-                    index--;
-                case ("like"):
-                    return "like";
-                default:
-                    throw new CommandException(command.get(index), index, "op");
+        switch (command.get(index)) {
+            case (">"):
+                index++;
+                if(command.get(index).equals("=")){
+                    return ">=";
+                }
+                index--;
+                return ">";
+            case ("<"):
+                index++;
+                if(command.get(index).equals("=")){
+                    return "<=";
+                }
+                index--;
+                return "<";
+            case ("!"):
+                index++;
+                if(command.get(index).equals("=")){
+                    return "!=";
+                }
+                index--;
+            case ("="):
+                index++;
+                if(command.get(index).equals("=")){
+                    return "==";
+                }
+                index--;
+            case ("like"):
+                return "like";
+            default:
+                throw new CommandException(command.get(index), index, "op");
             }
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index, "op", e);
-        }
     }
 
     public Value getValueObject()throws EmptyData{
