@@ -16,6 +16,7 @@ public class Interpreter {
 
     protected int index;
     private String tableName;
+    private String secondTableName;
     private String databaseName;
     private String attributeName;
     private ArrayList<String> attributeList;
@@ -56,6 +57,7 @@ public class Interpreter {
                     interpretDrop(parser);
                     break;
                 case "alter":
+                    interpretAlter(parser);
                     break;
                 case "insert":
                     interpretInsert(parser);
@@ -70,6 +72,7 @@ public class Interpreter {
                     interpretDelete(parser);
                     break;
                 case "join":
+                    results = interpretJoin(parser);
                     break;
                 default:
             }
@@ -78,6 +81,40 @@ public class Interpreter {
             exception = e;
         }
         return results;
+    }
+
+    private String interpretJoin(Parser parser) throws DBException{
+        getTableFromMemory(parser);
+        secondTableName = parser.getSecondTableName();
+        if(!database.getTables().containsKey(secondTableName)){
+            throw new EmptyData("table does not exist in memory");
+        }
+        Table secondTable = database.getTable(secondTableName);
+        String firstAttribute = parser.getAttributeList().get(0);
+        String secondAttribute = parser.getAttributeList().get(1);
+        String results = joinTables(table, secondTable, firstAttribute, secondAttribute);
+        return results;
+    }
+
+    private String joinTables(
+            Table firstTable, Table secondTable, String firstAttribute, String secondAttribute)
+            throws DBException{
+        Table resultsTable = new Table(databaseName, "joinTable");
+        String results = null;
+
+        return results;
+    }
+
+    private void interpretAlter(Parser parser) throws DBException, IOException{
+        getTableFromMemory(parser);
+        attributeName = parser.getAttributeName();
+        AlterationType alterationType = parser.getAlterationType();
+        if(alterationType==AlterationType.ADD){
+            table.addColumn(attributeName);
+        }else if(alterationType==AlterationType.DROP){
+            deleteColumn(attributeName, table);
+        }
+        updateFile();
     }
 
     private void interpretDelete(Parser parser) throws DBException, IOException{
@@ -157,8 +194,7 @@ public class Interpreter {
         //iterates through one row at a time
         for(int i=0; i<table.getNumberOfRows();i++){
             ArrayList<String> currentRow = table.getSpecificRow(i);
-            //if the value we're looking for exists at the column index
-            //of the current row, return the row index
+            //get indexes of each row that match condition
             rowIndexes = conditionSwitch(op, value, currentRow.get(columnIndex),
                     i, rowIndexes);
         }return rowIndexes;
@@ -191,11 +227,7 @@ public class Interpreter {
     private ArrayList<Integer> likeComparison(
             Value value, String element, int rowIndex, ArrayList<Integer> rowIndexes)
             throws DBException {
-        //get rid of quotes
-        StringBuilder formatString = new StringBuilder(value.getValue());
-        formatString.deleteCharAt(0);
-        formatString.deleteCharAt(formatString.length()-1);
-        String valueString = formatString.toString();
+        String valueString = removeQuotes(value);
         Pattern pattern = Pattern.compile(valueString, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(element);
         boolean matchFound = matcher.find();
@@ -285,7 +317,7 @@ public class Interpreter {
 
 
     private String interpretSelect(Parser parser) throws DBException, IOException {
-        String results = null;
+        String results;
         getTableFromMemory(parser);
         attributeList = parser.getAttributeList();
         //if * and no condition, return the whole table
@@ -297,14 +329,13 @@ public class Interpreter {
         //if condition, need to throw out rows not matching
         if(parser.getHasCondition()) {
             results = selectWithCondition(parser);
-            return results;
         }else{
             //fill table with relevant columns
             resultsTable.fillTableFromMemory(attributeList, null, false);
             //get results from relevant columns
             results = selectColumns(attributeList, false);
-            return results;
         }
+        return results;
     }
 
     private String selectWithCondition(Parser parser) throws DBException {
@@ -385,10 +416,7 @@ public class Interpreter {
             throws DBException {
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         //get rid of quotes
-        StringBuilder formatString = new StringBuilder(value.getValue());
-        formatString.deleteCharAt(0);
-        formatString.deleteCharAt(formatString.length()-1);
-        String valueString = formatString.toString();
+        String valueString = removeQuotes(value);
         //for each row of the table, need to check the relevant column
         for(int i=0; i<resultsTable.getNumberOfRows();i++){
             ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
@@ -401,6 +429,13 @@ public class Interpreter {
                 i--;
             }
         }
+    }
+
+    private String removeQuotes(Value value) throws EmptyData {
+        StringBuilder formatString = new StringBuilder(value.getValue());
+        formatString.deleteCharAt(0);
+        formatString.deleteCharAt(formatString.length()-1);
+        return formatString.toString();
     }
 
     private void greaterOrLess(Value value, String op) throws DBException{
@@ -551,7 +586,7 @@ public class Interpreter {
     }
 
     private void interpretDrop(Parser parser) throws DBException {
-        StorageType type = parser.getType();
+        StorageType type = parser.getStorageType();
         if(type==StorageType.DATABASE){
             dropDatabase(parser);
         }
@@ -601,7 +636,7 @@ public class Interpreter {
     }
 
     private void interpretCreate(Parser parser) throws DBException{
-        StorageType type = parser.getType();
+        StorageType type = parser.getStorageType();
         if(type==StorageType.DATABASE) {
             createDatabase(parser);
         }else if(type==StorageType.TABLE) {
@@ -676,9 +711,5 @@ public class Interpreter {
 
     public boolean getInterpretedOK(){
         return interpretedOK;
-    }
-
-    public void setInterpretedOK(boolean interpretedOK){
-        this.interpretedOK = interpretedOK;
     }
 }

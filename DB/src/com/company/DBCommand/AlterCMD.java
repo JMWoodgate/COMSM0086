@@ -14,6 +14,7 @@ public class AlterCMD extends Parser implements DBCommand{
     private final StorageType type;
     private String tableName;
     private String attributeName;
+    private AlterationType alterationType;
 
     public AlterCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
@@ -42,7 +43,14 @@ public class AlterCMD extends Parser implements DBCommand{
             nextToken = command.get(index);
             switch (nextToken) {
                 case ("add"):
+                    alterationType = AlterationType.ADD;
+                    index++;
+                    attributeName = parseAttributeName(command, index);
+                    //increasing index to point to after the attribute name
+                    index++;
+                    break;
                 case ("drop"):
+                    alterationType = AlterationType.DROP;
                     index++;
                     attributeName = parseAttributeName(command, index);
                     //increasing index to point to after the attribute name
@@ -55,6 +63,13 @@ public class AlterCMD extends Parser implements DBCommand{
         } catch(DBException e){
             throw new CommandException(command.get(index), index, "ALTER");
         }
+    }
+
+    public AlterationType getAlterationType()throws EmptyData{
+        if(alterationType!=null){
+            return alterationType;
+        }
+        throw new EmptyData("alteration type");
     }
 
     public String getAttributeName() throws EmptyData{

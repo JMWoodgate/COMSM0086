@@ -49,6 +49,11 @@ public class Row {
         this.numberOfColumns = numberOfColumns;
     }
 
+    public void addElement(){
+        elements.add(null);
+        numberOfColumns++;
+    }
+
     //inserts id into first index of elements
     private void addID(){
         String newID = Integer.toString(id);

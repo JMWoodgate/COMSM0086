@@ -13,14 +13,17 @@ public class Parser {
     private ArrayList<String> tokenizedCommand;
     private int commandSize;
     private String tableName;
+    private String secondTableName;
     private String databaseName;
+    private String attributeName;
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private boolean parsedOK;
     private String exception;
     private String currentFolder;
     private String homeDirectory;
-    private StorageType type;
+    private StorageType storageType;
+    private AlterationType alterationType;
     private ArrayList<String> attributeList;
     private ArrayList<String> valueListString;
     private ArrayList<Value> valueListObject;
@@ -99,7 +102,9 @@ public class Parser {
         try{
             JoinCMD join = new JoinCMD(tokenizedCommand, index);
             index = join.getIndex();
-            //do we need to store the table names? (as there are two tables here)
+            tableName = join.getTableNames().get(0);
+            secondTableName = join.getTableNames().get(1);
+            attributeList = join.getAttributeNames();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "join", e);
@@ -169,6 +174,8 @@ public class Parser {
             AlterCMD alter = new AlterCMD(tokenizedCommand, index);
             index = alter.getIndex();
             tableName = alter.getTableName();
+            attributeName = alter.getAttributeName();
+            alterationType = alter.getAlterationType();
         } catch(DBException e){
             throw new CommandException(
                     tokenizer.nextToken(index), index, "alter", e);
@@ -179,11 +186,11 @@ public class Parser {
         try{
             DropCMD drop = new DropCMD(tokenizedCommand, index);
             index = drop.getIndex();
-            type = drop.getType();
-            if(type== StorageType.DATABASE){
+            storageType = drop.getType();
+            if(storageType== StorageType.DATABASE){
                 databaseName = drop.getDatabaseName();
                 currentFolder = homeDirectory+File.separator+databaseName;
-            }else if(type==StorageType.TABLE){
+            }else if(storageType==StorageType.TABLE){
                 tableName = drop.getTableName();
             }
             else{
@@ -200,8 +207,8 @@ public class Parser {
         try{
             CreateCMD create = new CreateCMD(tokenizedCommand, index, currentFolder);
             index = create.getIndex();
-            type = create.getType();
-            if(type==StorageType.DATABASE){
+            storageType = create.getType();
+            if(storageType==StorageType.DATABASE){
                 databaseName = create.getDatabaseName();
             }else if(create.getType()==StorageType.TABLE){
                 tableName = create.getTableName();
@@ -341,8 +348,15 @@ public class Parser {
         throw new EmptyData("get value list string");
     }
 
-    public StorageType getType(){
-        return type;
+    public StorageType getStorageType(){
+        return storageType;
+    }
+
+    public AlterationType getAlterationType()throws EmptyData{
+        if(alterationType!=null){
+            return alterationType;
+        }
+        throw new EmptyData("alteration type");
     }
 
     public String getException() {
@@ -414,11 +428,25 @@ public class Parser {
         throw new EmptyData("database name");
     }
 
+    public String getSecondTableName() throws EmptyData {
+        if(secondTableName!=null) {
+            return secondTableName;
+        }
+        throw new EmptyData("table name");
+    }
+
     public String getTableName() throws EmptyData {
         if(tableName!=null) {
             return tableName;
         }
         throw new EmptyData("table name");
+    }
+
+    public String getAttributeName() throws EmptyData{
+        if(attributeName!=null){
+            return attributeName;
+        }
+        throw new EmptyData("attribute name");
     }
 
     public void setIndex(int newIndex){

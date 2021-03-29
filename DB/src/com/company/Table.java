@@ -19,6 +19,18 @@ public class Table {
         this.tableName = tableName;
     }
 
+    public void addColumn(String columnName) throws EmptyData{
+        if(columnName==null){
+            throw new EmptyData("no column name passed to addColumn");
+        }
+        columns.add(new Column(tableName, columnName, numberOfColumns));
+        numberOfColumns++;
+        //need to loop through rows and add one element to the end of each row
+        for(int i=0; i<numberOfRows;i++){
+            rows.get(i).addElement();
+        }
+    }
+
     public void deleteColumn(String columnName) throws EmptyData {
         if(columns==null || columnName==null){
             throw new EmptyData("couldn't delete column "+columnName);
