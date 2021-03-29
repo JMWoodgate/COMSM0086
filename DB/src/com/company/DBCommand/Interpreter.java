@@ -100,7 +100,6 @@ public class Interpreter {
             Table firstTable, Table secondTable, String firstAttribute, String secondAttribute)
             throws DBException{
         Table resultsTable = new Table(databaseName, "join table");
-        String results = null;
         //get the column names from each table, remove the index, and add on the table name
         ArrayList<String> table1Columns = formatColumnNames(firstTable);
         ArrayList<String> table2Columns = formatColumnNames(secondTable);
@@ -108,6 +107,7 @@ public class Interpreter {
         table1Columns.addAll(table2Columns);
         //creating an empty results table
         resultsTable.fillTableFromMemory(table1Columns, null, true);
+        System.out.println("number of columns in results table: "+resultsTable.getNumberOfColumns());
         System.out.println("init results table: "+resultsTable.getTable());
         //for each value under attribute 1, see if there is a matching value in attribute 2
         //if there is, store it in a tuple of row numbers
@@ -122,8 +122,25 @@ public class Interpreter {
         ArrayList<ArrayList<Integer>> rowIndexes = findRowIndexes(
                 firstAttributeIndex, secondAttributeIndex, firstTable, secondTable);
         System.out.println("matching row indexes: "+rowIndexes);
+        for (ArrayList<Integer> rowIndex : rowIndexes) {
+            ArrayList<String> currentRow = joinRows(
+                    rowIndex, firstTable, secondTable);
+            System.out.println("current row: "+currentRow);
+            System.out.println("size: "+currentRow.size());
+            resultsTable.addRow(currentRow);
+        }
+        return resultsTable.getTable();
+    }
 
-        return results;
+    private ArrayList<String> joinRows(
+            ArrayList<Integer> rowIndexes, Table firstTable, Table secondTable)
+            throws DBException{
+        ArrayList<String> firstRow = firstTable.getSpecificRow(rowIndexes.get(0));
+        firstRow.remove(0);
+        ArrayList<String> secondRow = secondTable.getSpecificRow(rowIndexes.get(1));
+        secondRow.remove(0);
+        firstRow.addAll(secondRow);
+        return firstRow;
     }
 
     private ArrayList<ArrayList<Integer>> findRowIndexes(
