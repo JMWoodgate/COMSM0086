@@ -16,7 +16,6 @@ public class Interpreter {
 
     protected int index;
     private String tableName;
-    private String secondTableName;
     private String databaseName;
     private String attributeName;
     private ArrayList<String> attributeList;
@@ -25,7 +24,6 @@ public class Interpreter {
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private String currentFolder;
-    private String parentFolder;
     private final String homeDirectory;
     private Database database;
     private final HashMap<String, Database> databaseMap;
@@ -42,7 +40,7 @@ public class Interpreter {
         interpretedOK = true;
     }
 
-    public String interpretCommand(String command, Parser parser) throws DBException {
+    public String interpretCommand(String command, Parser parser) {
         interpretedOK = true;
         String results = null;
         try {
@@ -85,15 +83,14 @@ public class Interpreter {
 
     private String interpretJoin(Parser parser) throws DBException{
         getTableFromMemory(parser);
-        secondTableName = parser.getSecondTableName();
+        String secondTableName = parser.getSecondTableName();
         if(!database.getTables().containsKey(secondTableName)){
             throw new EmptyData("table does not exist in memory");
         }
         Table secondTable = database.getTable(secondTableName);
         String firstAttribute = parser.getAttributeList().get(0);
         String secondAttribute = parser.getAttributeList().get(1);
-        String results = joinTables(table, secondTable, firstAttribute, secondAttribute);
-        return results;
+        return joinTables(table, secondTable, firstAttribute, secondAttribute);
     }
 
     private String joinTables(
@@ -107,26 +104,16 @@ public class Interpreter {
         table1Columns.addAll(table2Columns);
         //creating an empty results table
         resultsTable.fillTableFromMemory(table1Columns, null, true);
-        System.out.println("number of columns in results table: "+resultsTable.getNumberOfColumns());
-        System.out.println("init results table: "+resultsTable.getTable());
-        //for each value under attribute 1, see if there is a matching value in attribute 2
-        //if there is, store it in a tuple of row numbers
-        //nested loops - outer loop running through values under attribute 1
-        //inner loop running through values under attribute 2
-        //for each matching value in attribute 2, add tuple to 2D arrayList
-        //when all tuples collected, add row by row
-        //get the values from attribute 1, take off ID
-        //then append the matching values from attribute 2, take off ID
+        //get join column indexes
         int firstAttributeIndex = firstTable.getColumnIndex(firstAttribute);
         int secondAttributeIndex = secondTable.getColumnIndex(secondAttribute);
+        //get indexes of matching rows
         ArrayList<ArrayList<Integer>> rowIndexes = findRowIndexes(
                 firstAttributeIndex, secondAttributeIndex, firstTable, secondTable);
-        System.out.println("matching row indexes: "+rowIndexes);
+        //append rows from each table and add to results table
         for (ArrayList<Integer> rowIndex : rowIndexes) {
             ArrayList<String> currentRow = joinRows(
                     rowIndex, firstTable, secondTable);
-            System.out.println("current row: "+currentRow);
-            System.out.println("size: "+currentRow.size());
             resultsTable.addRow(currentRow);
         }
         return resultsTable.getTable();
@@ -147,7 +134,7 @@ public class Interpreter {
             int firstAttribute, int secondAttribute, Table firstTable, Table secondTable)
             throws DBException {
         ArrayList<String> firstColumn = firstTable.getColumnValues(firstAttribute);
-        ArrayList<String> secondColumn = secondTable.getColumnValues(secondAttribute);;
+        ArrayList<String> secondColumn = secondTable.getColumnValues(secondAttribute);
         ArrayList<ArrayList<Integer>> rowIndexes = new ArrayList<>();
         //for each row in the first table's column, loop through all the columns
         //in the second table to compare
@@ -179,9 +166,7 @@ public class Interpreter {
         //get rid of ID column
         columnNames.remove(0);
         for (String columnName : columnNames) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(currentTable.getTableName()).append(".").append(columnName);
-            formattedColumns.add(stringBuilder.toString());
+            formattedColumns.add(currentTable.getTableName() + "." + columnName);
         }
         return formattedColumns;
     }
@@ -732,7 +717,7 @@ public class Interpreter {
             //make a new file within specified database
             FileIO fileIO = new FileIO(databaseName);
             //creates a new table within a specified folder (returns error if file already exists)
-            File newTableFile = fileIO.makeFile(currentFolder, tableName);
+            fileIO.makeFile(currentFolder, tableName);
             table = new Table(databaseName, tableName);
             if(attributeList.size()>1) {
                 //writing column names to file

@@ -59,184 +59,134 @@ public class Parser {
     public Parser(){}
 
 
-    private void parseCommand() throws CommandException{
-        try {
-            String nextCommand = tokenizer.nextToken(index);
-            switch (nextCommand) {
-                case "use":
-                    parseUse();
-                    break;
-                case "create":
-                    parseCreate();
-                    break;
-                case "drop":
-                    parseDrop();
-                    break;
-                case "alter":
-                    parseAlter();
-                    break;
-                case "insert":
-                    parseInsert();
-                    break;
-                case "select":
-                    parseSelect();
-                    break;
-                case "update":
-                    parseUpdate();
-                    break;
-                case "delete":
-                    parseDelete();
-                    break;
-                case "join":
-                    parseJoin();
-                    break;
-                default:
-                    throw new CommandException(tokenizer.nextToken(index), index, "command");
-            }
-        } catch(DBException e){
-            throw new CommandException(tokenizer.nextToken(index), index, "command", e);
+    private void parseCommand() throws DBException{
+        String nextCommand = tokenizer.nextToken(index);
+        switch (nextCommand) {
+            case "use":
+                parseUse();
+                break;
+            case "create":
+                parseCreate();
+                break;
+            case "drop":
+                parseDrop();
+                break;
+            case "alter":
+                parseAlter();
+                break;
+            case "insert":
+                parseInsert();
+                break;
+            case "select":
+                parseSelect();
+                break;
+            case "update":
+                parseUpdate();
+                break;
+            case "delete":
+                parseDelete();
+                break;
+            case "join":
+                parseJoin();
+                break;
+            default:
+                throw new CommandException(tokenizer.nextToken(index), index, "command");
         }
     }
 
     private void parseJoin() throws DBException{
-        try{
-            JoinCMD join = new JoinCMD(tokenizedCommand, index);
-            index = join.getIndex();
-            tableName = join.getTableNames().get(0);
-            secondTableName = join.getTableNames().get(1);
-            attributeList = join.getAttributeNames();
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "join", e);
-        }
+        JoinCMD join = new JoinCMD(tokenizedCommand, index);
+        index = join.getIndex();
+        tableName = join.getTableNames().get(0);
+        secondTableName = join.getTableNames().get(1);
+        attributeList = join.getAttributeNames();
     }
 
     private void parseDelete() throws DBException{
-        try{
-            DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
-            index = delete.getIndex();
-            tableName = delete.getTableName();
-            conditionListArray = delete.getConditionListArray();
-            conditionListObject = delete.getConditionListObject();
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "delete", e);
-        }
+        DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
+        index = delete.getIndex();
+        tableName = delete.getTableName();
+        conditionListArray = delete.getConditionListArray();
+        conditionListObject = delete.getConditionListObject();
     }
 
     private void parseUpdate() throws DBException{
-        try{
-            UpdateCMD update = new UpdateCMD(tokenizedCommand, index);
-            index = update.getIndex();
-            tableName = update.getTableName();
-            conditionListArray = update.getConditionListArray();
-            conditionListObject = update.getConditionListObject();
-            attributeList = update.getAttributeList();
-            valueListString = update.getValueListString();
-            valueListObject = update.getValueListObject();
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "update", e);
-        }
+        UpdateCMD update = new UpdateCMD(tokenizedCommand, index);
+        index = update.getIndex();
+        tableName = update.getTableName();
+        conditionListArray = update.getConditionListArray();
+        conditionListObject = update.getConditionListObject();
+        attributeList = update.getAttributeList();
+        valueListString = update.getValueListString();
+        valueListObject = update.getValueListObject();
     }
 
     private void parseSelect() throws DBException{
-        try{
-            SelectCMD select = new SelectCMD(tokenizedCommand, index);
-            index = select.getIndex();
-            tableName = select.getTableName();
-            attributeList = select.getAttributeList();
-            if(select.getHasCondition()) {
-                hasCondition = true;
-                conditionListArray = select.getConditionListArray();
-                conditionListObject = select.getConditionListObject();
-            }
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "select", e);
+        SelectCMD select = new SelectCMD(tokenizedCommand, index);
+        index = select.getIndex();
+        tableName = select.getTableName();
+        attributeList = select.getAttributeList();
+        if(select.getHasCondition()) {
+            hasCondition = true;
+            conditionListArray = select.getConditionListArray();
+            conditionListObject = select.getConditionListObject();
         }
     }
 
     private void parseInsert() throws DBException{
-        try{
-            InsertCMD insert = new InsertCMD(tokenizedCommand, index);
-            index = insert.getIndex();
-            tableName = insert.getTableName();
-            valueListString = insert.getValueListString();
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "insert", e);
-        }
+        InsertCMD insert = new InsertCMD(tokenizedCommand, index);
+        index = insert.getIndex();
+        tableName = insert.getTableName();
+        valueListString = insert.getValueListString();
     }
 
     private void parseAlter() throws DBException{
-        try{
-            AlterCMD alter = new AlterCMD(tokenizedCommand, index);
-            index = alter.getIndex();
-            tableName = alter.getTableName();
-            attributeName = alter.getAttributeName();
-            alterationType = alter.getAlterationType();
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "alter", e);
-        }
+        AlterCMD alter = new AlterCMD(tokenizedCommand, index);
+        index = alter.getIndex();
+        tableName = alter.getTableName();
+        attributeName = alter.getAttributeName();
+        alterationType = alter.getAlterationType();
     }
 
     private void parseDrop() throws DBException{
-        try{
-            DropCMD drop = new DropCMD(tokenizedCommand, index);
-            index = drop.getIndex();
-            storageType = drop.getType();
-            if(storageType== StorageType.DATABASE){
-                databaseName = drop.getDatabaseName();
-                currentFolder = homeDirectory+File.separator+databaseName;
-            }else if(storageType==StorageType.TABLE){
-                tableName = drop.getTableName();
-            }
-            else{
-                throw new StorageTypeException(
-                        drop.getType(), index, "table or database");
-            }
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "drop", e);
+        DropCMD drop = new DropCMD(tokenizedCommand, index);
+        index = drop.getIndex();
+        storageType = drop.getType();
+        if(storageType== StorageType.DATABASE){
+            databaseName = drop.getDatabaseName();
+            currentFolder = homeDirectory+File.separator+databaseName;
+        }else if(storageType==StorageType.TABLE){
+            tableName = drop.getTableName();
+        }
+        else{
+            throw new StorageTypeException(
+                    drop.getType(), index, "table or database");
         }
     }
 
     private void parseCreate() throws DBException{
-        try{
-            CreateCMD create = new CreateCMD(tokenizedCommand, index, currentFolder);
-            index = create.getIndex();
-            storageType = create.getType();
-            if(storageType==StorageType.DATABASE){
-                databaseName = create.getDatabaseName();
-            }else if(create.getType()==StorageType.TABLE){
-                tableName = create.getTableName();
-                attributeList = create.getAttributeList();
-            }
-            else{
-                throw new StorageTypeException(
-                        create.getType(), index, "table or database");
-            }
-        } catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "create", e);
+        CreateCMD create = new CreateCMD(tokenizedCommand, index, currentFolder);
+        index = create.getIndex();
+        storageType = create.getType();
+        if(storageType==StorageType.DATABASE){
+            databaseName = create.getDatabaseName();
+        }else if(create.getType()==StorageType.TABLE){
+            tableName = create.getTableName();
+            attributeList = create.getAttributeList();
+        }
+        else{
+            throw new StorageTypeException(
+                    create.getType(), index, "table or database");
         }
     }
 
     private void parseUse() throws DBException {
-        try {
-            //creates a new instance of useCMD and parses it
-            UseCMD use = new UseCMD(tokenizedCommand, index);
-            //updating the current index
-            index = use.getIndex();
-            databaseName = use.getDatabaseName();
-            //don't need to call execute, just need to update the folder name
-            currentFolder = homeDirectory+File.separator+databaseName;
-        }catch(DBException e){
-            throw new CommandException(
-                    tokenizer.nextToken(index), index, "use", e);
-        }
+        UseCMD use = new UseCMD(tokenizedCommand, index);
+        //updating the current index
+        index = use.getIndex();
+        databaseName = use.getDatabaseName();
+        //update folder name
+        currentFolder = homeDirectory+File.separator+databaseName;
     }
 
     protected String parseAttributeName(ArrayList<String> command, int index) throws CommandException {
