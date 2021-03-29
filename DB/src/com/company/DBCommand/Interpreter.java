@@ -117,6 +117,11 @@ public class Interpreter {
         //when all tuples collected, add row by row
         //get the values from attribute 1, take off ID
         //then append the matching values from attribute 2, take off ID
+        int firstAttributeIndex = firstTable.getColumnIndex(firstAttribute);
+        int secondAttributeIndex = secondTable.getColumnIndex(secondAttribute);
+        ArrayList<ArrayList<Integer>> rowIndexes = findRowIndexes(
+                firstAttributeIndex, secondAttributeIndex, firstTable, secondTable);
+        System.out.println("matching row indexes: "+rowIndexes);
 
         return results;
     }
