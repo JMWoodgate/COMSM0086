@@ -99,10 +99,29 @@ public class Interpreter {
     private String joinTables(
             Table firstTable, Table secondTable, String firstAttribute, String secondAttribute)
             throws DBException{
-        Table resultsTable = new Table(databaseName, "joinTable");
+        Table resultsTable = new Table(databaseName, "join table");
         String results = null;
-
+        //get the column names from each table, remove the index, and add on the table name
+        ArrayList<String> table1Columns = formatColumnNames(firstTable);
+        ArrayList<String> table2Columns = formatColumnNames(secondTable);
+        //putting all column names together
+        table1Columns.addAll(table2Columns);
+        //creating an empty results table
+        resultsTable.fillTableFromMemory(table1Columns, null, true);
         return results;
+    }
+
+    private ArrayList<String> formatColumnNames(Table currentTable){
+        ArrayList<String> columnNames = currentTable.getColumns();
+        StringBuilder stringBuilder = new StringBuilder();
+        ArrayList<String> formattedColumns = new ArrayList<>();
+        //get rid of ID column
+        columnNames.remove(0);
+        for (String columnName : columnNames) {
+            stringBuilder.append(tableName).append(".").append(columnName);
+            formattedColumns.add(stringBuilder.toString());
+        }
+        return formattedColumns;
     }
 
     private void interpretAlter(Parser parser) throws DBException, IOException{

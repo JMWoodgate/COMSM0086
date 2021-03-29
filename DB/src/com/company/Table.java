@@ -111,7 +111,9 @@ public class Table {
         numberOfRows++;
     }
 
-    public void fillTableFromMemory(ArrayList<String> columnNames, ArrayList<String> rowData, boolean addID){
+    public void fillTableFromMemory(
+            ArrayList<String> columnNames, ArrayList<String> rowData,
+            boolean addID){
         if(columnNames!=null){
             columns = new ArrayList<>();
             if(addID) {
