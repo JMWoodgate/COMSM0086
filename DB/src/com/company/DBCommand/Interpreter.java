@@ -108,17 +108,57 @@ public class Interpreter {
         table1Columns.addAll(table2Columns);
         //creating an empty results table
         resultsTable.fillTableFromMemory(table1Columns, null, true);
+        System.out.println("init results table: "+resultsTable.getTable());
+        //for each value under attribute 1, see if there is a matching value in attribute 2
+        //if there is, store it in a tuple of row numbers
+        //nested loops - outer loop running through values under attribute 1
+        //inner loop running through values under attribute 2
+        //for each matching value in attribute 2, add tuple to 2D arrayList
+        //when all tuples collected, add row by row
+        //get the values from attribute 1, take off ID
+        //then append the matching values from attribute 2, take off ID
+
         return results;
+    }
+
+    private ArrayList<ArrayList<Integer>> findRowIndexes(
+            int firstAttribute, int secondAttribute, Table firstTable, Table secondTable)
+            throws DBException {
+        ArrayList<String> firstColumn = firstTable.getColumnValues(firstAttribute);
+        ArrayList<String> secondColumn = secondTable.getColumnValues(secondAttribute);;
+        ArrayList<ArrayList<Integer>> rowIndexes = new ArrayList<>();
+        //for each row in the first table's column, loop through all the columns
+        //in the second table to compare
+        for(int i=0; i<firstColumn.size();i++){
+            rowIndexes = getMatchingRows(firstColumn.get(i), secondColumn, rowIndexes, i);
+        }
+        return rowIndexes;
+    }
+
+    private ArrayList<ArrayList<Integer>> getMatchingRows(
+            String currentValue, ArrayList<String> comparisonRow,
+            ArrayList<ArrayList<Integer>> rowIndexes, int comparisonRowIndex){
+        //for the current row in table 1, loop through the values in table 2
+        //if there is a matching value, pair the indexes together and store in a 2D arrayList
+        for(int i=0;i<comparisonRow.size();i++){
+            if(comparisonRow.get(i).equals(currentValue)) {
+                ArrayList<Integer> currentIndex = new ArrayList<>();
+                currentIndex.add(comparisonRowIndex);
+                currentIndex.add(i);
+                rowIndexes.add(currentIndex);
+            }
+        }
+        return rowIndexes;
     }
 
     private ArrayList<String> formatColumnNames(Table currentTable){
         ArrayList<String> columnNames = currentTable.getColumns();
-        StringBuilder stringBuilder = new StringBuilder();
         ArrayList<String> formattedColumns = new ArrayList<>();
         //get rid of ID column
         columnNames.remove(0);
         for (String columnName : columnNames) {
-            stringBuilder.append(tableName).append(".").append(columnName);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(currentTable.getTableName()).append(".").append(columnName);
             formattedColumns.add(stringBuilder.toString());
         }
         return formattedColumns;
