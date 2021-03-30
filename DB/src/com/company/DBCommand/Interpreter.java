@@ -124,10 +124,17 @@ public class Interpreter {
     private ArrayList<String> joinRows(
             ArrayList<Integer> rowIndexes, Table firstTable, Table secondTable)
             throws DBException{
-        ArrayList<String> firstRow = firstTable.getSpecificRow(rowIndexes.get(0));
-        firstRow.remove(0);
-        ArrayList<String> secondRow = secondTable.getSpecificRow(rowIndexes.get(1));
-        secondRow.remove(0);
+        ArrayList<String> temp = firstTable.getSpecificRow(rowIndexes.get(0));
+        ArrayList<String> firstRow = new ArrayList<>();
+        //copy from index 1 onwards as we don't want the id column
+        for(int i=1; i<temp.size();i++){
+            firstRow.add(temp.get(i));
+        }
+        temp = secondTable.getSpecificRow(rowIndexes.get(1));
+        ArrayList<String> secondRow = new ArrayList<>();
+        for(int i=1; i<temp.size();i++){
+            firstRow.add(temp.get(i));
+        }
         firstRow.addAll(secondRow);
         return firstRow;
     }
@@ -150,7 +157,8 @@ public class Interpreter {
             String currentValue, ArrayList<String> comparisonRow,
             ArrayList<ArrayList<Integer>> rowIndexes, int comparisonRowIndex){
         //for the current row in table 1, loop through the values in table 2
-        //if there is a matching value, pair the indexes together and store in a 2D arrayList
+        //if there is a matching value, pair the indexes together
+        // and store in a 2D arrayList
         for(int i=0;i<comparisonRow.size();i++){
             if(comparisonRow.get(i).equals(currentValue)) {
                 ArrayList<Integer> currentIndex = new ArrayList<>();
@@ -165,16 +173,16 @@ public class Interpreter {
     private ArrayList<String> formatColumnNames(Table currentTable){
         ArrayList<String> columnNames = currentTable.getColumns();
         ArrayList<String> formattedColumns = new ArrayList<>();
-        //get rid of ID column
-        columnNames.remove(0);
-        //add table names
-        for (String columnName : columnNames) {
-            formattedColumns.add(currentTable.getTableName() + "." + columnName);
+        //add table names not including id
+        for (int i=1;i<columnNames.size();i++) {
+            formattedColumns.add(currentTable.getTableName()+
+                    "."+columnNames.get(i));
         }
         return formattedColumns;
     }
 
-    private void interpretAlter(Parser parser) throws DBException, IOException{
+    private void interpretAlter(Parser parser)
+            throws DBException, IOException{
         getTableFromMemory(parser);
         attributeName = parser.getAttributeName();
         AlterationType alterationType = parser.getAlterationType();
@@ -186,7 +194,8 @@ public class Interpreter {
         updateFile();
     }
 
-    private void interpretDelete(Parser parser) throws DBException, IOException{
+    private void interpretDelete(Parser parser)
+            throws DBException, IOException{
         getTableFromMemory(parser);
         conditionListObject = parser.getConditionListObject();
         //get condition
@@ -209,7 +218,8 @@ public class Interpreter {
         updateFile();
     }
 
-    private void interpretUpdate(Parser parser) throws DBException, IOException {
+    private void interpretUpdate(Parser parser)
+            throws DBException, IOException {
         getTableFromMemory(parser);
         //valueList and attributeList can be paired by index
         valueListString = parser.getValueListString();
@@ -298,7 +308,8 @@ public class Interpreter {
     }
 
     private ArrayList<Integer> likeComparison(
-            Value value, String element, int rowIndex, ArrayList<Integer> rowIndexes)
+            Value value, String element, int rowIndex,
+            ArrayList<Integer> rowIndexes)
             throws DBException {
         if(value.getLiteralType()!=LiteralType.STRING){
             throw new CommandException(value.getValue(), index, "string");
@@ -454,8 +465,9 @@ public class Interpreter {
         return removeUnselectedColumns(attributeList, resultsTable);
     }
 
-    private String removeUnselectedColumns(ArrayList<String> selectedAttributes,
-                                           Table currentTable) throws EmptyData {
+    private String removeUnselectedColumns(
+            ArrayList<String> selectedAttributes,
+            Table currentTable) throws EmptyData {
         ArrayList<String> existingColumns = currentTable.getColumns();
         int i=0;
         while(i<existingColumns.size()&&i>=0){
@@ -534,7 +546,8 @@ public class Interpreter {
 
     private ArrayList<Integer> andOr(
             ArrayList<String> command, Parser parser,
-            Stack<Condition> conditionStack, ArrayList<Integer> rowIndexes)
+            Stack<Condition> conditionStack,
+            ArrayList<Integer> rowIndexes)
             throws DBException{
         if(command.get(commandIndex).equals("and")){
             //call recursively, compare and update row indexes
@@ -551,7 +564,8 @@ public class Interpreter {
     }
 
     private ArrayList<Integer> andIndexes(
-            ArrayList<Integer> firstIndexes, ArrayList<Integer> secondIndexes){
+            ArrayList<Integer> firstIndexes,
+            ArrayList<Integer> secondIndexes){
         ArrayList<Integer> results = new ArrayList<>();
         if(firstIndexes==null&&secondIndexes==null){
             return results;
@@ -571,7 +585,8 @@ public class Interpreter {
     }
 
     private ArrayList<Integer> orIndexes(
-            ArrayList<Integer> firstIndexes, ArrayList<Integer> secondIndexes){
+            ArrayList<Integer> firstIndexes,
+            ArrayList<Integer> secondIndexes){
         if(firstIndexes==null&&secondIndexes==null){
             return null;
         }
@@ -633,14 +648,16 @@ public class Interpreter {
         }
     }
 
-    private String removeQuotes(Value value) throws EmptyData {
+    private String removeQuotes(Value value)
+            throws EmptyData {
         StringBuilder formatString = new StringBuilder(value.getValue());
         formatString.deleteCharAt(0);
         formatString.deleteCharAt(formatString.length()-1);
         return formatString.toString();
     }
 
-    private void greaterOrLess(Value value, String op) throws DBException{
+    private void greaterOrLess(Value value, String op)
+            throws DBException{
         LiteralType type = value.getLiteralType();
         if(type==LiteralType.INTEGER||type==LiteralType.FLOAT){
             for(int i=0; i<resultsTable.getNumberOfRows();i++){
@@ -651,7 +668,8 @@ public class Interpreter {
         }
     }
 
-    private int parseNumber(int rowIndex, Value value, String op) throws DBException{
+    private int parseNumber(int rowIndex, Value value, String op)
+            throws DBException{
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         ArrayList<String> currentRow = resultsTable.getSpecificRow(rowIndex);
         if(currentRow.get(columnIndex)!=null){
@@ -666,7 +684,8 @@ public class Interpreter {
     }
 
     private int greaterOrLessSwitch(Value value, float currentNumber,
-                                     String op, int rowIndex) throws DBException{
+                                     String op, int rowIndex)
+            throws DBException{
         switch(op){
             case("<"):
                 if(currentNumber>=value.getFloatLiteral()){
@@ -698,7 +717,8 @@ public class Interpreter {
         return rowIndex;
     }
 
-    private void equalOrUnequal(Value value, String op) throws DBException{
+    private void equalOrUnequal(Value value, String op)
+            throws DBException{
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         String valueString = value.getValue();
         //for each row of the table, need to check the relevant column
@@ -766,7 +786,8 @@ public class Interpreter {
     //if there is an ID column in the table, need to set the id in each row
     // for later reference
     private void setIDs(
-            ArrayList<String> columnValues) throws DBException {
+            ArrayList<String> columnValues)
+            throws DBException {
         ArrayList<String> idColumn = table.getColumnValues(0);
         for(int i=0;i<columnValues.size();i++){
             resultsTable.setRowID(Integer.parseInt(idColumn.get(i)), i);
@@ -801,7 +822,8 @@ public class Interpreter {
         }
     }
 
-    private void dropTable(Parser parser) throws DBException{
+    private void dropTable(Parser parser)
+            throws DBException{
         tableName = parser.getTableName();
         File fileToDelete = new File(currentFolder+File.separator+tableName+".tab");
         if(fileToDelete.exists()){
@@ -816,7 +838,8 @@ public class Interpreter {
         }
     }
 
-    private void dropDatabase(Parser parser) throws DBException {
+    private void dropDatabase(Parser parser)
+            throws DBException {
         databaseName = parser.getDatabaseName();
         currentFolder = parser.getCurrentFolder();
         //delete the file system for the database
@@ -830,7 +853,8 @@ public class Interpreter {
         }
     }
 
-    private void interpretUse(Parser parser) throws DBException {
+    private void interpretUse(Parser parser)
+            throws DBException {
         //gets the name of the database
         databaseName = parser.getDatabaseName();
         //gets the relative pathname to the database
@@ -841,7 +865,8 @@ public class Interpreter {
         database = databaseMap.get(databaseName);
     }
 
-    private void interpretCreate(Parser parser) throws DBException{
+    private void interpretCreate(Parser parser)
+            throws DBException{
         StorageType type = parser.getStorageType();
         if(type==StorageType.DATABASE) {
             createDatabase(parser);
@@ -850,7 +875,8 @@ public class Interpreter {
         }
     }
 
-    private void createTable(Parser parser) throws DBException{
+    private void createTable(Parser parser)
+            throws DBException{
         tableName = parser.getTableName();
         attributeList = parser.getAttributeList();
         try{
@@ -871,7 +897,8 @@ public class Interpreter {
         }
     }
 
-    private void createDatabase(Parser parser) throws DBException{
+    private void createDatabase(Parser parser)
+            throws DBException{
         databaseName = parser.getDatabaseName();
         try {
             FileIO fileIO = new FileIO(databaseName);
@@ -883,14 +910,16 @@ public class Interpreter {
         }
     }
 
-    private void updateFile() throws DBException, IOException{
+    private void updateFile()
+            throws DBException, IOException{
         //make a new file within specified database
         FileIO fileIO = new FileIO(databaseName);
         //writes to file (creates file if it doesn't exist)
         fileIO.writeFile(currentFolder, tableName, table);
     }
 
-    private void initResultsTable() throws DBException {
+    private void initResultsTable()
+            throws DBException {
         //make a new results table and fill with column names
         resultsTable = new Table(databaseName, tableName);
         //if wild, table is the whole thing, otherwise need to fill with relevant attributes
@@ -903,7 +932,8 @@ public class Interpreter {
         }
     }
 
-    private void getTableFromMemory(Parser parser) throws DBException{
+    private void getTableFromMemory(Parser parser)
+            throws DBException{
         tableName = parser.getTableName();
         if(!database.getTables().containsKey(tableName)){
             throw new EmptyData("table does not exist in memory");
