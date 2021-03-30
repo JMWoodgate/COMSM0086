@@ -21,8 +21,6 @@ public class Interpreter {
     private String attributeName;
     private ArrayList<String> attributeList;
     private ArrayList<String> valueListString;
-    private ArrayList<Value> valueListObject;
-    private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private String currentFolder;
     private final String homeDirectory;
@@ -169,6 +167,7 @@ public class Interpreter {
         ArrayList<String> formattedColumns = new ArrayList<>();
         //get rid of ID column
         columnNames.remove(0);
+        //add table names
         for (String columnName : columnNames) {
             formattedColumns.add(currentTable.getTableName() + "." + columnName);
         }
@@ -189,7 +188,6 @@ public class Interpreter {
 
     private void interpretDelete(Parser parser) throws DBException, IOException{
         getTableFromMemory(parser);
-        conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
         //get condition
         Condition currentCondition = conditionListObject.getConditionList().get(0);
@@ -214,34 +212,29 @@ public class Interpreter {
     private void interpretUpdate(Parser parser) throws DBException, IOException {
         getTableFromMemory(parser);
         //valueList and attributeList can be paired by index
-        valueListObject = parser.getValueListObject();
         valueListString = parser.getValueListString();
         attributeList = parser.getAttributeList();
         conditionListObject = parser.getConditionListObject();
-        conditionListArray = parser.getConditionListArray();
-        //get condition
-        Condition currentCondition = conditionListObject.getConditionList().get(0);
-        Value conditionValue = currentCondition.getValueObject();
-        String conditionAttribute = currentCondition.getAttribute();
-        String conditionOp = currentCondition.getOp();
-        //String conditionValue = currentCondition.getValueString();
+        //conditionListArray = parser.getConditionListArray();
         //iterate through the attributes to change, changing those that meet the condition
         for(int i=0;i<attributeList.size();i++){
-            changeValues(conditionAttribute,  conditionOp,
-                    conditionValue, valueListString.get(i),
+            changeValues(valueListString.get(i),
                     attributeList.get(i), parser);
         }
         updateFile();
     }
 
-    private void changeValues(String conditionAttribute, String conditionOp,
-                              Value conditionValue, String newValue,
+    private void changeValues(String newValue,
                               String attributeToChange, Parser parser)
             throws DBException {
         Stack<Condition> conditionStack = new Stack<>();
         ArrayList<Integer> rowIndexes = new ArrayList<>();
         //get all the row indexes that match the condition
         if(!multipleConditions) {
+            Condition currentCondition = conditionListObject.getConditionList().get(0);
+            Value conditionValue = currentCondition.getValueObject();
+            String conditionAttribute = currentCondition.getAttribute();
+            String conditionOp = currentCondition.getOp();
             rowIndexes = findRowIndexes(
                     conditionAttribute, conditionValue, conditionOp);
         }else{
@@ -256,14 +249,14 @@ public class Interpreter {
     }
 
     private ArrayList<Integer> findRowIndexes(
-            String conditionAttribute, Value conditionValue, String conditionOp)
+            String attribute, Value value, String op)
             throws DBException {
         ArrayList<Integer> rowIndexes = new ArrayList<>();
         //iterate through columns until we find the target one, then iterate through rows
         for(int i=0; i<table.getNumberOfColumns();i++) {
-            if (table.getColumns().get(i).equals(conditionAttribute)) {
+            if (table.getColumns().get(i).equals(attribute)) {
                 //get row indexes of rows that match the condition
-                rowIndexes = rowsMatchingCondition(conditionValue, i, conditionOp);
+                rowIndexes = rowsMatchingCondition(value, i, op);
             }
         }return rowIndexes;
     }
@@ -379,7 +372,8 @@ public class Interpreter {
     }
 
     private ArrayList<Integer> unequal
-            (String value, String element, int rowIndex, ArrayList<Integer> rowIndexes) {
+            (String value, String element, int rowIndex,
+             ArrayList<Integer> rowIndexes) {
         if (!element.equals(value)) {
             rowIndexes.add(rowIndex);
         }
@@ -397,7 +391,8 @@ public class Interpreter {
     }
 
 
-    private String interpretSelect(Parser parser) throws DBException, IOException {
+    private String interpretSelect(Parser parser)
+            throws DBException, IOException {
         String results;
         getTableFromMemory(parser);
         attributeList = parser.getAttributeList();
@@ -420,8 +415,8 @@ public class Interpreter {
         return results;
     }
 
-    private String selectWithCondition(Parser parser) throws DBException {
-        String results = null;
+    private String selectWithCondition(Parser parser)
+            throws DBException {
         //create table with all columns
         resultsTable.fillTableFromMemory(table.getColumns(), null, false);
         if(!multipleConditions) {
@@ -430,7 +425,6 @@ public class Interpreter {
             //first get the rows that don't match the condition
             singleCondition(parser);
         }else{
-            conditionListArray = parser.getConditionListArray();
             conditionListObject = parser.getConditionListObject();
             commandIndex = 0;
             conditionIndex = 0;
@@ -442,8 +436,7 @@ public class Interpreter {
             }
         }
         //then remove the unselected columns
-        results = removeUnselectedColumns(attributeList, resultsTable);
-        return results;
+        return removeUnselectedColumns(attributeList, resultsTable);
     }
 
     private String removeUnselectedColumns(ArrayList<String> selectedAttributes,
@@ -452,7 +445,7 @@ public class Interpreter {
         int i=0;
         while(i<existingColumns.size()&&i>=0){
             //checking each column in our current table to see if it is in our selected attributes
-            if(!attributeIsIn(existingColumns.get(i), selectedAttributes)){
+            if(!selectedAttributes.contains(existingColumns.get(i))){
                 deleteColumn(existingColumns.get(i), currentTable);
             }
             i++;
@@ -460,7 +453,8 @@ public class Interpreter {
         return currentTable.getTable();
     }
 
-    private void deleteColumn(String columnName, Table currentTable) throws EmptyData {
+    private void deleteColumn(String columnName, Table currentTable)
+            throws EmptyData {
         //deletes each element in the chosen column row by row
         for(int i=0; i<currentTable.getNumberOfRows();i++){
             currentTable.deleteElement(i, columnName);
@@ -469,7 +463,6 @@ public class Interpreter {
     }
 
     private void singleCondition(Parser parser) throws DBException{
-        conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
         //get condition
         Condition currentCondition = conditionListObject.getConditionList().get(0);
@@ -482,7 +475,8 @@ public class Interpreter {
     }
 
     private ArrayList<Integer> multipleConditions(
-            Parser parser, Stack<Condition> conditionStack, ArrayList<Integer> rowIndexes)
+            Parser parser, Stack<Condition> conditionStack,
+            ArrayList<Integer> rowIndexes)
             throws DBException{
         ArrayList<String> command = parser.getTokenizedCommand();
         while(commandIndex<command.size()&&!command.get(commandIndex).equals(";")){
@@ -510,7 +504,9 @@ public class Interpreter {
         return rowIndexes;
     }
 
-    private Stack<Condition> pushConditions(ArrayList<String> command, Stack<Condition> conditionStack) throws DBException{
+    private Stack<Condition> pushConditions(
+            ArrayList<String> command, Stack<Condition> conditionStack)
+            throws DBException{
         while(command.get(commandIndex).equals("(")&&
                 conditionIndex<conditionListObject.getConditionList().size()){
             //push nested conditions onto the stack
@@ -683,8 +679,9 @@ public class Interpreter {
         }
     }
 
-    private int equalOrUnequalSwitch(ArrayList<String> currentRow, String valueString,
-                                      String op, int columnIndex, int rowIndex)
+    private int equalOrUnequalSwitch(
+            ArrayList<String> currentRow, String valueString,
+            String op, int columnIndex, int rowIndex)
             throws DBException{
         switch(op){
             case("=="):
@@ -750,30 +747,22 @@ public class Interpreter {
     private void checkAttributes() throws EmptyData {
         ArrayList<String> tableAttributes = table.getColumns();
         for(String attribute : attributeList){
-            if(!attributeIsIn(attribute, tableAttributes)){
+            if(!tableAttributes.contains(attribute)){
                 throw new EmptyData("column '"+attribute+"' does not exist");
             }
         }
     }
 
-    private boolean attributeIsIn(
-            String attribute, ArrayList<String> tableAttributes){
-        for (String tableAttribute : tableAttributes) {
-            if (attribute.equals(tableAttribute)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void interpretInsert(Parser parser) throws DBException, IOException {
+    private void interpretInsert(Parser parser)
+            throws DBException, IOException {
         valueListString = parser.getValueListString();
         getTableFromMemory(parser);
         table.addRow(valueListString);
         updateFile();
     }
 
-    private void interpretDrop(Parser parser) throws DBException {
+    private void interpretDrop(Parser parser)
+            throws DBException {
         StorageType type = parser.getStorageType();
         if(type==StorageType.DATABASE){
             dropDatabase(parser);
