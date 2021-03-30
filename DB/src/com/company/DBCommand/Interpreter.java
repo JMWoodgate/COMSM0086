@@ -215,7 +215,6 @@ public class Interpreter {
         valueListString = parser.getValueListString();
         attributeList = parser.getAttributeList();
         conditionListObject = parser.getConditionListObject();
-        //conditionListArray = parser.getConditionListArray();
         //iterate through the attributes to change, changing those that meet the condition
         for(int i=0;i<attributeList.size();i++){
             changeValues(valueListString.get(i),
@@ -301,6 +300,9 @@ public class Interpreter {
     private ArrayList<Integer> likeComparison(
             Value value, String element, int rowIndex, ArrayList<Integer> rowIndexes)
             throws DBException {
+        if(value.getLiteralType()!=LiteralType.STRING){
+            throw new CommandException(value.getValue(), index, "string");
+        }
         String valueString = removeQuotes(value);
         Pattern pattern = Pattern.compile(valueString, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(element);
@@ -317,8 +319,21 @@ public class Interpreter {
             throws DBException{
         LiteralType type = value.getLiteralType();
         if(type==LiteralType.INTEGER||type==LiteralType.FLOAT){
-            float currentNumber = Float.parseFloat(element);
-            rowIndexes = greaterOrLessSwitch(value, currentNumber, op, rowIndex, rowIndexes);
+            rowIndexes = parseNumber(value, op, element, rowIndex, rowIndexes);
+        }
+        return rowIndexes;
+    }
+
+    private ArrayList<Integer> parseNumber(
+            Value value, String op, String element, int rowIndex,
+            ArrayList<Integer> rowIndexes) throws DBException{
+        if(element!=null){
+            try {
+                float currentNumber = Float.parseFloat(element);
+                rowIndexes = greaterOrLessSwitch(value, currentNumber, op, rowIndex, rowIndexes);
+            }catch(Exception e){
+                throw new CommandException(value.toString(), rowIndex, "a number");
+            }
         }
         return rowIndexes;
     }
@@ -598,6 +613,9 @@ public class Interpreter {
 
     private void likeComparison(Value value)
             throws DBException {
+        if(value.getLiteralType()!=LiteralType.STRING){
+            throw new CommandException(value.getValue(), index, "string");
+        }
         int columnIndex = resultsTable.getColumnIndex(attributeName);
         //get rid of quotes
         String valueString = removeQuotes(value);
@@ -623,17 +641,28 @@ public class Interpreter {
     }
 
     private void greaterOrLess(Value value, String op) throws DBException{
-        int columnIndex = resultsTable.getColumnIndex(attributeName);
         LiteralType type = value.getLiteralType();
         if(type==LiteralType.INTEGER||type==LiteralType.FLOAT){
             for(int i=0; i<resultsTable.getNumberOfRows();i++){
-                ArrayList<String> currentRow = resultsTable.getSpecificRow(i);
-                float currentNumber = Float.parseFloat(currentRow.get(columnIndex));
-                i = greaterOrLessSwitch(value, currentNumber, op, i);
+                i = parseNumber(i, value, op);
             }
         }else{
             throw new EmptyData("not a valid condition for value type");
         }
+    }
+
+    private int parseNumber(int rowIndex, Value value, String op) throws DBException{
+        int columnIndex = resultsTable.getColumnIndex(attributeName);
+        ArrayList<String> currentRow = resultsTable.getSpecificRow(rowIndex);
+        if(currentRow.get(columnIndex)!=null){
+            try {
+                float currentNumber = Float.parseFloat(currentRow.get(columnIndex));
+                rowIndex = greaterOrLessSwitch(value, currentNumber, op, rowIndex);
+            }catch(Exception e){
+                throw new CommandException(currentRow.get(columnIndex), index, "a number");
+            }
+        }
+        return rowIndex;
     }
 
     private int greaterOrLessSwitch(Value value, float currentNumber,

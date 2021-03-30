@@ -95,13 +95,13 @@ public class Row {
             throws DBException {
         if(columnIndex<numberOfColumns
         && columnIndex>=0){
-            if(newElement!=null) {
+            /*if(newElement!=null) {*/
                 elements.set(columnIndex, newElement);
                 return true;
-            }
+            /*}
             else{
                 throw new EmptyName(StorageType.COLUMN, tableName);
-            }
+            }*/
         }
         else{
             throw new IndexOutOfBounds(StorageType.COLUMN, columnIndex);
