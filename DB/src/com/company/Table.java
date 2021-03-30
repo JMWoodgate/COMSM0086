@@ -111,6 +111,28 @@ public class Table {
         numberOfRows++;
     }
 
+    public void addRowWithID(ArrayList<String> rowData) throws DBException {
+        if(rowData==null) {
+            throw new EmptyData("rowData in addRow in Table");
+        }
+        //if there are no columns, first row must be column headers
+        if(numberOfColumns==0){
+            fillTableFromMemory(rowData, null, true);
+            return;
+        }
+        //check right number of values for columns
+        //can have less columns, but not more
+        if(rowData.size()>numberOfColumns){
+            throw new CommandException(rowData.toString(),
+                    rowData.size(), "check number of values/columns");
+        }
+        if(rows==null){
+            rows = new ArrayList<>();
+        }
+        rows.add(new Row(tableName, rowData, numberOfColumns));
+        numberOfRows++;
+    }
+
     public void fillTableFromMemory(
             ArrayList<String> columnNames, ArrayList<String> rowData,
             boolean addID){

@@ -17,6 +17,7 @@ public class SelectCMD extends Parser implements DBCommand{
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private boolean hasCondition;
+    private boolean multipleConditions;
 
     public SelectCMD(ArrayList<String> command, int index) throws DBException{
         this.command = command;
@@ -55,6 +56,7 @@ public class SelectCMD extends Parser implements DBCommand{
                 conditionListObject = new ConditionList(command, index);
                 conditionListArray = conditionListObject.getConditionList();
                 index = conditionListObject.getIndex();
+                multipleConditions = conditionListObject.isMultipleConditions();
                 break;
             default:
                 throw new CommandException(
@@ -63,6 +65,10 @@ public class SelectCMD extends Parser implements DBCommand{
         //point index to end of command
         index++;
         return true;
+    }
+
+    public boolean isMultipleConditions(){
+        return multipleConditions;
     }
 
     public boolean getHasCondition(){

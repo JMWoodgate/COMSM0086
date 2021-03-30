@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,9 @@ public class Interpreter {
     private Table resultsTable;
     private boolean interpretedOK;
     private Exception exception;
+    private boolean multipleConditions;
+    private int commandIndex;
+    private int conditionIndex;
 
     public Interpreter(String homeDirectory) throws DBException, IOException {
         this.homeDirectory = homeDirectory;
@@ -192,7 +196,6 @@ public class Interpreter {
         Value value = currentCondition.getValueObject();
         String conditionAttribute = currentCondition.getAttribute();
         String conditionOp = currentCondition.getOp();
-        //String conditionValue = currentCondition.getValueString();
         ArrayList<Integer> rowIndexes = findRowIndexes(
                 conditionAttribute, value, conditionOp);
         //delete all rows in the rowIndexes
@@ -386,6 +389,7 @@ public class Interpreter {
         String results;
         getTableFromMemory(parser);
         attributeList = parser.getAttributeList();
+        multipleConditions = parser.isMultipleConditions();
         //if * and no condition, return the whole table
         if(attributeList.get(0).equals("*")&&!parser.getHasCondition()){
             results = table.getTable();
@@ -405,16 +409,28 @@ public class Interpreter {
     }
 
     private String selectWithCondition(Parser parser) throws DBException {
-        String results;
+        String results = null;
         //create table with all columns
         resultsTable.fillTableFromMemory(table.getColumns(), null, false);
-        //populate table with results from all columns
-        selectColumns(resultsTable.getColumns(), true);
-        //first get the rows that don't match the condition
-        executeSelectConditions(parser);
+        if(!multipleConditions) {
+            //populate table with results from all columns
+            selectColumns(resultsTable.getColumns(), true);
+            //first get the rows that don't match the condition
+            singleCondition(parser);
+        }else{
+            conditionListArray = parser.getConditionListArray();
+            conditionListObject = parser.getConditionListObject();
+            commandIndex = 0;
+            conditionIndex = 0;
+            Stack<Condition> conditionStack = new Stack<>();
+            ArrayList<Integer> rowIndexes = new ArrayList<>();
+            rowIndexes = multipleConditions(parser, conditionStack, rowIndexes);
+            for (Integer rowIndex : rowIndexes) {
+                resultsTable.addRowWithID(table.getSpecificRow(rowIndex));
+            }
+        }
         //then remove the unselected columns
         results = removeUnselectedColumns(attributeList, resultsTable);
-        //then change the values
         return results;
     }
 
@@ -440,21 +456,126 @@ public class Interpreter {
         currentTable.deleteColumn(columnName);
     }
 
-    private void executeSelectConditions(Parser parser) throws DBException{
+    private void singleCondition(Parser parser) throws DBException{
         conditionListArray = parser.getConditionListArray();
         conditionListObject = parser.getConditionListObject();
-        //do conditions need to be stored in a tree-like structure so that we can
-        //evaluate them in the correct order?
-        for(int i=0; i<conditionListObject.getConditionList().size();i++){
-            //get one condition at a time
-            Condition currentCondition = conditionListObject.getConditionList().get(i);
-            //get the attribute name
-            attributeName = currentCondition.getAttribute();
-            //get the condition variables
-            String op = currentCondition.getOp();
-            Value value = currentCondition.getValueObject();
-            selectConditionSwitch(op, value);
+        //get condition
+        Condition currentCondition = conditionListObject.getConditionList().get(0);
+        //get the attribute name
+        attributeName = currentCondition.getAttribute();
+        //get the condition variables
+        String op = currentCondition.getOp();
+        Value value = currentCondition.getValueObject();
+        selectConditionSwitch(op, value);
+    }
+
+    private ArrayList<Integer> multipleConditions(
+            Parser parser, Stack<Condition> conditionStack, ArrayList<Integer> rowIndexes)
+            throws DBException{
+        ArrayList<String> command = parser.getTokenizedCommand();
+        while(commandIndex<command.size()&&!command.get(commandIndex).equals(";")){
+            //iterate through command until next condition
+            if(command.get(commandIndex).equals(")")){
+                commandIndex++;
+                rowIndexes = andOr(command, parser, conditionStack, rowIndexes);
+                if(commandIndex>=command.size()){
+                    return rowIndexes;
+                }
+                if(command.get(commandIndex).equals("and")){
+                    //call recursively, compare and update row indexes
+                    ArrayList<Integer> newIndexes = multipleConditions(
+                            parser, conditionStack, rowIndexes);
+                    rowIndexes = andIndexes(rowIndexes, newIndexes);
+                    if(commandIndex>=command.size()){
+                        return rowIndexes;
+                    }
+                }else if(command.get(commandIndex).equals("or")){
+                    //compare row indexes, concat and get rid of duplicates
+                    ArrayList<Integer> newIndexes = multipleConditions(
+                            parser, conditionStack, rowIndexes);
+                    rowIndexes = orIndexes(rowIndexes, newIndexes);
+                    if(commandIndex>=command.size()){
+                        return rowIndexes;
+                    }
+                }
+            }
+            if(command.get(commandIndex).equals("(")){
+                while(command.get(commandIndex).equals("(")&&
+                        conditionIndex<conditionListObject.getConditionList().size()){
+                    //push nested conditions onto the stack
+                    conditionStack.push(conditionListObject.getConditionList().get(conditionIndex));
+                    conditionIndex++;
+                    commandIndex++;
+                }
+                //pop conditions off the stack
+                Condition currentCondition = conditionStack.pop();
+                attributeName = currentCondition.getAttribute();
+                //get the condition variables
+                String op = currentCondition.getOp();
+                Value value = currentCondition.getValueObject();
+                rowIndexes=findRowIndexes(attributeName, value, op);
+            }
+            commandIndex++;
         }
+        return rowIndexes;
+    }
+
+    private ArrayList<Integer> andOr(
+            ArrayList<String> command, Parser parser,
+            Stack<Condition> conditionStack, ArrayList<Integer> rowIndexes)
+            throws DBException{
+        if(command.get(commandIndex).equals("and")){
+            //call recursively, compare and update row indexes
+            ArrayList<Integer> newIndexes = multipleConditions(
+                    parser, conditionStack, rowIndexes);
+            rowIndexes = andIndexes(rowIndexes, newIndexes);
+        }else if(command.get(commandIndex).equals("or")){
+            //compare row indexes, concat and get rid of duplicates
+            ArrayList<Integer> newIndexes = multipleConditions(
+                    parser, conditionStack, rowIndexes);
+            rowIndexes = orIndexes(rowIndexes, newIndexes);
+        }
+        return rowIndexes;
+    }
+
+    private ArrayList<Integer> andIndexes(
+            ArrayList<Integer> firstIndexes, ArrayList<Integer> secondIndexes){
+        ArrayList<Integer> results = new ArrayList<>();
+        if(firstIndexes==null&&secondIndexes==null){
+            return results;
+        }
+        if(firstIndexes==null){
+            return secondIndexes;
+        }
+        if(secondIndexes==null){
+            return firstIndexes;
+        }
+        for (Integer firstIndex : firstIndexes) {
+            if (secondIndexes.contains(firstIndex)&&!results.contains(firstIndex)) {
+                results.add(firstIndex);
+            }
+        }
+        return results;
+    }
+
+    private ArrayList<Integer> orIndexes(
+            ArrayList<Integer> firstIndexes, ArrayList<Integer> secondIndexes){
+        if(firstIndexes==null&&secondIndexes==null){
+            return null;
+        }
+        if(firstIndexes==null){
+            return secondIndexes;
+        }
+        if(secondIndexes==null){
+            return firstIndexes;
+        }
+        for(int i=0;i<firstIndexes.size();i++){
+            if(secondIndexes.contains(firstIndexes.get(i))){
+                firstIndexes.remove(i);
+            }
+        }
+        firstIndexes.addAll(secondIndexes);
+        return firstIndexes;
     }
 
     private void selectConditionSwitch(String op, Value value)

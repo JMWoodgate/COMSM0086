@@ -28,6 +28,7 @@ public class Parser {
     private ArrayList<String> valueListString;
     private ArrayList<Value> valueListObject;
     private boolean hasCondition;
+    private boolean multipleConditions;
 
     public Parser(String command, String currentFolder) {
         if(command!=null && command.length()>0) {
@@ -126,6 +127,7 @@ public class Parser {
         index = select.getIndex();
         tableName = select.getTableName();
         attributeList = select.getAttributeList();
+        multipleConditions = select.isMultipleConditions();
         if(select.getHasCondition()) {
             hasCondition = true;
             conditionListArray = select.getConditionListArray();
@@ -282,6 +284,10 @@ public class Parser {
             }
         }
         return true;
+    }
+
+    public boolean isMultipleConditions(){
+        return multipleConditions;
     }
 
     public ArrayList<Value> getValueListObject() throws EmptyData {

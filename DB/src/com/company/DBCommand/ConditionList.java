@@ -12,12 +12,14 @@ public class ConditionList {
     private final ArrayList<Condition> conditionList;
     private int index;
     private int count;
+    private boolean multipleConditions;
 
     public ConditionList(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         count = 0;
         conditionList = new ArrayList<>();
+        multipleConditions = false;
         if(command==null){
             throw new EmptyData("command in condition");
         }
@@ -72,6 +74,7 @@ public class ConditionList {
             case ("and"):
             case ("or"):
                 index++;
+                multipleConditions = true;
                 parseConditions();
                 break;
             case (")"):
@@ -80,6 +83,10 @@ public class ConditionList {
             default:
                 throw new CommandException(command.get(index), index, "and, or, ;, ) at end of condition");
         }
+    }
+
+    public boolean isMultipleConditions(){
+        return multipleConditions;
     }
 
     public ArrayList<Condition> getConditionList() throws EmptyData {
