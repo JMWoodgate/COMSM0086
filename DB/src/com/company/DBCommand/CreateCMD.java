@@ -1,12 +1,6 @@
 package com.company.DBCommand;
 
 import com.company.DBExceptions.*;
-import com.company.Database;
-import com.company.FileIO;
-import com.company.Table;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class CreateCMD extends Parser implements DBCommand {
@@ -18,10 +12,9 @@ public class CreateCMD extends Parser implements DBCommand {
     private String databaseName;
     private final String parentFolder;
     private ArrayList<String> attributeList;
-    private Database database;
-    private Table table;
 
-    public CreateCMD(ArrayList<String> command, int index, String parentFolder) throws DBException {
+    public CreateCMD(ArrayList<String> command, int index, String parentFolder)
+            throws DBException {
         this.command = command;
         this.index = index;
         this.parentFolder = parentFolder;
@@ -36,7 +29,6 @@ public class CreateCMD extends Parser implements DBCommand {
         }
     }
 
-    //CREATE <create Database> || <create Table>
     private boolean parseCreate() throws DBException {
         index++;
         String nextToken = command.get(index);
@@ -44,7 +36,7 @@ public class CreateCMD extends Parser implements DBCommand {
             case ("database"):
                 type = StorageType.DATABASE;
                 databaseName = parseDatabaseName(command, index);
-                //increase index to be pointing to the ; after databaseName
+                //increase index to point to after databaseName
                 index += 2;
                 break;
             case ("table"):

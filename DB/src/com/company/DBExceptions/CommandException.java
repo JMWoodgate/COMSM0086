@@ -23,7 +23,9 @@ public class CommandException extends DBException{
     }
 
     public String toString(){
-        String errorString = "'"+command + "' at index " + index + " is not a valid command. Expected " + "'"+expected+"'";
+        String errorString = "'"+command + "' at index " +
+                index + " is not a valid command. Expected "
+                + "'"+expected+"'";
         if(error!=null){
             errorString += "\n" + error;
         }

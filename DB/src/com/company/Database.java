@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class Database {
 
     private final String databaseName;
-    private HashMap<String, Table> tables;
+    private final HashMap<String, Table> tables;
     private int numberOfTables = 0;
 
     public Database(String databaseName){
@@ -61,26 +61,6 @@ public class Database {
         }
         else{
             throw new EmptyData(databaseName);
-        }
-    }
-
-    public int getNumberOfTables(){
-        return numberOfTables;
-    }
-
-    public String getDatabaseString() {
-        String database = null;
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Table table : tables.values()) {
-            stringBuilder.append(table.getTable());
-        }
-        database = stringBuilder.toString();
-        return database;
-    }
-
-    public void printDatabase(){
-        for(Table table : tables.values()){
-            table.printTable();
         }
     }
 

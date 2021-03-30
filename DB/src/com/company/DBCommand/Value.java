@@ -8,10 +8,7 @@ import java.util.ArrayList;
 
 public class Value {
 
-    private int intLiteral;
-    private boolean booleanLiteral;
     private float floatLiteral;
-    private String stringLiteral;
     private final ArrayList<String> command;
     private int index;
     private LiteralType type;
@@ -21,7 +18,6 @@ public class Value {
         this.command = command;
         this.index = index;
         if (command != null) {
-            //storing the token
             value = command.get(index);
             //checks the token and sets the type of value
             setLiteralType();
@@ -45,20 +41,8 @@ public class Value {
         return type;
     }
 
-    public boolean getBooleanLiteral(){
-        return booleanLiteral;
-    }
-
     public float getFloatLiteral(){
         return floatLiteral;
-    }
-
-    public int getIntLiteral(){
-        return intLiteral;
-    }
-
-    public String getStringLiteral(){
-        return stringLiteral;
     }
 
     private void setLiteralType() throws DBException{
@@ -85,9 +69,9 @@ public class Value {
             return false;
         }
         int lastIndex = token.length()-1;
+        String stringLiteral;
         if(token.charAt(lastIndex)!= '\''){
             //if the end of that token isn't a single quote, concat tokens
-            //function updates index after concat to point to the end of the string literal
             stringLiteral = concatStringLiteral(tokenizedCommand, index);
             return true;
         }
@@ -97,21 +81,17 @@ public class Value {
 
     private String concatStringLiteral(
             ArrayList<String> tokenizedCommand, int index){
-        //store the first token of the stringLiteral
         String currentToken = tokenizedCommand.get(index);
         String stringLiteral = currentToken;
         //loop through until we find the end of the stringLiteral
         while(currentToken.charAt(currentToken.length()-1)!='\''
                 &&index<tokenizedCommand.size()-1){
             index++;
-            //get the next token in the list
             currentToken = tokenizedCommand.get(index);
-            //concat it to the end of our stringLiteral
+            //concat next token to the end of our stringLiteral
             stringLiteral = stringLiteral.concat(currentToken);
         }
-
-        //update the index to be pointing to the end of the stringLiteral
-        // in the tokenizedCommand list
+        //update the index to be pointing to end of stringLiteral
         this.index = index;
         value = stringLiteral;
         return stringLiteral;
@@ -120,11 +100,9 @@ public class Value {
     private boolean floatLiteral(String token) throws DBException {
         if (token != null) {
             try {
-                //getting the float value from the string
                 floatLiteral = Float.parseFloat(token);
                 return true;
             } catch (NumberFormatException e) {
-                //if we can't get a float from the string, return false
                 return false;
             }
         }
@@ -136,12 +114,10 @@ public class Value {
     private boolean integerLiteral(String token) throws DBException {
         if(token!=null){
             try{
-                //getting the integer value from the string
-                intLiteral = Integer.parseInt(token);
+                int intLiteral = Integer.parseInt(token);
                 floatLiteral = intLiteral;
                 return true;
             } catch (NumberFormatException e) {
-                //if we can't get an integer from the string, return false
                 return false;
             }
         }
@@ -152,14 +128,12 @@ public class Value {
 
     private boolean boolLiteral(String token) throws DBException{
         if(token!=null){
+            boolean booleanLiteral;
             if(token.equals("true")){
-                //if the string is true, setting the boolean variable to true
                 booleanLiteral = true;
-                //returning true because the token is a boolean value
                 return true;
             }
             else if(token.equals("false")){
-                //if the string is true, setting the boolean variable to false
                 booleanLiteral = false;
                 //returning true because the token is a boolean value
                 return true;
@@ -170,7 +144,6 @@ public class Value {
             }
         }
         else {
-            //catching null pointers
             throw new EmptyData("Command in boolLiteral");
         }
     }

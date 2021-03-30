@@ -30,8 +30,6 @@ public class AlterCMD extends Parser implements DBCommand{
         }
     }
 
-    //ALTER TABLE <TableName> <AlterationType> <AttributeName>
-    //AlterationType <ADD> <DROP>
     private boolean parseAlter() throws DBException{
         index++;
         String nextToken = command.get(index);
@@ -45,14 +43,12 @@ public class AlterCMD extends Parser implements DBCommand{
                 alterationType = AlterationType.ADD;
                 index++;
                 attributeName = parseAttributeName(command, index);
-                //increasing index to point to after the attribute name
                 index++;
                 break;
             case ("drop"):
                 alterationType = AlterationType.DROP;
                 index++;
                 attributeName = parseAttributeName(command, index);
-                //increasing index to point to after the attribute name
                 index++;
                 break;
             default:
@@ -85,8 +81,6 @@ public class AlterCMD extends Parser implements DBCommand{
         }
         throw new EmptyData("table name");
     }
-
-    public void execute(){}
 
     public int getIndex(){
         return index;

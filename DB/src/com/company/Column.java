@@ -5,7 +5,7 @@ import com.company.DBExceptions.StorageType;
 
 public class Column {
 
-    private String tableName;
+    private final String tableName;
     private String columnName;
     private int columnIndex;
 
@@ -13,10 +13,6 @@ public class Column {
         this.tableName = tableName;
         this.columnName = columnName;
         this.columnIndex = columnIndex;
-    }
-
-    public void setColumnIndex(int index){
-        columnIndex = index;
     }
 
     public int getColumnIndex(){

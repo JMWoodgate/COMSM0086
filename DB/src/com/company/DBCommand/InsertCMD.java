@@ -29,7 +29,6 @@ public class InsertCMD extends Parser implements DBCommand{
         }
     }
 
-    //INSERT INTO <TableName> VALUES (<ValueList>)
     private boolean parseInsert() throws DBException{
         index++;
         String nextToken = command.get(index);

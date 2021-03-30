@@ -14,7 +14,8 @@ public class ConditionList {
     private int count;
     private boolean multipleConditions;
 
-    public ConditionList(ArrayList<String> command, int index) throws DBException {
+    public ConditionList(ArrayList<String> command, int index)
+            throws DBException {
         this.command = command;
         this.index = index;
         count = 0;
@@ -26,19 +27,16 @@ public class ConditionList {
         parseConditions();
     }
 
-    //(<Condition>) AND (<Condition>) | (<Condition) OR (<Condition>)
-    // | <attributeName> <operator> <value>
     private void parseConditions() throws DBException {
         switch(command.get(index)){
             case ("("):
                 startCondition();
-                //check for end of condition
+            //check for end of condition
             case (")"):
                 index++;
                 //check for second condition or end of condition
                 endOfCondition();
                 break;
-                //if no opening bracket, is a single condition
             default:
                 Condition condition = new Condition(command, index);
                 conditionList.add(condition);
@@ -57,10 +55,9 @@ public class ConditionList {
             parseConditions();
         }
         else {
-            //get condition
+            //get condition & update index
             Condition condition = new Condition(command, index);
             conditionList.add(condition);
-            //update index
             index = condition.getIndex();
         }
     }

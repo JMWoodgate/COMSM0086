@@ -13,20 +13,23 @@ public class ValueList {
     private ArrayList<Value> valueArrayList;
     private ArrayList<String> valueListString;
 
-    public ValueList(ArrayList<String> command, int index) throws DBException{
+    public ValueList(ArrayList<String> command, int index)
+            throws DBException{
         this.command = command;
         this.index = index;
         parseValueList();
     }
 
-    public ArrayList<String> getValueListString() throws DBException{
+    public ArrayList<String> getValueListString()
+            throws DBException{
         if(valueListString!=null){
             return valueListString;
         }
         throw new EmptyData("get value list string");
     }
 
-    public ArrayList<Value> getValueArrayList() throws DBException{
+    public ArrayList<Value> getValueArrayList()
+            throws DBException{
         if(valueArrayList!=null){
             return valueArrayList;
         }
@@ -38,15 +41,11 @@ public class ValueList {
         valueListString = new ArrayList<String>();
         //move past first bracket
         index++;
-        //looping until the end of valueList
         while (!command.get(index).equals(")")) {
             //getting first value & storing in list
             Value value = new Value(command, index);
             valueArrayList.add(value);
-            //also storing string in a list for ease of access
             valueListString.add(value.getValue());
-            //if stringLiteral has a special character,
-            // index will be further than expected
             index = value.getIndex()+1;
             //if no comma and haven't reached end of list, syntax error
             if(!command.get(index).equals(",")&&!command.get(index).equals(")")){

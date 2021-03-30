@@ -12,9 +12,8 @@ public class NameValueList extends Parser{
     private int index;
     private String attributeName;
     private final ArrayList<String> attributeList;
-    private String valueString;
     private final ArrayList<String> valueList;
-    private ArrayList<Value> valueListObject;
+    private final ArrayList<Value> valueListObject;
 
     public NameValueList(ArrayList<String> command, int index) throws DBException {
         this.command = command;
@@ -48,18 +47,15 @@ public class NameValueList extends Parser{
     }
 
     private void parseNameValuePair() throws DBException{
-        //have to decrease index because parseAttributeName increases it again
         attributeName = parseAttributeName(command, index);
         attributeList.add(attributeName);
-        //now have to skip past attribute name
         index++;
         String nextToken = command.get(index);
         checkNextToken(nextToken, "=", index);
         index++;
-        //get the value
         Value value = new Value(command, index);
         valueListObject.add(value);
-        valueString = value.getValue();
+        String valueString = value.getValue();
         valueList.add(valueString);
         index = value.getIndex()+1;
     }
@@ -83,13 +79,6 @@ public class NameValueList extends Parser{
             return valueListObject;
         }
         throw new EmptyData("value list");
-    }
-
-    public String getValueString() throws EmptyData {
-        if(valueString!=null){
-            return valueString;
-        }
-        throw new EmptyData("value");
     }
 
     public String getAttributeName() throws EmptyData {

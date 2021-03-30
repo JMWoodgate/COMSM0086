@@ -32,19 +32,14 @@ public class DeleteCMD extends Parser implements DBCommand{
         }
     }
 
-    //DELETE FROM <TableName> WHERE <Condition>
     private boolean parseDelete() throws DBException{
         index++;
-        //check for "from"
         checkNextToken(command.get(index), "from", index);
-        //get table name
         tableName = parseTableName(command, index);
         //increasing index to point to after the table name
         index+=2;
-        //check for "where"
         checkNextToken(command.get(index), "where", index);
         index++;
-        //get conditions, store as object and array for testing
         conditionListObject = new ConditionList(command, index);
         conditionListArray = conditionListObject.getConditionList();
         index = conditionListObject.getIndex();

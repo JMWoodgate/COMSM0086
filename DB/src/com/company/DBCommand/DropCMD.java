@@ -32,14 +32,13 @@ public class DropCMD extends Parser implements DBCommand{
             case ("database"):
                 type = StorageType.DATABASE;
                 databaseName = parseDatabaseName(command, index);
-                //increase index to be pointing to the ; after databaseName
+                //increase index to be pointing to after databaseName
                 index += 2;
                 break;
             case ("table"):
                 type = StorageType.TABLE;
                 tableName = parseTableName(command, index);
                 index += 2;
-                //now we have a problem with index if there is an attribute list...
                 break;
             default:
                 return false;

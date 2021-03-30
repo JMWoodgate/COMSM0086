@@ -18,32 +18,35 @@ public class FileIO {
         File folder = new File(folderName);
         File[] listOfFiles;
         if(folder.exists()) {
-            //creating a list of files that are within the folder
             listOfFiles = folder.listFiles();
             assert listOfFiles != null;
-            for (File listOfFile : listOfFiles) {
-                if (listOfFile.isFile()) {
-                    //saving the name in a string for error handling
-                    String fileName = listOfFile.getName();
-                    if (!listOfFile.delete())
-                        throw new FileException("couldn't delete file "+fileName);
-                    }
-                }
+            deleteListOfFiles(listOfFiles);
             if(!folder.delete()){
                 throw new FileException("couldn't delete folder "+folderName);
             }
         }
     }
 
-    public Database makeFolder(String parentFolder, String folderName) throws DBException {
+    private void deleteListOfFiles(File[] listOfFiles) throws DBException{
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                //save name for error handling
+                String fileName = listOfFile.getName();
+                if (!listOfFile.delete()) {
+                    throw new FileException("couldn't delete file " + fileName);
+                }
+            }
+        }
+    }
+
+    public Database makeFolder(String parentFolder, String folderName)
+            throws DBException {
         if(folderName==null||parentFolder==null){
             throw new EmptyData("database name in makeFolder");
         }
         File folderToMake = new File(parentFolder, folderName);
-        //Check that folder doesn't already exist
         if(!folderToMake.exists()){
             final boolean mkdir = folderToMake.mkdir();
-            //create new folder (for new database)
             if(!mkdir){
                 throw new FileException("couldn't make folder");
             }
@@ -54,7 +57,7 @@ public class FileIO {
         }
     }
 
-    public File makeFile(String parentFolder, String tableName)
+    public void makeFile(String parentFolder, String tableName)
             throws DBException, IOException {
         if(tableName==null||parentFolder==null){
             throw new EmptyData("table name/parent folder in makeFile");
@@ -76,11 +79,10 @@ public class FileIO {
         }else{
             throw new FileExists(tableName);
         }
-        return fileToMake;
     }
 
-    public void writeFile(String folderName, String fileName, Table table) throws IOException, DBException {
-        //opening file, creating if it doesn't exist
+    public void writeFile(String folderName, String fileName, Table table)
+            throws IOException, DBException {
         File fileToOpen = new File(folderName, fileName+".tab");
         if(!fileToOpen.exists()){
             final boolean newFile = fileToOpen.createNewFile();
@@ -88,17 +90,14 @@ public class FileIO {
                 throw new FileException("couldn't create file");
             }
         }
-        //creating a new file writer
         FileWriter fileWriter = new FileWriter(fileToOpen);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        //write the table to the file
         //getting tables and rows from memory
         ArrayList<String> columns = table.getColumns();
         ArrayList<ArrayList<String>> rows = table.getRows();
-        //formatting columns and writing to file
+        //formatting columns and rows, writing to file
         bufferedWriter.write(formatString(columns));
         bufferedWriter.write("\n");
-        //formatting rows and adding one at a time to file
         for (ArrayList<String> row : rows) {
             bufferedWriter.write(formatString(row));
             bufferedWriter.write("\n");
@@ -110,7 +109,7 @@ public class FileIO {
     public String formatString(ArrayList<String> stringToFormat){
         String formatString;
         StringBuilder stringBuilder = new StringBuilder();
-        //turning ArrayList into String and putting a tab between each token
+        //turning list to String and putting a tab between each token
         for (String s : stringToFormat) {
             stringBuilder.append(s);
             stringBuilder.append("\t");
@@ -121,7 +120,6 @@ public class FileIO {
 
     public HashMap<String, Database> readAllFolders(String homeDirectory)
             throws DBException, IOException {
-        Database database;
         File homeFolder = new File(homeDirectory);
         File[] listOfFiles;
         HashMap<String, Database> databaseMap = new HashMap<>();
@@ -129,7 +127,6 @@ public class FileIO {
             listOfFiles = homeFolder.listFiles();
         }else{
             final boolean mkdir = homeFolder.mkdir();
-            //create new folder (for new database)
             if (!mkdir) {
                 throw new FileException("could not create home directory");
             }
@@ -138,13 +135,19 @@ public class FileIO {
         if(listOfFiles == null){
             return databaseMap;
         }else{
-            //loop through folders and read each one, store in hashmap
-            for(File currentFile : listOfFiles){
-                if(currentFile.isDirectory()){
-                    String filePath = currentFile.getPath();
-                    database = readFolder(filePath);
-                    databaseMap.put(database.getDatabaseName(), database);
-                }
+            databaseMap = readAllFolders(listOfFiles, databaseMap);
+        }
+        return databaseMap;
+    }
+
+    //loop through folders and read each one, store in hashmap
+    private HashMap<String, Database> readAllFolders(File[] listOfFiles, HashMap<String, Database> databaseMap)
+            throws DBException, IOException {
+        for(File currentFile : listOfFiles){
+            if(currentFile.isDirectory()){
+                String filePath = currentFile.getPath();
+                Database database = readFolder(filePath);
+                databaseMap.put(database.getDatabaseName(), database);
             }
         }
         return databaseMap;
@@ -155,32 +158,21 @@ public class FileIO {
         File[] listOfFiles;
         Database newDatabase;
         if(folder.exists()) {
-            //creating a list of files that are within the folder
             listOfFiles = folder.listFiles();
             newDatabase = new Database(folder.getName());
         }else{
             throw new EmptyData(folderName+" in readFolder");
         }
-        //checking the list isn't empty
         if(listOfFiles == null){
             throw new EmptyData(folderName+" in readFolder");
         }
-        //iterating through the list of files
         for (File fileToOpen : listOfFiles) {
-            //checking if it is a file
             if (fileToOpen.isFile()) {
-                //selecting current file
-                //saving the name in a string
                 String fileName = fileToOpen.getName();
-                //creating a variable to store the data in
-                ArrayList<String> dataFromFile = new ArrayList<>();
-                //reading the data from the file
-                dataFromFile = readFile(fileToOpen);
-                //creating a new table
-                Table newTable = null;
+                ArrayList<String> dataFromFile = readFile(fileToOpen);
                 //sending the data we read to our new table
                 fileName = removeExtension(fileName);
-                newTable = new Table(folder.getName(), fileName);
+                Table newTable = new Table(folder.getName(), fileName);
                 newTable.fillTableFromFile(dataFromFile);
                 //adding the new table to the list of tables in our database
                 newDatabase.addTable(newTable);
@@ -205,13 +197,9 @@ public class FileIO {
     {
         ArrayList<String> dataFromFile = null;
         String currentLine;
-
-        //opening file and assigning a buffered reader
         if (fileToOpen.exists()) {
-            FileReader reader = null;
-            reader = new FileReader(fileToOpen);
-            BufferedReader buffReader = null;
-            buffReader = new BufferedReader(reader);
+            FileReader reader = new FileReader(fileToOpen);
+            BufferedReader buffReader = new BufferedReader(reader);
             dataFromFile = new ArrayList<>();
             //reading from the file line by line, and storing each line in an ArrayList
             do {

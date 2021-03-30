@@ -12,16 +12,16 @@ public class JoinCMD extends Parser implements DBCommand{
     private final ArrayList<String> command;
     private int index;
     private final StorageType type;
-    private ArrayList<String> tableNames;
-    private ArrayList<String> attributeNames;
+    private final ArrayList<String> tableNames;
+    private final ArrayList<String> attributeNames;
 
 
     public JoinCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
-        tableNames = new ArrayList<String>();
-        attributeNames = new ArrayList<String>();
+        tableNames = new ArrayList<>();
+        attributeNames = new ArrayList<>();
         if(command != null) {
             if (!parseJoin()) {
                 throw new CommandException(
@@ -32,9 +32,7 @@ public class JoinCMD extends Parser implements DBCommand{
         }
     }
 
-    //JOIN <TableName> AND <TableName> ON <AttributeName> AND <AttributeName>
     private boolean parseJoin() throws DBException{
-        //get table names
         String firstTableName = parseTableName(command, index);
         tableNames.add(firstTableName);
         //point index to after tableName
@@ -76,8 +74,6 @@ public class JoinCMD extends Parser implements DBCommand{
         }
         throw new EmptyData("attribute name");
     }
-
-    public void execute(){}
 
     public int getIndex(){
         return index;

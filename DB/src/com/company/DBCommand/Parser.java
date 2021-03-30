@@ -16,7 +16,6 @@ public class Parser {
     private String secondTableName;
     private String databaseName;
     private String attributeName;
-    private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private boolean parsedOK;
     private String exception;
@@ -35,13 +34,10 @@ public class Parser {
             try {
                 checkQuotes(command);
                 checkBrackets(command);
-                //tokenizing the command
                 tokenizer = new Tokenizer(command);
                 tokenizedCommand = tokenizer.getTokenizedCommand();
                 commandSize = tokenizedCommand.size();
-                //checking that the statement ends with a ;
                 assert(checkEndOfStatement());
-                conditionListArray = new ArrayList<>();
                 index = 0;
                 this.currentFolder = currentFolder;
                 homeDirectory = "."+File.separator+"databases";
@@ -107,7 +103,6 @@ public class Parser {
         DeleteCMD delete = new DeleteCMD(tokenizedCommand, index);
         index = delete.getIndex();
         tableName = delete.getTableName();
-        conditionListArray = delete.getConditionListArray();
         conditionListObject = delete.getConditionListObject();
         multipleConditions = delete.isMultipleConditions();
     }
@@ -116,7 +111,6 @@ public class Parser {
         UpdateCMD update = new UpdateCMD(tokenizedCommand, index);
         index = update.getIndex();
         tableName = update.getTableName();
-        conditionListArray = update.getConditionListArray();
         conditionListObject = update.getConditionListObject();
         attributeList = update.getAttributeList();
         valueListString = update.getValueListString();
@@ -132,7 +126,6 @@ public class Parser {
         multipleConditions = select.isMultipleConditions();
         if(select.getHasCondition()) {
             hasCondition = true;
-            conditionListArray = select.getConditionListArray();
             conditionListObject = select.getConditionListObject();
         }
     }
@@ -186,17 +179,14 @@ public class Parser {
 
     private void parseUse() throws DBException {
         UseCMD use = new UseCMD(tokenizedCommand, index);
-        //updating the current index
         index = use.getIndex();
         databaseName = use.getDatabaseName();
-        //update folder name
         currentFolder = homeDirectory+File.separator+databaseName;
     }
 
     protected String parseAttributeName(ArrayList<String> command, int index) throws CommandException {
         String nextToken = command.get(index);
         if(isAlphaNumerical(nextToken)||nextToken.equals("*")) {
-            //getting the attribute name
             return nextToken;
         }
         throw new CommandException(nextToken, index, "attribute name");
@@ -206,7 +196,6 @@ public class Parser {
         index++;
         String nextToken = command.get(index);
         if(isAlphaNumerical(nextToken)) {
-            //getting the database name
             databaseName = nextToken;
             return databaseName;
         }
@@ -218,7 +207,6 @@ public class Parser {
         index++;
         String nextToken = command.get(index);
         if(isAlphaNumerical(nextToken)) {
-            //getting the table name
             tableName = nextToken;
             return tableName;
         }
@@ -227,14 +215,14 @@ public class Parser {
         }
     }
 
-    protected void checkNextToken(String nextToken, String expectedToken, int index) throws CommandException{
+    protected void checkNextToken(String nextToken, String expectedToken, int index)
+            throws CommandException{
         if (!nextToken.equals(expectedToken)) {
             expectedToken = expectedToken.toUpperCase();
             throw new CommandException(nextToken, index, expectedToken);
         }
     }
 
-    //what if there is a bracket inside a string literal?
     public void checkBrackets(String command) throws DBException {
         int open = 0;
         int close = 0;
@@ -334,14 +322,16 @@ public class Parser {
         return parsedOK;
     }
 
-    public ArrayList<String> getAttributeList() throws EmptyData {
+    public ArrayList<String> getAttributeList()
+            throws EmptyData {
         if(attributeList!=null){
             return attributeList;
         }
         throw new EmptyData("wild attribute list");
     }
 
-    public ConditionList getConditionListObject() throws EmptyData {
+    public ConditionList getConditionListObject()
+            throws EmptyData {
         if(conditionListObject!=null){
             return conditionListObject;
         }
@@ -350,16 +340,8 @@ public class Parser {
         }
     }
 
-    public ArrayList<Condition> getConditionListArray() throws EmptyData {
-        if(conditionListArray!=null){
-            return conditionListArray;
-        }
-        else{
-            throw new EmptyData("condition list string");
-        }
-    }
-
-    public ArrayList<String> getTokenizedCommand() throws EmptyData {
+    public ArrayList<String> getTokenizedCommand()
+            throws EmptyData {
         if(tokenizedCommand!=null){
             return tokenizedCommand;
         }

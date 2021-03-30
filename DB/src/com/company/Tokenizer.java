@@ -26,7 +26,8 @@ public class Tokenizer {
             command = command.toLowerCase();
             //turning command into an array list
             ArrayList<String> tokenizedCommand = new ArrayList<>();
-            StringTokenizer tokenizer = new StringTokenizer(command, " \t\n\r\f();=<>!*,", true);
+            StringTokenizer tokenizer = new StringTokenizer(
+                    command, " \t\n\r\f();=<>!*,", true);
             while (tokenizer.hasMoreElements()) {
                 tokenizedCommand.add(tokenizer.nextToken());
             }

@@ -37,7 +37,6 @@ public class UpdateCMD extends Parser implements DBCommand{
         }
     }
 
-    //UPDATE <TableName> SET <NameValueList> WHERE <Condition>
     private boolean parseUpdate() throws DBException{
         tableName = parseTableName(command, index);
         //point index to after tableName
@@ -113,8 +112,6 @@ public class UpdateCMD extends Parser implements DBCommand{
         }
         throw new EmptyData("table name");
     }
-
-    public void execute(){}
 
     public int getIndex(){
         return index;

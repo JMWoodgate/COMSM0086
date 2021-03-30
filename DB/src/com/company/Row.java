@@ -5,14 +5,12 @@ import java.util.ArrayList;
 
 public class Row {
 
-    private final String tableName;
     private final ArrayList<String> elements;
     private int numberOfColumns;
     private int id;
 
     //adding an empty row with a specified id
-    public Row(String tableName, int numberOfColumns, int id){
-        this.tableName = tableName;
+    public Row(int numberOfColumns, int id){
         elements = new ArrayList<>();
         for(int i = 0; i<numberOfColumns-1; i++){
             elements.add(null);
@@ -23,9 +21,8 @@ public class Row {
     }
 
     //adding a row with the id already in the first index of elements
-    public Row(String tableName, ArrayList<String> elements,
+    public Row(ArrayList<String> elements,
                int numberOfColumns){
-        this.tableName = tableName;
         if(elements==null) {
             this.elements = new ArrayList<>();
             for(int i = 0; i<numberOfColumns; i++){
@@ -40,9 +37,8 @@ public class Row {
     }
 
     //adding a row with the id of the previous row+1
-    public Row(String tableName, ArrayList<String> elements,
+    public Row(ArrayList<String> elements,
                int numberOfColumns, int lastID){
-        this.tableName = tableName;
         this.elements = elements;
         id = lastID+1;
         addID();
@@ -85,23 +81,17 @@ public class Row {
     public void deleteElement(int columnIndex) throws EmptyData {
         if(columnIndex>numberOfColumns){
             throw new EmptyData(
-                    "couldn't delete element from column "+columnIndex+" at row id "+id);
+                    "couldn't delete element from column "
+                            +columnIndex+" at row id "+id);
         }
         elements.remove(columnIndex);
         numberOfColumns--;
     }
 
-    public boolean setElement(String newElement, int columnIndex)
+    public void setElement(String newElement, int columnIndex)
             throws DBException {
-        if(columnIndex<numberOfColumns
-        && columnIndex>=0){
-            /*if(newElement!=null) {*/
-                elements.set(columnIndex, newElement);
-                return true;
-            /*}
-            else{
-                throw new EmptyName(StorageType.COLUMN, tableName);
-            }*/
+        if(columnIndex<numberOfColumns && columnIndex>=0){
+            elements.set(columnIndex, newElement);
         }
         else{
             throw new IndexOutOfBounds(StorageType.COLUMN, columnIndex);

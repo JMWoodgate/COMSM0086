@@ -12,10 +12,10 @@ public class Condition extends Parser{
     private String attributeName;
     private String op;
     private Value valueObject;
-    private String valueString;
     private int index;
 
-    public Condition(ArrayList<String> command, int index) throws DBException {
+    public Condition(ArrayList<String> command, int index)
+            throws DBException {
         this.command = command;
         this.index = index;
         if(command==null){
@@ -24,18 +24,12 @@ public class Condition extends Parser{
         parseCondition();
     }
 
-    // <attributeName> <operator> <value>
     private void parseCondition() throws DBException{
-        //get attribute name
         attributeName = parseAttributeName(command, index);
         index++;
-        //get operator
         op = parseOp();
         index++;
-        //get value and store as object as well as string
         valueObject = new Value(command, index);
-        valueString = valueObject.getValue();
-        //update index
         index = valueObject.getIndex()+1;
     }
 
@@ -79,24 +73,6 @@ public class Condition extends Parser{
             return valueObject;
         }
         throw new EmptyData("value object in condition");
-    }
-
-    public String getConditionString() throws EmptyData{
-        if(op!=null){
-            if(attributeName!=null) {
-                if (valueString != null) {
-                    return attributeName + op + valueString;
-                }
-            }
-        }
-        throw new EmptyData("value string in condition");
-    }
-
-    public String getValueString() throws EmptyData{
-        if(valueString!=null){
-            return valueString;
-        }
-        throw new EmptyData("value string in condition");
     }
 
     public int getIndex(){

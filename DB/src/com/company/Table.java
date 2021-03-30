@@ -14,18 +14,20 @@ public class Table {
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
 
-    public Table(String databaseName, String tableName) throws DBException {
+    public Table(String databaseName, String tableName)
+            throws DBException {
         this.databaseName = databaseName;
         this.tableName = tableName;
     }
 
     public void addColumn(String columnName) throws EmptyData{
         if(columnName==null){
-            throw new EmptyData("no column name passed to addColumn");
+            throw new EmptyData(
+                    "no column name passed to addColumn");
         }
         columns.add(new Column(tableName, columnName, numberOfColumns));
         numberOfColumns++;
-        //need to loop through rows and add one element to the end of each row
+        //loop through rows, add element to the end of each row
         for(int i=0; i<numberOfRows;i++){
             rows.get(i).addElement();
         }
@@ -33,7 +35,8 @@ public class Table {
 
     public void deleteColumn(String columnName) throws EmptyData {
         if(columns==null || columnName==null){
-            throw new EmptyData("couldn't delete column "+columnName);
+            throw new EmptyData(
+                    "couldn't delete column "+columnName);
         }
         int columnIndex = getColumnIndex(columnName);
         columns.remove(columnIndex);
@@ -49,7 +52,8 @@ public class Table {
         rows.get(rowIndex).deleteElement(columnIndex);
     }
 
-    public void changeElement(String element, int rowIndex, int columnIndex)
+    public void changeElement(String element,
+                              int rowIndex, int columnIndex)
             throws DBException {
         if(rows==null){
             throw new EmptyData("no rows to add element to");
@@ -57,19 +61,20 @@ public class Table {
         rows.get(rowIndex).setElement(element, columnIndex);
     }
 
-    public void addEmptyRows(int rowsToAdd, int columnsToAdd, boolean addID){
+    public void addEmptyRows(int rowsToAdd,
+                             int columnsToAdd, boolean addID){
         if(rows==null){
             rows = new ArrayList<>();
         }
         if(addID) {
             while (numberOfRows < rowsToAdd) {
                 numberOfRows++;
-                rows.add(new Row(tableName, columnsToAdd, numberOfRows));
+                rows.add(new Row(columnsToAdd, numberOfRows));
             }
         }else{
             while (numberOfRows < rowsToAdd) {
                 numberOfRows++;
-                rows.add(new Row(tableName, null, columnsToAdd));
+                rows.add(new Row(null, columnsToAdd));
             }
         }
     }
@@ -82,8 +87,9 @@ public class Table {
         numberOfRows--;
     }
 
-    //to add a row that doesn't have an id in the data
-    public void addRow(ArrayList<String> rowData) throws DBException {
+    //add a row that doesn't have an id in rowData
+    public void addRow(ArrayList<String> rowData)
+            throws DBException {
         int lastID;
         checkData(rowData);
         //checking if this is the first row
@@ -92,23 +98,23 @@ public class Table {
         }else{
             lastID = 0;
         }
-        rows.add(new Row(tableName, rowData, numberOfColumns, lastID));
+        rows.add(new Row(rowData, numberOfColumns, lastID));
         numberOfRows++;
     }
 
-    //to add a row that already has the id in the rowData
+    //add a row that already has the id in rowData
     public void addRowWithID(ArrayList<String> rowData) throws DBException {
         checkData(rowData);
-        rows.add(new Row(tableName, rowData, numberOfColumns));
+        rows.add(new Row(rowData, numberOfColumns));
         numberOfRows++;
     }
 
-    private void checkData(ArrayList<String> rowData) throws DBException{
+    private void checkData(ArrayList<String> rowData)
+            throws DBException{
         if(rowData==null) {
             throw new EmptyData("rowData in addRow in Table");
         }
         //check right number of values for columns
-        //can have less columns, but not more
         if(rowData.size()>numberOfColumns){
             throw new CommandException(rowData.toString(),
                     rowData.size(), "check number of values/columns");
@@ -119,8 +125,8 @@ public class Table {
     }
 
     public void fillTableFromMemory(
-            ArrayList<String> columnNames, ArrayList<String> rowData,
-            boolean addID){
+            ArrayList<String> columnNames,
+            ArrayList<String> rowData, boolean addID){
         if(columnNames!=null){
             fillColumns(columnNames, addID);
         }
@@ -135,12 +141,13 @@ public class Table {
         int id = 0;
         for (int i = 1; i <= numberOfRows; i++) {
             ArrayList<String> currentRow = parseString(rowData.get(i));
-            rows.add(new Row(tableName, currentRow, numberOfColumns, id));
+            rows.add(new Row(currentRow, numberOfColumns, id));
             id++;
         }
     }
 
-    private void fillColumns(ArrayList<String> columnNames, boolean addID){
+    private void fillColumns(
+            ArrayList<String> columnNames, boolean addID){
         columns = new ArrayList<>();
         if(addID) {
             //add one for id
@@ -163,29 +170,27 @@ public class Table {
             throws DBException {
         numberOfRows = initNumberOfRows(dataFromFile);
         numberOfColumns = initNumberOfColumns(dataFromFile.get(0));
-        //getting column names, then storing in an array of columns
+        //getting column names, store in array of columns
         ArrayList<String> columnNames = parseString(dataFromFile.get(0));
         columns = new ArrayList<>();
         for (int i = 0; i < numberOfColumns; i++) {
             columns.add(new Column(tableName, columnNames.get(i), i));
         }
-        //storing data in array of rows
+        //store data in array of rows
         rows = new ArrayList<>();
         for (int i = 1; i <= numberOfRows; i++) {
             ArrayList<String> currentRow = parseString(dataFromFile.get(i));
-            rows.add(new Row(tableName, currentRow, numberOfColumns));
+            rows.add(new Row(currentRow, numberOfColumns));
         }
     }
 
     public String getTable(){
-        String table = null;
         StringBuilder stringBuilder = new StringBuilder();
         FileIO fileIO = new FileIO(null);
-        stringBuilder.append("Table name: " + tableName + "\n");
-        stringBuilder.append("From database: " + databaseName + "\n");
-
+        stringBuilder.append("Table name: ").append(tableName).append("\n");
+        stringBuilder.append("From database: ").append(databaseName).append("\n");
         for(int i = 0; i < numberOfColumns; i++){
-            stringBuilder.append(columns.get(i).getColumnName() + "\t");
+            stringBuilder.append(columns.get(i).getColumnName()).append("\t");
         }
         stringBuilder.append("\n");
         for(int j = 0; j < numberOfRows; j++){
@@ -195,8 +200,7 @@ public class Table {
             stringBuilder.append("\n");
         }
         stringBuilder.append("\n");
-        table = stringBuilder.toString();
-        return table;
+        return stringBuilder.toString();
     }
 
     public void printTable(){
@@ -210,21 +214,6 @@ public class Table {
             System.out.println(rows.get(i).getElements());
         }
         System.out.println();
-    }
-
-    public String getElement(int rowNumber, int columnNumber)
-            throws IndexOutOfBounds{
-        if(rowNumber >= 0 && rowNumber <= numberOfRows) {
-            if(columnNumber >= 0 && columnNumber <= numberOfColumns){
-                return rows.get(rowNumber).getElement(columnNumber);
-            }
-            else{
-                throw new IndexOutOfBounds(StorageType.COLUMN, columnNumber);
-            }
-        }
-        else{
-            throw new IndexOutOfBounds(StorageType.ROW, rowNumber);
-        }
     }
 
     public ArrayList<String> getColumnValues(int columnIndex)
@@ -243,16 +232,6 @@ public class Table {
             }
         }throw new EmptyData(
                 "can't find column "+columnName+" in getColumnIndex");
-    }
-
-    public String getSpecificColumn(int index)
-            throws IndexOutOfBounds{
-        if(index <= numberOfColumns && index >= 0) {
-            return columns.get(index).getColumnName();
-        }
-        else{
-            throw new IndexOutOfBounds(StorageType.COLUMN, index);
-        }
     }
 
     public ArrayList<String> getSpecificRow(int index)
@@ -292,11 +271,13 @@ public class Table {
         return tableName;
     }
 
-    public void setRowID(int ID, int rowNumber) throws EmptyData {
+    public void setRowID(int ID, int rowNumber)
+            throws EmptyData {
         if(rowNumber <= numberOfRows){
             rows.get(rowNumber).setID(ID);
         }else{
-            throw new EmptyData("setting row ID of row that doesn't exist");
+            throw new EmptyData(
+                    "setting row ID of row that doesn't exist");
         }
     }
 

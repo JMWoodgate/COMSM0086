@@ -10,7 +10,6 @@ public class WildAttributeList extends Parser{
 
     private int index;
     private final ArrayList<String> command;
-    private String attributeName;
     private final ArrayList<String> attributeList;
 
     public WildAttributeList(ArrayList<String> command, int index)
@@ -24,14 +23,12 @@ public class WildAttributeList extends Parser{
         parseAttributeList();
     }
 
-    //WILD ATTRIBUTE LIST <attributeList> | <*>
-    //ATTRIBUTE LIST <attributeName> | <attributeName>,<attributeList>
     private void parseAttributeList() throws DBException{
         String nextToken = command.get(index);
         while(!nextToken.equals(";")&&
                 !nextToken.equals("from")&&!nextToken.equals(")")){
             parseAttributeName(command, index);
-            attributeName = nextToken;
+            String attributeName = nextToken;
             attributeList.add(attributeName);
             index++;
             nextToken = command.get(index);

@@ -23,7 +23,7 @@ public class SelectCMD extends Parser implements DBCommand{
         this.command = command;
         this.index = index;
         type = StorageType.TABLE;
-        attributeList = new ArrayList<String>();
+        attributeList = new ArrayList<>();
         conditionListArray = new ArrayList<>();
         if(command == null) {
             throw new EmptyData("SELECT command");
@@ -34,8 +34,6 @@ public class SelectCMD extends Parser implements DBCommand{
         }
     }
 
-    //SELECT <WildAttributeList> FROM <TableName> |
-    //SELECT <WildAttributeList> FROM <TableName> WHERE <Condition>
     private boolean parseSelect() throws DBException{
         index++;
         WildAttributeList wildAttributeList = new WildAttributeList(command, index);
