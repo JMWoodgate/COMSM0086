@@ -14,47 +14,36 @@ public class WildAttributeList extends Parser{
     private final ArrayList<String> attributeList;
 
     public WildAttributeList(ArrayList<String> command, int index)
-            throws CommandException {
+            throws DBException {
         this.index = index;
         this.command = command;
-        attributeList = new ArrayList<>();
-        try{
-            parseAttributeList();
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index,
-                    "wild attribute list", e);
+        if(command==null){
+            throw new EmptyData("command in WildAttributeList");
         }
+        attributeList = new ArrayList<>();
+        parseAttributeList();
     }
 
     //WILD ATTRIBUTE LIST <attributeList> | <*>
     //ATTRIBUTE LIST <attributeName> | <attributeName>,<attributeList>
     private void parseAttributeList() throws DBException{
-        try{
-            if(command!=null){
-                String nextToken = command.get(index);
-                while(!nextToken.equals(";")&&
-                        !nextToken.equals("from")&&!nextToken.equals(")")){
-                    parseAttributeName(command, index);
-                    attributeName = nextToken;
-                    attributeList.add(attributeName);
-                    index++;
-                    nextToken = command.get(index);
-                    if(nextToken.equals(",")){
-                        index++;
-                        parseAttributeList();
-                        return;
-                    }
-                    else if(!nextToken.equals("from")&&!nextToken.equals(")")){
-                        throw new CommandException(nextToken, index,
-                                "missing comma in attribute list");
-                    }
-                }
-            }else{
-                throw new EmptyData("command in attribute list");
+        String nextToken = command.get(index);
+        while(!nextToken.equals(";")&&
+                !nextToken.equals("from")&&!nextToken.equals(")")){
+            parseAttributeName(command, index);
+            attributeName = nextToken;
+            attributeList.add(attributeName);
+            index++;
+            nextToken = command.get(index);
+            if(nextToken.equals(",")){
+                index++;
+                parseAttributeList();
+                return;
             }
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index,
-                    "wild attribute list", e);
+            else if(!nextToken.equals("from")&&!nextToken.equals(")")){
+                throw new CommandException(nextToken, index,
+                        "missing comma in attribute list");
+            }
         }
     }
 

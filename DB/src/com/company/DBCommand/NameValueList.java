@@ -30,46 +30,38 @@ public class NameValueList extends Parser{
     }
 
     private void parseNameValueList() throws DBException{
-        try{
-            if(command!=null) {
-                String nextToken = command.get(index);
-                while (!nextToken.equals(";") && !nextToken.equals("where")) {
-                    parseNameValuePair();
-                    nextToken = command.get(index);
-                    if (nextToken.equals(",")) {
-                        index++;
-                        //if comma, it's a list so need to call recursively
-                        parseNameValueList();
-                        return;
-                    }
+        if(command!=null) {
+            String nextToken = command.get(index);
+            while (!nextToken.equals(";") && !nextToken.equals("where")) {
+                parseNameValuePair();
+                nextToken = command.get(index);
+                if (nextToken.equals(",")) {
+                    index++;
+                    //if comma, it's a list so need to call recursively
+                    parseNameValueList();
+                    return;
                 }
-            }else{
-                throw new EmptyData("command in name value list");
             }
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index, "name value list", e);
+        }else{
+            throw new EmptyData("command in name value list");
         }
     }
 
     private void parseNameValuePair() throws DBException{
-        try{
-            //have to decrease index because parseAttributeName increases it again
-            attributeName = parseAttributeName(command, index);
-            attributeList.add(attributeName);
-            //now have to skip past attribute name
-            index++;
-            String nextToken = command.get(index);
-            checkNextToken(nextToken, "=", index);
-            index++;
-            //get the value
-            Value value = new Value(command, index);
-            valueListObject.add(value);
-            valueString = value.getValue();
-            valueList.add(valueString);
-            index = value.getIndex()+1;
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index, "name value pair", e);
-        }
+        //have to decrease index because parseAttributeName increases it again
+        attributeName = parseAttributeName(command, index);
+        attributeList.add(attributeName);
+        //now have to skip past attribute name
+        index++;
+        String nextToken = command.get(index);
+        checkNextToken(nextToken, "=", index);
+        index++;
+        //get the value
+        Value value = new Value(command, index);
+        valueListObject.add(value);
+        valueString = value.getValue();
+        valueList.add(valueString);
+        index = value.getIndex()+1;
     }
 
     public ArrayList<String> getAttributeList() throws EmptyData {

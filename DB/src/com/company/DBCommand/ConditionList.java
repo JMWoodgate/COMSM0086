@@ -23,11 +23,7 @@ public class ConditionList {
         if(command==null){
             throw new EmptyData("command in condition");
         }
-        try{
-            parseConditions();
-        }catch(DBException e){
-            throw new CommandException(command.get(index), index, "condition", e);
-        }
+        parseConditions();
     }
 
     //(<Condition>) AND (<Condition>) | (<Condition) OR (<Condition>)

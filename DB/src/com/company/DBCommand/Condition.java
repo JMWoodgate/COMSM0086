@@ -21,12 +21,7 @@ public class Condition extends Parser{
         if(command==null){
             throw new EmptyData("command in condition");
         }
-        try{
-            parseCondition();
-        }catch(DBException e){
-            throw new CommandException(
-                    command.get(index), index, "condition", e);
-        }
+        parseCondition();
     }
 
     // <attributeName> <operator> <value>
@@ -76,7 +71,7 @@ public class Condition extends Parser{
                 return "like";
             default:
                 throw new CommandException(command.get(index), index, "op");
-            }
+        }
     }
 
     public Value getValueObject()throws EmptyData{
