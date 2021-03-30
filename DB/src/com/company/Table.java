@@ -122,38 +122,43 @@ public class Table {
             ArrayList<String> columnNames, ArrayList<String> rowData,
             boolean addID){
         if(columnNames!=null){
-            columns = new ArrayList<>();
-            if(addID) {
-                //add one for id
-                numberOfColumns = columnNames.size()+1;
-                //have to add id column
-                columns.add(new Column(tableName, "id", 0));
-                //then add the rest of the columns
-                for (int i = 0; i < columnNames.size(); i++) {
-                    columns.add(new Column(tableName, columnNames.get(i), i+1));
-                }
-            }
-            else{
-                numberOfColumns = columnNames.size();
-                //then add the rest of the columns
-                for (int i = 0; i < columnNames.size(); i++) {
-                    columns.add(new Column(tableName, columnNames.get(i), i));
-                }
-            }
+            fillColumns(columnNames, addID);
         }
         if(rowData!=null){
-            numberOfRows = rowData.size();
-            rows = new ArrayList<>();
-            int id = 0;
-            for (int i = 1; i <= numberOfRows; i++) {
-                ArrayList<String> currentRow = parseString(rowData.get(i));
-                rows.add(new Row(tableName, currentRow, numberOfColumns, id));
-                id++;
+            fillRows(rowData);
+        }
+    }
+
+    private void fillRows(ArrayList<String> rowData){
+        numberOfRows = rowData.size();
+        rows = new ArrayList<>();
+        int id = 0;
+        for (int i = 1; i <= numberOfRows; i++) {
+            ArrayList<String> currentRow = parseString(rowData.get(i));
+            rows.add(new Row(tableName, currentRow, numberOfColumns, id));
+            id++;
+        }
+    }
+
+    private void fillColumns(ArrayList<String> columnNames, boolean addID){
+        columns = new ArrayList<>();
+        if(addID) {
+            //add one for id
+            numberOfColumns = columnNames.size()+1;
+            columns.add(new Column(tableName, "id", 0));
+            //then add the rest of the columns
+            for (int i = 0; i < columnNames.size(); i++) {
+                columns.add(new Column(tableName, columnNames.get(i), i+1));
+            }
+        }
+        else{
+            numberOfColumns = columnNames.size();
+            for (int i = 0; i < columnNames.size(); i++) {
+                columns.add(new Column(tableName, columnNames.get(i), i));
             }
         }
     }
-    //can we replace the filling section with fillTableFromMemory? as they are the same
-    //just need to separate rows from column names
+
     public void fillTableFromFile(ArrayList<String> dataFromFile)
             throws DBException {
         numberOfRows = initNumberOfRows(dataFromFile);

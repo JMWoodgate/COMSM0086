@@ -99,14 +99,11 @@ public class Interpreter {
             Table firstTable, Table secondTable, String firstAttribute, String secondAttribute)
             throws DBException{
         Table resultsTable = new Table(databaseName, "join table");
-        //get the column names from each table, remove the index, and add on the table name
         ArrayList<String> table1Columns = formatColumnNames(firstTable);
         ArrayList<String> table2Columns = formatColumnNames(secondTable);
-        //putting all column names together
         table1Columns.addAll(table2Columns);
         //creating an empty results table
         resultsTable.fillTableFromMemory(table1Columns, null, true);
-        //get join column indexes
         int firstAttributeIndex = firstTable.getColumnIndex(firstAttribute);
         int secondAttributeIndex = secondTable.getColumnIndex(secondAttribute);
         //get indexes of matching rows
@@ -140,13 +137,13 @@ public class Interpreter {
     }
 
     private ArrayList<ArrayList<Integer>> findRowIndexes(
-            int firstAttribute, int secondAttribute, Table firstTable, Table secondTable)
+            int firstAttribute, int secondAttribute,
+            Table firstTable, Table secondTable)
             throws DBException {
         ArrayList<String> firstColumn = firstTable.getColumnValues(firstAttribute);
         ArrayList<String> secondColumn = secondTable.getColumnValues(secondAttribute);
         ArrayList<ArrayList<Integer>> rowIndexes = new ArrayList<>();
-        //for each row in the first table's column, loop through all the columns
-        //in the second table to compare
+        //for each row in the first table, loop through second table to compare
         for(int i=0; i<firstColumn.size();i++){
             rowIndexes = getMatchingRows(firstColumn.get(i), secondColumn, rowIndexes, i);
         }
@@ -158,7 +155,6 @@ public class Interpreter {
             ArrayList<ArrayList<Integer>> rowIndexes, int comparisonRowIndex){
         //for the current row in table 1, loop through the values in table 2
         //if there is a matching value, pair the indexes together
-        // and store in a 2D arrayList
         for(int i=0;i<comparisonRow.size();i++){
             if(comparisonRow.get(i).equals(currentValue)) {
                 ArrayList<Integer> currentIndex = new ArrayList<>();
