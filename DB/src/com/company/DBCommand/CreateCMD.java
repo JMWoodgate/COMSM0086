@@ -37,41 +37,37 @@ public class CreateCMD extends Parser implements DBCommand {
     }
 
     //CREATE <create Database> || <create Table>
-    private boolean parseCreate() throws CommandException {
+    private boolean parseCreate() throws DBException {
         index++;
         String nextToken = command.get(index);
-        try {
-            switch (nextToken) {
-                case ("database"):
-                    type = StorageType.DATABASE;
-                    databaseName = parseDatabaseName(command, index);
-                    //increase index to be pointing to the ; after databaseName
-                    index += 2;
+        switch (nextToken) {
+            case ("database"):
+                type = StorageType.DATABASE;
+                databaseName = parseDatabaseName(command, index);
+                //increase index to be pointing to the ; after databaseName
+                index += 2;
+                break;
+            case ("table"):
+                type = StorageType.TABLE;
+                tableName = parseTableName(command, index);
+                //store the database name (location for the new table file)
+                databaseName = parentFolder;
+                //skip to after tableName
+                index += 2;
+                nextToken = command.get(index);
+                if (nextToken.equals(";")) {
                     break;
-                case ("table"):
-                    type = StorageType.TABLE;
-                    tableName = parseTableName(command, index);
-                    //store the database name (location for the new table file)
-                    databaseName = parentFolder;
-                    //skip to after tableName
-                    index += 2;
-                    nextToken = command.get(index);
-                    if (nextToken.equals(";")) {
-                        break;
-                    } else if (nextToken.equals("(")) {
-                        index++;
-                        WildAttributeList wildAttributeList = new WildAttributeList(command, index);
-                        //updating index and storing attributes
-                        index = wildAttributeList.getIndex();
-                        attributeList = wildAttributeList.getAttributeList();
-                        break;
-                    }
-                    throw new CommandException(nextToken, index, "; or (<attribute list>)");
-                default:
-                    return false;
-            }
-        } catch (DBException e){
-            throw new CommandException(command.get(index), index, "CREATE", e);
+                } else if (nextToken.equals("(")) {
+                    index++;
+                    WildAttributeList wildAttributeList = new WildAttributeList(command, index);
+                    //updating index and storing attributes
+                    index = wildAttributeList.getIndex();
+                    attributeList = wildAttributeList.getAttributeList();
+                    break;
+                }
+                throw new CommandException(nextToken, index, "; or (<attribute list>)");
+            default:
+                return false;
         }
         return true;
     }

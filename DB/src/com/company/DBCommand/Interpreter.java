@@ -196,8 +196,14 @@ public class Interpreter {
         Value value = currentCondition.getValueObject();
         String conditionAttribute = currentCondition.getAttribute();
         String conditionOp = currentCondition.getOp();
-        ArrayList<Integer> rowIndexes = findRowIndexes(
-                conditionAttribute, value, conditionOp);
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
+        Stack<Condition> conditionStack = new Stack<>();
+        if(!multipleConditions){
+            rowIndexes = findRowIndexes(
+                    conditionAttribute, value, conditionOp);
+        }else{
+            rowIndexes = multipleConditions(parser, conditionStack, rowIndexes);
+        }
         //delete all rows in the rowIndexes
         for (int i=rowIndexes.size()-1; i>=0; i--) {
             table.deleteRow(rowIndexes.get(i));
@@ -223,18 +229,24 @@ public class Interpreter {
         for(int i=0;i<attributeList.size();i++){
             changeValues(conditionAttribute,  conditionOp,
                     conditionValue, valueListString.get(i),
-                    attributeList.get(i));
+                    attributeList.get(i), parser);
         }
         updateFile();
     }
 
     private void changeValues(String conditionAttribute, String conditionOp,
                               Value conditionValue, String newValue,
-                              String attributeToChange)
+                              String attributeToChange, Parser parser)
             throws DBException {
+        Stack<Condition> conditionStack = new Stack<>();
+        ArrayList<Integer> rowIndexes = new ArrayList<>();
         //get all the row indexes that match the condition
-        ArrayList<Integer> rowIndexes = findRowIndexes(
-                conditionAttribute, conditionValue, conditionOp);
+        if(!multipleConditions) {
+            rowIndexes = findRowIndexes(
+                    conditionAttribute, conditionValue, conditionOp);
+        }else{
+            rowIndexes = multipleConditions(parser, conditionStack, rowIndexes);
+        }
         //get the column index we're changing
         int columnIndex = table.getColumnIndex(attributeToChange);
         //for each row that matches condition, change the column value
@@ -477,47 +489,36 @@ public class Interpreter {
             //iterate through command until next condition
             if(command.get(commandIndex).equals(")")){
                 commandIndex++;
+                //checking for AND or OR
                 rowIndexes = andOr(command, parser, conditionStack, rowIndexes);
                 if(commandIndex>=command.size()){
                     return rowIndexes;
                 }
-                if(command.get(commandIndex).equals("and")){
-                    //call recursively, compare and update row indexes
-                    ArrayList<Integer> newIndexes = multipleConditions(
-                            parser, conditionStack, rowIndexes);
-                    rowIndexes = andIndexes(rowIndexes, newIndexes);
-                    if(commandIndex>=command.size()){
-                        return rowIndexes;
-                    }
-                }else if(command.get(commandIndex).equals("or")){
-                    //compare row indexes, concat and get rid of duplicates
-                    ArrayList<Integer> newIndexes = multipleConditions(
-                            parser, conditionStack, rowIndexes);
-                    rowIndexes = orIndexes(rowIndexes, newIndexes);
-                    if(commandIndex>=command.size()){
-                        return rowIndexes;
-                    }
-                }
             }
             if(command.get(commandIndex).equals("(")){
-                while(command.get(commandIndex).equals("(")&&
-                        conditionIndex<conditionListObject.getConditionList().size()){
-                    //push nested conditions onto the stack
-                    conditionStack.push(conditionListObject.getConditionList().get(conditionIndex));
-                    conditionIndex++;
-                    commandIndex++;
-                }
+                conditionStack = pushConditions(command, conditionStack);
                 //pop conditions off the stack
                 Condition currentCondition = conditionStack.pop();
                 attributeName = currentCondition.getAttribute();
                 //get the condition variables
                 String op = currentCondition.getOp();
                 Value value = currentCondition.getValueObject();
-                rowIndexes=findRowIndexes(attributeName, value, op);
+                rowIndexes = findRowIndexes(attributeName, value, op);
             }
             commandIndex++;
         }
         return rowIndexes;
+    }
+
+    private Stack<Condition> pushConditions(ArrayList<String> command, Stack<Condition> conditionStack) throws DBException{
+        while(command.get(commandIndex).equals("(")&&
+                conditionIndex<conditionListObject.getConditionList().size()){
+            //push nested conditions onto the stack
+            conditionStack.push(conditionListObject.getConditionList().get(conditionIndex));
+            conditionIndex++;
+            commandIndex++;
+        }
+        return conditionStack;
     }
 
     private ArrayList<Integer> andOr(

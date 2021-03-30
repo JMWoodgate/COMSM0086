@@ -15,6 +15,7 @@ public class DeleteCMD extends Parser implements DBCommand{
     private String tableName;
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
+    private boolean multipleConditions;
 
     public DeleteCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
@@ -33,25 +34,26 @@ public class DeleteCMD extends Parser implements DBCommand{
 
     //DELETE FROM <TableName> WHERE <Condition>
     private boolean parseDelete() throws DBException{
-        try {
-            index++;
-            //check for "from"
-            checkNextToken(command.get(index), "from", index);
-            //get table name
-            tableName = parseTableName(command, index);
-            //increasing index to point to after the table name
-            index+=2;
-            //check for "where"
-            checkNextToken(command.get(index), "where", index);
-            index++;
-            //get conditions, store as object and array for testing
-            conditionListObject = new ConditionList(command, index);
-            conditionListArray = conditionListObject.getConditionList();
-            index = conditionListObject.getIndex();
-            return true;
-        } catch(DBException e){
-            throw new CommandException(command.get(index), index, "DELETE", e);
-        }
+        index++;
+        //check for "from"
+        checkNextToken(command.get(index), "from", index);
+        //get table name
+        tableName = parseTableName(command, index);
+        //increasing index to point to after the table name
+        index+=2;
+        //check for "where"
+        checkNextToken(command.get(index), "where", index);
+        index++;
+        //get conditions, store as object and array for testing
+        conditionListObject = new ConditionList(command, index);
+        conditionListArray = conditionListObject.getConditionList();
+        index = conditionListObject.getIndex();
+        multipleConditions = conditionListObject.isMultipleConditions();
+        return true;
+    }
+
+    public boolean isMultipleConditions(){
+        return multipleConditions;
     }
 
     public ConditionList getConditionListObject()throws EmptyData {

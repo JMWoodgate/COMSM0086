@@ -31,25 +31,21 @@ public class InsertCMD extends Parser implements DBCommand{
 
     //INSERT INTO <TableName> VALUES (<ValueList>)
     private boolean parseInsert() throws DBException{
-        try {
-            index++;
-            String nextToken = command.get(index);
-            checkNextToken(nextToken, "into", index);
-            tableName = parseTableName(command, index);
-            //increasing index to point to after the table name
-            index+=2;
-            nextToken = command.get(index);
-            checkNextToken(nextToken, "values", index);
-            index++;
-            nextToken = command.get(index);
-            checkNextToken(nextToken, "(", index);
-            ValueList valueList = new ValueList(command, index);
-            valueListString = valueList.getValueListString();
-            index = valueList.getIndex();
-            return true;
-        } catch(DBException e){
-            throw new CommandException(command.get(index), index, "INSERT", e);
-        }
+        index++;
+        String nextToken = command.get(index);
+        checkNextToken(nextToken, "into", index);
+        tableName = parseTableName(command, index);
+        //increasing index to point to after the table name
+        index+=2;
+        nextToken = command.get(index);
+        checkNextToken(nextToken, "values", index);
+        index++;
+        nextToken = command.get(index);
+        checkNextToken(nextToken, "(", index);
+        ValueList valueList = new ValueList(command, index);
+        valueListString = valueList.getValueListString();
+        index = valueList.getIndex();
+        return true;
     }
 
     public ArrayList<String> getValueListString() throws DBException{

@@ -33,36 +33,32 @@ public class AlterCMD extends Parser implements DBCommand{
     //ALTER TABLE <TableName> <AlterationType> <AttributeName>
     //AlterationType <ADD> <DROP>
     private boolean parseAlter() throws DBException{
-        try {
-            index++;
-            String nextToken = command.get(index);
-            checkNextToken(nextToken, "table", index);
-            tableName = parseTableName(command, index);
-            //increasing index to point to after the table name
-            index+=2;
-            nextToken = command.get(index);
-            switch (nextToken) {
-                case ("add"):
-                    alterationType = AlterationType.ADD;
-                    index++;
-                    attributeName = parseAttributeName(command, index);
-                    //increasing index to point to after the attribute name
-                    index++;
-                    break;
-                case ("drop"):
-                    alterationType = AlterationType.DROP;
-                    index++;
-                    attributeName = parseAttributeName(command, index);
-                    //increasing index to point to after the attribute name
-                    index++;
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        } catch(DBException e){
-            throw new CommandException(command.get(index), index, "ALTER");
+        index++;
+        String nextToken = command.get(index);
+        checkNextToken(nextToken, "table", index);
+        tableName = parseTableName(command, index);
+        //increasing index to point to after the table name
+        index+=2;
+        nextToken = command.get(index);
+        switch (nextToken) {
+            case ("add"):
+                alterationType = AlterationType.ADD;
+                index++;
+                attributeName = parseAttributeName(command, index);
+                //increasing index to point to after the attribute name
+                index++;
+                break;
+            case ("drop"):
+                alterationType = AlterationType.DROP;
+                index++;
+                attributeName = parseAttributeName(command, index);
+                //increasing index to point to after the attribute name
+                index++;
+                break;
+            default:
+                return false;
         }
+        return true;
     }
 
     public AlterationType getAlterationType()throws EmptyData{

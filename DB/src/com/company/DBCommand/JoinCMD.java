@@ -34,33 +34,29 @@ public class JoinCMD extends Parser implements DBCommand{
 
     //JOIN <TableName> AND <TableName> ON <AttributeName> AND <AttributeName>
     private boolean parseJoin() throws DBException{
-        try {
-            //get table names
-            String firstTableName = parseTableName(command, index);
-            tableNames.add(firstTableName);
-            //point index to after tableName
-            index+=2;
-            checkNextToken(command.get(index), "and", index);
-            String secondTableName = parseTableName(command, index);
-            tableNames.add(secondTableName);
-            //point index to after tableName
-            index+=2;
-            checkNextToken(command.get(index), "on", index);
-            index++;
-            //get attribute names
-            String firstAttributeName = parseAttributeName(command, index);
-            attributeNames.add(firstAttributeName);
-            index++;
-            checkNextToken(command.get(index), "and", index);
-            index++;
-            String secondAttributeName = parseAttributeName(command, index);
-            attributeNames.add(secondAttributeName);
-            //point index to end of command
-            index++;
-            return true;
-        } catch(DBException e){
-            throw new CommandException(command.get(index), index, "JOIN", e);
-        }
+        //get table names
+        String firstTableName = parseTableName(command, index);
+        tableNames.add(firstTableName);
+        //point index to after tableName
+        index+=2;
+        checkNextToken(command.get(index), "and", index);
+        String secondTableName = parseTableName(command, index);
+        tableNames.add(secondTableName);
+        //point index to after tableName
+        index+=2;
+        checkNextToken(command.get(index), "on", index);
+        index++;
+        //get attribute names
+        String firstAttributeName = parseAttributeName(command, index);
+        attributeNames.add(firstAttributeName);
+        index++;
+        checkNextToken(command.get(index), "and", index);
+        index++;
+        String secondAttributeName = parseAttributeName(command, index);
+        attributeNames.add(secondAttributeName);
+        //point index to end of command
+        index++;
+        return true;
     }
 
     public StorageType getType(){

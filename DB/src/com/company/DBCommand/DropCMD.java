@@ -28,25 +28,21 @@ public class DropCMD extends Parser implements DBCommand{
     private boolean parseDrop() throws DBException{
         index++;
         String nextToken = command.get(index);
-        try {
-            switch (nextToken) {
-                case ("database"):
-                    type = StorageType.DATABASE;
-                    databaseName = parseDatabaseName(command, index);
-                    //increase index to be pointing to the ; after databaseName
-                    index += 2;
-                    break;
-                case ("table"):
-                    type = StorageType.TABLE;
-                    tableName = parseTableName(command, index);
-                    index += 2;
-                    //now we have a problem with index if there is an attribute list...
-                    break;
-                default:
-                    return false;
-            }
-        } catch (DBException e){
-            throw new CommandException(command.get(index), index, "DROP", e);
+        switch (nextToken) {
+            case ("database"):
+                type = StorageType.DATABASE;
+                databaseName = parseDatabaseName(command, index);
+                //increase index to be pointing to the ; after databaseName
+                index += 2;
+                break;
+            case ("table"):
+                type = StorageType.TABLE;
+                tableName = parseTableName(command, index);
+                index += 2;
+                //now we have a problem with index if there is an attribute list...
+                break;
+            default:
+                return false;
         }
         return true;
     }

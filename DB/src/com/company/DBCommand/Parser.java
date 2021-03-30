@@ -109,6 +109,7 @@ public class Parser {
         tableName = delete.getTableName();
         conditionListArray = delete.getConditionListArray();
         conditionListObject = delete.getConditionListObject();
+        multipleConditions = delete.isMultipleConditions();
     }
 
     private void parseUpdate() throws DBException{
@@ -120,6 +121,7 @@ public class Parser {
         attributeList = update.getAttributeList();
         valueListString = update.getValueListString();
         valueListObject = update.getValueListObject();
+        multipleConditions = update.isMultipleConditions();
     }
 
     private void parseSelect() throws DBException{

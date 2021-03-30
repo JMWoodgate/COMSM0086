@@ -18,6 +18,7 @@ public class UpdateCMD extends Parser implements DBCommand{
     private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private ArrayList<Value> valueListObject;
+    private boolean multipleConditions;
 
     public UpdateCMD(ArrayList<String> command, int index) throws DBException {
         this.command = command;
@@ -38,32 +39,33 @@ public class UpdateCMD extends Parser implements DBCommand{
 
     //UPDATE <TableName> SET <NameValueList> WHERE <Condition>
     private boolean parseUpdate() throws DBException{
-        try {
-            tableName = parseTableName(command, index);
-            //point index to after tableName
-            index+=2;
-            String nextToken = command.get(index);
-            checkNextToken(nextToken, "set", index);
-            index++;
-            //make nameValueList and update index
-            NameValueList nameValueList = new NameValueList(command, index);
-            //get attribute names and values
-            attributeList = nameValueList.getAttributeList();
-            valueListString = nameValueList.getValueList();
-            valueListObject = nameValueList.getValueListObject();
-            index = nameValueList.getIndex();
-            nextToken = command.get(index);
-            //check for where
-            checkNextToken(nextToken, "where", index);
-            index++;
-            //get conditions, store as object and array for testing
-            conditionListObject = new ConditionList(command, index);
-            conditionListArray = conditionListObject.getConditionList();
-            index = conditionListObject.getIndex();
-            return true;
-        } catch(DBException e){
-            throw new CommandException(command.get(index), index, "UPDATE", e);
-        }
+        tableName = parseTableName(command, index);
+        //point index to after tableName
+        index+=2;
+        String nextToken = command.get(index);
+        checkNextToken(nextToken, "set", index);
+        index++;
+        //make nameValueList and update index
+        NameValueList nameValueList = new NameValueList(command, index);
+        //get attribute names and values
+        attributeList = nameValueList.getAttributeList();
+        valueListString = nameValueList.getValueList();
+        valueListObject = nameValueList.getValueListObject();
+        index = nameValueList.getIndex();
+        nextToken = command.get(index);
+        //check for where
+        checkNextToken(nextToken, "where", index);
+        index++;
+        //get conditions, store as object and array for testing
+        conditionListObject = new ConditionList(command, index);
+        conditionListArray = conditionListObject.getConditionList();
+        index = conditionListObject.getIndex();
+        multipleConditions = conditionListObject.isMultipleConditions();
+        return true;
+    }
+
+    public boolean isMultipleConditions(){
+        return multipleConditions;
     }
 
     public ConditionList getConditionListObject()throws EmptyData {

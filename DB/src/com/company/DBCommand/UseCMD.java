@@ -9,22 +9,16 @@ import java.util.ArrayList;
 
 public class UseCMD extends Parser implements DBCommand{
 
-    private final ArrayList<String> command;
     private int index;
     private final String databaseName;
     private final StorageType type;
 
-    public UseCMD(ArrayList<String> command, int index) throws CommandException {
-        try {
-            this.command = command;
-            this.index = index;
-            type = StorageType.DATABASE;
-            databaseName = parseDatabaseName(command, index);
-            this.index += 2;
-            //increase index to be pointing to the ; after databaseName
-        } catch (DBException e){
-            throw new CommandException(command.get(index), index, "USE", e);
-        }
+    public UseCMD(ArrayList<String> command, int index) throws DBException {
+        this.index = index;
+        type = StorageType.DATABASE;
+        databaseName = parseDatabaseName(command, index);
+        this.index += 2;
+        //increase index to be pointing to the ; after databaseName
     }
 
     public String getDatabaseName() throws EmptyData {
