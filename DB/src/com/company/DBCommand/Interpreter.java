@@ -541,16 +541,25 @@ public class Interpreter {
             Stack<Condition> conditionStack,
             ArrayList<Integer> rowIndexes)
             throws DBException{
-        if(command.get(commandIndex).equals("and")){
-            //call recursively, compare and update row indexes
-            ArrayList<Integer> newIndexes = multipleConditions(
-                    parser, conditionStack, rowIndexes);
-            rowIndexes = andIndexes(rowIndexes, newIndexes);
-        }else if(command.get(commandIndex).equals("or")){
-            //compare row indexes, concat and get rid of duplicates
-            ArrayList<Integer> newIndexes = multipleConditions(
-                    parser, conditionStack, rowIndexes);
-            rowIndexes = orIndexes(rowIndexes, newIndexes);
+        switch (command.get(commandIndex)) {
+            case "and": {
+                //call recursively, compare and update row indexes
+                ArrayList<Integer> newIndexes = multipleConditions(
+                        parser, conditionStack, rowIndexes);
+                rowIndexes = andIndexes(rowIndexes, newIndexes);
+                break;
+            }
+            case "or": {
+                //compare row indexes, concat and get rid of duplicates
+                ArrayList<Integer> newIndexes = multipleConditions(
+                        parser, conditionStack, rowIndexes);
+                rowIndexes = orIndexes(rowIndexes, newIndexes);
+                break;
+            }
+            case ")":
+                rowIndexes = multipleConditions(
+                        parser, conditionStack, rowIndexes);
+                break;
         }
         return rowIndexes;
     }
@@ -831,27 +840,26 @@ public class Interpreter {
 
     private void dropDatabase(Parser parser)
             throws DBException {
+        if(!databaseMap.containsKey(parser.getDatabaseName())) {
+            throw new EmptyData("database does not exist in memory");
+        }
         databaseName = parser.getDatabaseName();
         currentFolder = parser.getCurrentFolder();
         //delete the file system for the database
         FileIO fileToDelete = new FileIO(currentFolder);
         fileToDelete.deleteFolder();
         //delete database from memory
-        if(databaseMap.containsKey(databaseName)) {
-            databaseMap.remove(databaseName);
-        }else{
-            throw new EmptyData("database does not exist in memory");
-        }
+        databaseMap.remove(databaseName);
     }
 
     private void interpretUse(Parser parser)
             throws DBException {
+        if(!databaseMap.containsKey(parser.getDatabaseName())){
+            throw new EmptyData("database does not exist");
+        }
         databaseName = parser.getDatabaseName();
         //gets the relative pathname to the database
         currentFolder = parser.getCurrentFolder();
-        if(!databaseMap.containsKey(databaseName)){
-            throw new EmptyData("database does not exist");
-        }
         database = databaseMap.get(databaseName);
     }
 

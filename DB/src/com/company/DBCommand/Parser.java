@@ -37,7 +37,9 @@ public class Parser {
                 tokenizer = new Tokenizer(command);
                 tokenizedCommand = tokenizer.getTokenizedCommand();
                 commandSize = tokenizedCommand.size();
-                assert(checkEndOfStatement());
+                if(!checkEndOfStatement()){
+                    throw new CommandException(command, commandSize-1, ";");
+                }
                 index = 0;
                 this.currentFolder = currentFolder;
                 homeDirectory = "."+File.separator+"databases";
