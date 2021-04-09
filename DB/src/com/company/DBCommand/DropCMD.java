@@ -64,8 +64,6 @@ public class DropCMD extends Parser implements DBCommand{
         throw new EmptyData("database name");
     }
 
-    public void execute(){}
-
     public int getIndex(){
         return index;
     }

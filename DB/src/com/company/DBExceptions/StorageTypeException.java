@@ -2,9 +2,9 @@ package com.company.DBExceptions;
 
 public class StorageTypeException extends CommandException{
 
-    private StorageType type;
-    private int index;
-    private String expected;
+    private final StorageType type;
+    private final int index;
+    private final String expected;
 
     public StorageTypeException(StorageType type, int index, String expected){
         super();

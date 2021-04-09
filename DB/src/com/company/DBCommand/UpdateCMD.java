@@ -15,7 +15,6 @@ public class UpdateCMD extends Parser implements DBCommand{
     private String tableName;
     private ArrayList<String> attributeList;
     private ArrayList<String> valueListString;
-    private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private ArrayList<Value> valueListObject;
     private boolean multipleConditions;
@@ -26,7 +25,6 @@ public class UpdateCMD extends Parser implements DBCommand{
         type = StorageType.TABLE;
         valueListString = new ArrayList<>();
         attributeList = new ArrayList<>();
-        conditionListArray = new ArrayList<>();
         if(command != null) {
             if (!parseUpdate()) {
                 throw new CommandException(
@@ -57,7 +55,6 @@ public class UpdateCMD extends Parser implements DBCommand{
         index++;
         //get conditions, store as object and array for testing
         conditionListObject = new ConditionList(command, index);
-        conditionListArray = conditionListObject.getConditionList();
         index = conditionListObject.getIndex();
         multipleConditions = conditionListObject.isMultipleConditions();
         return true;
@@ -70,13 +67,6 @@ public class UpdateCMD extends Parser implements DBCommand{
     public ConditionList getConditionListObject()throws EmptyData {
         if(conditionListObject!=null){
             return conditionListObject;
-        }
-        throw new EmptyData("condition list in DeleteCMD");
-    }
-
-    public ArrayList<Condition> getConditionListArray() throws EmptyData {
-        if(conditionListArray!=null){
-            return conditionListArray;
         }
         throw new EmptyData("condition list in DeleteCMD");
     }

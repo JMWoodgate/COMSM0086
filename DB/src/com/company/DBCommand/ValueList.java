@@ -10,7 +10,6 @@ public class ValueList {
 
     private final ArrayList<String> command;
     private int index;
-    private ArrayList<Value> valueArrayList;
     private ArrayList<String> valueListString;
 
     public ValueList(ArrayList<String> command, int index)
@@ -28,17 +27,9 @@ public class ValueList {
         throw new EmptyData("get value list string");
     }
 
-    public ArrayList<Value> getValueArrayList()
-            throws DBException{
-        if(valueArrayList!=null){
-            return valueArrayList;
-        }
-        throw new EmptyData("get value list");
-    }
-
     private void parseValueList() throws DBException {
-        valueArrayList = new ArrayList<Value>();
-        valueListString = new ArrayList<String>();
+        ArrayList<Value> valueArrayList = new ArrayList<>();
+        valueListString = new ArrayList<>();
         //move past first bracket
         index++;
         while (!command.get(index).equals(")")) {

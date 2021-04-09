@@ -203,19 +203,6 @@ public class Table {
         return stringBuilder.toString();
     }
 
-    public void printTable(){
-        System.out.println("Table name: " + tableName);
-        System.out.println("From database: " + databaseName);
-        for(int i = 0; i < numberOfColumns; i++){
-            System.out.print(columns.get(i).getColumnName() + " ");
-        }
-        System.out.println();
-        for(int i = 0; i < numberOfRows; i++){
-            System.out.println(rows.get(i).getElements());
-        }
-        System.out.println();
-    }
-
     public ArrayList<String> getColumnValues(int columnIndex)
             throws DBException {
         ArrayList<String> columnValues = new ArrayList<>();

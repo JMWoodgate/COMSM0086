@@ -1,13 +1,12 @@
 package com.company;
 
-import com.company.DBExceptions.EmptyName;
-import com.company.DBExceptions.StorageType;
+import com.company.DBExceptions.EmptyData;
 
 public class Column {
 
     private final String tableName;
-    private String columnName;
-    private int columnIndex;
+    private final String columnName;
+    private final int columnIndex;
 
     public Column(String tableName, String columnName, int columnIndex){
         this.tableName = tableName;
@@ -19,13 +18,11 @@ public class Column {
         return columnIndex;
     }
 
-    public void setColumnName(String newName) throws EmptyName {
-        if(newName!=null){
-            columnName = newName;
+    public String getTableName() throws EmptyData {
+        if(tableName!=null){
+            return tableName;
         }
-        else{
-            throw new EmptyName(StorageType.COLUMN, tableName);
-        }
+        throw new EmptyData("table name in Column object");
     }
 
     public String getColumnName(){

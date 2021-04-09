@@ -14,7 +14,6 @@ public class SelectCMD extends Parser implements DBCommand{
     private int index;
     private final StorageType type;
     private String tableName;
-    private ArrayList<Condition> conditionListArray;
     private ConditionList conditionListObject;
     private boolean hasCondition;
     private boolean multipleConditions;
@@ -24,7 +23,6 @@ public class SelectCMD extends Parser implements DBCommand{
         this.index = index;
         type = StorageType.TABLE;
         attributeList = new ArrayList<>();
-        conditionListArray = new ArrayList<>();
         if(command == null) {
             throw new EmptyData("SELECT command");
         }
@@ -52,7 +50,6 @@ public class SelectCMD extends Parser implements DBCommand{
                 index++;
                 //get conditions, store as object and array for testing
                 conditionListObject = new ConditionList(command, index);
-                conditionListArray = conditionListObject.getConditionList();
                 index = conditionListObject.getIndex();
                 multipleConditions = conditionListObject.isMultipleConditions();
                 break;
@@ -84,13 +81,6 @@ public class SelectCMD extends Parser implements DBCommand{
         throw new EmptyData("condition list in DeleteCMD");
     }
 
-    public ArrayList<Condition> getConditionListArray() throws EmptyData {
-        if(conditionListArray!=null){
-            return conditionListArray;
-        }
-        throw new EmptyData("condition list in DeleteCMD");
-    }
-
     public ArrayList<String> getAttributeList() throws EmptyData {
         if(attributeList!=null){
             return attributeList;
@@ -104,8 +94,6 @@ public class SelectCMD extends Parser implements DBCommand{
         }
         throw new EmptyData("table name");
     }
-
-    public void execute(){}
 
     public int getIndex(){
         return index;

@@ -96,7 +96,8 @@ public class Interpreter {
     }
 
     private String joinTables(
-            Table firstTable, Table secondTable, String firstAttribute, String secondAttribute)
+            Table firstTable, Table secondTable,
+            String firstAttribute, String secondAttribute)
             throws DBException{
         Table resultsTable = new Table(databaseName, "join table");
         ArrayList<String> table1Columns = formatColumnNames(firstTable);
@@ -758,13 +759,10 @@ public class Interpreter {
         String results;
         //get the first column's values so that we know how many rows to make
         ArrayList<String> columnValues = table.getColumnValues(0);
-        //add the number of rows to our list that we have values
         resultsTable.addEmptyRows(columnValues.size(), selectedAttributes.size(), false);
         //for each column in our selected list, get the values
         for (int i=0; i<selectedAttributes.size(); i++) {
-            //need to get the selected column's index from our table
             int columnIndex = table.getColumnIndex(selectedAttributes.get(i));
-            //get the relevant column values
             columnValues = table.getColumnValues(columnIndex);
             populateRows(columnValues, i);
         }
@@ -878,7 +876,6 @@ public class Interpreter {
         tableName = parser.getTableName();
         attributeList = parser.getAttributeList();
         try{
-            //make a new file within specified database
             FileIO fileIO = new FileIO(databaseName);
             //creates a new table within a specified folder
             fileIO.makeFile(currentFolder, tableName);

@@ -114,8 +114,7 @@ public class Value {
     private boolean integerLiteral(String token) throws DBException {
         if(token!=null){
             try{
-                int intLiteral = Integer.parseInt(token);
-                floatLiteral = intLiteral;
+                floatLiteral = Integer.parseInt(token);
                 return true;
             } catch (NumberFormatException e) {
                 return false;
