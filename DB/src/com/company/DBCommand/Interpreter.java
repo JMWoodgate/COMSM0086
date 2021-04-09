@@ -8,6 +8,7 @@ import com.company.Table;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -216,7 +217,6 @@ public class Interpreter {
     private void interpretUpdate(Parser parser)
             throws DBException, IOException {
         getTableFromMemory(parser);
-        //valueList and attributeList can be paired by index
         valueListString = parser.getValueListString();
         attributeList = parser.getAttributeList();
         conditionListObject = parser.getConditionListObject();
@@ -257,7 +257,7 @@ public class Interpreter {
             String attribute, Value value, String op)
             throws DBException {
         ArrayList<Integer> rowIndexes = new ArrayList<>();
-        //iterate through columns until we find the target one, then iterate through rows
+        //iterate through columns until we find the target one
         for(int i=0; i<table.getNumberOfColumns();i++) {
             if (table.getColumns().get(i).equals(attribute)) {
                 //get row indexes of rows that match the condition
@@ -418,6 +418,8 @@ public class Interpreter {
             throws DBException, IOException {
         String results;
         getTableFromMemory(parser);
+        //store table so it doesn't get affected in selection
+        ArrayList<String> tempTable = table.getTableAsList();
         attributeList = parser.getAttributeList();
         multipleConditions = parser.isMultipleConditions();
         //if * and no condition, return the whole table
@@ -430,11 +432,11 @@ public class Interpreter {
         if(parser.getHasCondition()) {
             results = selectWithCondition(parser);
         }else{
-            //fill table with relevant columns
+            //fill table with relevant columns & get values
             resultsTable.fillTableFromMemory(attributeList, null, false);
-            //get results from relevant columns
             results = selectColumns(attributeList, false);
         }
+        table.fillTableFromFile(tempTable);
         return results;
     }
 
@@ -503,7 +505,7 @@ public class Interpreter {
             //iterate through command until next condition
             if(command.get(commandIndex).equals(")")){
                 commandIndex++;
-                //checking for AND or OR
+                //checking for AND or OR or )
                 rowIndexes = andOr(command, parser, conditionStack, rowIndexes);
                 if(commandIndex>=command.size()){
                     return rowIndexes;

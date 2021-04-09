@@ -203,6 +203,29 @@ public class Table {
         return stringBuilder.toString();
     }
 
+    public ArrayList<String> getTableAsList(){
+        ArrayList<String> table = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0; i < numberOfColumns; i++){
+            stringBuilder.append(columns.get(i).getColumnName()).append("\t");
+        }
+        table.add(stringBuilder.toString());
+        for(int i = 0; i < numberOfRows; i++){
+            table.add(getRowString(i));
+        }
+        table.add("\n");
+        return table;
+    }
+
+    private String getRowString(int index){
+        StringBuilder stringBuilder = new StringBuilder();
+        ArrayList<String> currentRow = rows.get(index).getElements();
+        for (String s : currentRow) {
+            stringBuilder.append(s).append("\t");
+        }
+        return stringBuilder.toString();
+    }
+
     public ArrayList<String> getColumnValues(int columnIndex)
             throws DBException {
         ArrayList<String> columnValues = new ArrayList<>();
