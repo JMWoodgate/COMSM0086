@@ -7,5 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="dot-parser" level="application" />
+    <orderEntry type="library" name="json-parser" level="application" />
   </component>
 </module>

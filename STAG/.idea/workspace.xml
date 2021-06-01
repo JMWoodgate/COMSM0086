@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/dot_parser.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/json_parser.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestFiles/basic-actions.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestFiles/basic-entities.dot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/basic-entities.dot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dot-parser.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/csv-plugin.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DB/.idea/csv-plugin.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/csv-plugin.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/STAG.iml" beforeDir="false" afterPath="$PROJECT_DIR$/STAG.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/StagCheck.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/StagClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/StagServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/basic-actions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/basic-entities.dot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/extended-actions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/extended-entities.dot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/description.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/project-template.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/description.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/project-template.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/hello.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/OXO.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/Triangles.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Column.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/AlterCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/AlterationType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Condition.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/ConditionList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/CreateCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/DBCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/DeleteCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/DropCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/InsertCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Interpreter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/JoinCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/LiteralType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/NameValueList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Parser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/SelectCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/UpdateCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/UseCMD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Value.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/ValueList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/WildAttributeList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/CommandException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/DBException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/EmptyData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/EmptyName.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/FileException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/FileExists.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/IndexOutOfBounds.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/StorageType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/StorageTypeException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Database.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/FileIO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Row.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Table.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/TokenType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Tokenizer.class" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1tLu2AvwS9tLjvfI6AkMpzdsdwD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled104" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled104" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled104" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled104" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled104" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="company" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/json-parser.jar" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jessw\Documents\Java\COMSM0086\STAG\src\com\company" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.StagServer">
+    <configuration name="GraphParserExample (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.company.GraphParserExample" />
+      <module name="STAG" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.company.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GraphParserExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GraphParserExample" />
+      <module name="STAG" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="com.company.Main" />
+      <module name="STAG" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StagServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.company.StagServer" />
+      <module name="STAG" />
+      <option name="PROGRAM_PARAMETERS" value="TestFiles\basic-entities.dot TestFiles\basic-actions.json" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.company.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.GraphParserExample" />
+      <item itemvalue="Application.GraphParserExample (1)" />
+      <item itemvalue="Application.StagServer" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.StagServer" />
+        <item itemvalue="Application.GraphParserExample (1)" />
+        <item itemvalue="Application.GraphParserExample" />
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="" />
+      <created>1622560482184</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1622560482184</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
