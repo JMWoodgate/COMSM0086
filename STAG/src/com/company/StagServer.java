@@ -5,6 +5,9 @@ import java.util.*;
 
 class StagServer
 {
+    private String entityFilename;
+    private String actionFilename;
+
     public static void main(String args[])
     {
         if(args.length != 2) System.out.println("Usage: java StagServer <entity-file> <action-file>");
@@ -14,8 +17,11 @@ class StagServer
     public StagServer(String entityFilename, String actionFilename, int portNumber)
     {
         try {
+            //open connection
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Server Listening");
+            this.entityFilename = entityFilename;
+            this.actionFilename = actionFilename;
             while(true) acceptNextConnection(ss);
         } catch(IOException ioe) {
             System.err.println(ioe);
@@ -42,5 +48,6 @@ class StagServer
     {
         String line = in.readLine();
         out.write("You said... " + line + "\n");
+
     }
 }
