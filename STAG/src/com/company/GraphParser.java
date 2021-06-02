@@ -1,21 +1,25 @@
+package com.company;
 import com.alexmerz.graphviz.*;
 import com.alexmerz.graphviz.objects.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public class GraphParserExample {
+public class GraphParser {
 
-    public static void main(String[] args) {
+    private String entityFilename;
+
+    public GraphParser(String entityFilename){
         try {
+            this.entityFilename = entityFilename;
             Parser parser = new Parser();
-            FileReader reader = new FileReader(args[0]);
+            FileReader reader = new FileReader(entityFilename);
             parser.parse(reader);
             ArrayList<Graph> graphs = parser.getGraphs();
             ArrayList<Graph> subGraphs = graphs.get(0).getSubgraphs();
+
             for(Graph g : subGraphs){
                 System.out.printf("id = %s\n",g.getId().getId());
-
                 ArrayList<Graph> subGraphs1 = g.getSubgraphs();
                 for (Graph g1 : subGraphs1){
                     ArrayList<Node> nodesLoc = g1.getNodes(false);
@@ -30,17 +34,13 @@ public class GraphParserExample {
                         }
                     }
                 }
-
                 ArrayList<Edge> edges = g.getEdges();
                 for (Edge e : edges){
                     System.out.printf("Path from %s to %s\n", e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
                 }
             }
-
-        } catch (FileNotFoundException fnfe) {
-            System.out.println(fnfe);
-        } catch (com.alexmerz.graphviz.ParseException pe) {
-            System.out.println(pe);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

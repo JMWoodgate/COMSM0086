@@ -22,6 +22,7 @@ class StagServer
             System.out.println("Server Listening");
             this.entityFilename = entityFilename;
             this.actionFilename = actionFilename;
+            GraphParser graphParser = new GraphParser(entityFilename);
             while(true) acceptNextConnection(ss);
         } catch(IOException ioe) {
             System.err.println(ioe);

@@ -1,86 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/Element/Artefact.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/Element/Characters.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/Element/Element.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/Element/Furniture.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/Element/Location.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/Element/Players.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/Visitor/Visitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/dot_parser.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/dot_parser.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/json_parser.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/json_parser.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/basic-entities.dot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dot-parser.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/dot-parser.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/json-parser.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Libraries/json-parser.jar" afterDir="false" />
+    <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="created visitor design pattern structure">
+      <change afterPath="$PROJECT_DIR$/src/com/company/GraphParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/StagServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/description.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/project-template.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/description.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/.idea/project-template.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Hello/hello.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/OXO.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/COMSM0086/Triangles/Triangles.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Column.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/AlterCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/AlterationType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Condition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/ConditionList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/CreateCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/DBCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/DeleteCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/DropCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/InsertCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Interpreter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/JoinCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/LiteralType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/NameValueList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Parser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/SelectCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/UpdateCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/UseCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/Value.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/ValueList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBCommand/WildAttributeList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/CommandException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/DBException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/EmptyData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/EmptyName.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/FileException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/FileExists.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/IndexOutOfBounds.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/StorageType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBExceptions/StorageTypeException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/DBServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Database.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/FileIO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Row.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Table.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Test.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/TokenType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/DB/com/company/Tokenizer.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,6 +172,14 @@
       <option name="presentableId" value="Default" />
       <updated>1622560482184</updated>
     </task>
+    <task id="LOCAL-00001" summary="created visitor design pattern structure">
+      <created>1622638177102</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1622638177102</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -262,5 +193,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="created visitor design pattern structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="created visitor design pattern structure" />
   </component>
 </project>
