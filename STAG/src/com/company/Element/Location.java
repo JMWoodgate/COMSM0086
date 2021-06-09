@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public class Location implements Element{
     private String name;
+    private String description;
     private final HashMap<String, String> artefacts;
     private final HashMap<String, String> furniture;
     private final HashMap<String, String> characters;
@@ -29,6 +30,14 @@ public class Location implements Element{
 
     public String getName(){
         return name;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
+    }
+
+    public String getDescription(){
+        return description;
     }
 
     public void setArtefact(String key, String value){
