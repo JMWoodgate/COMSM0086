@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="created visitor design pattern structure">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Location.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/GraphParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/GraphParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -150,13 +152,11 @@
     <list>
       <item itemvalue="Application.Main" />
       <item itemvalue="Application.GraphParserExample" />
-      <item itemvalue="Application.GraphParserExample (1)" />
       <item itemvalue="Application.StagServer" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.StagServer" />
-        <item itemvalue="Application.GraphParserExample (1)" />
         <item itemvalue="Application.GraphParserExample" />
         <item itemvalue="Application.Main" />
       </list>
