@@ -44,6 +44,17 @@ public class GraphParser {
                         for (Graph g2 : subGraphs2) {
                             System.out.printf("\t\tid3 = %s\n", g2.getId().getId());
                             String innerElementId = g2.getId().getId();
+                            switch (innerElementId) {
+                                case "artefacts":
+                                    //do something
+                                    break;
+                                case "characters":
+                                    //do something else
+                                    break;
+                                case "furniture":
+                                    //do something else
+                                    break;
+                            }
                             ArrayList<Node> nodesEnt = g2.getNodes(false);
                             for (Node nEnt : nodesEnt) {
                                 System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
