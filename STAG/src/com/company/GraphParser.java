@@ -44,22 +44,32 @@ public class GraphParser {
                         for (Graph g2 : subGraphs2) {
                             System.out.printf("\t\tid3 = %s\n", g2.getId().getId());
                             String innerElementId = g2.getId().getId();
+                            ArrayList<Node> nodesEnt = g2.getNodes(false);
                             switch (innerElementId) {
                                 case "artefacts":
-                                    //do something
+                                    for (Node nEnt : nodesEnt) {
+                                        System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
+                                        String elementTypeId = nEnt.getId().getId();
+                                        String elementTypeDescription = nEnt.getAttribute("description");
+                                        currentLocation.setArtefact(elementTypeDescription, elementTypeId);
+                                    }
                                     break;
                                 case "characters":
-                                    //do something else
+                                    for (Node nEnt : nodesEnt) {
+                                        System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
+                                        String elementTypeId = nEnt.getId().getId();
+                                        String elementTypeDescription = nEnt.getAttribute("description");
+                                        currentLocation.setCharacter(elementTypeDescription, elementTypeId);
+                                    }
                                     break;
                                 case "furniture":
-                                    //do something else
+                                    for (Node nEnt : nodesEnt) {
+                                        System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
+                                        String elementTypeId = nEnt.getId().getId();
+                                        String elementTypeDescription = nEnt.getAttribute("description");
+                                        currentLocation.setFurniture(elementTypeDescription, elementTypeId);
+                                    }
                                     break;
-                            }
-                            ArrayList<Node> nodesEnt = g2.getNodes(false);
-                            for (Node nEnt : nodesEnt) {
-                                System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
-                                String elementTypeId = nEnt.getId().getId();
-                                String elementTypeDescription = nEnt.getAttribute("description");
                             }
                         }
                     }
