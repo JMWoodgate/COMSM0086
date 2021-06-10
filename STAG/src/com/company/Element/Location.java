@@ -63,4 +63,9 @@ public class Location implements Element{
     public String getCharacter(String key){
         return characters.get(key);
     }
+
+    //other locations accessible from the current location
+    public void setPath(String path){
+
+    }
 }

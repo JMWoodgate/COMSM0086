@@ -2,8 +2,9 @@ package com.company;
 import com.alexmerz.graphviz.*;
 import com.alexmerz.graphviz.objects.*;
 import com.company.Element.Location;
+import com.company.StagExceptions.DataTypeException;
 
-import java.io.FileNotFoundException;
+import javax.xml.crypto.Data;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -32,6 +33,8 @@ public class GraphParser {
                 ArrayList<Edge> edges = g.getEdges();
                 for (Edge e : edges){
                     System.out.printf("Path from %s to %s\n", e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
+                    //need to iterate through the stored locations
+                    //if the location we are on is equal to the source path, need to store the target location in the object
                 }
             }
         } catch (Exception e) {
@@ -48,7 +51,7 @@ public class GraphParser {
     }
 
     //stores description and id of artefact/furniture/characters in current location
-    private void storeDetails(Location currentLocation, String dataType, String description, String id){
+    private void storeDetails(Location currentLocation, String dataType, String description, String id) throws DataTypeException {
         switch(dataType){
             case "artefact":
                 currentLocation.setArtefact(description, id);
@@ -60,11 +63,11 @@ public class GraphParser {
                 currentLocation.setCharacter(description, id);
                 break;
             default:
-                //throw error - data type not recognised
+                throw new DataTypeException(dataType);
         }
     }
 
-    private void parseLocation(Graph g){
+    private void parseLocation(Graph g) throws DataTypeException{
         ArrayList<Graph> subGraphs1 = g.getSubgraphs();
         for (Graph g1 : subGraphs1) {
             //create new location and store in array -- this is overwriting each time so need to change
@@ -82,7 +85,7 @@ public class GraphParser {
     }
 
     //loops through inner graphs to parse
-    private void parseInnerGraphs(ArrayList<Graph> subGraphs, Location currentLocation){
+    private void parseInnerGraphs(ArrayList<Graph> subGraphs, Location currentLocation) throws DataTypeException{
         for (Graph g2 : subGraphs) {
             System.out.printf("\t\tid3 = %s\n", g2.getId().getId());
             String innerElementId = g2.getId().getId();
@@ -92,7 +95,7 @@ public class GraphParser {
     }
 
     //loop through nodes and parse
-    private void parseNodes(ArrayList<Node> nodesEnt, Location currentLocation, String id){
+    private void parseNodes(ArrayList<Node> nodesEnt, Location currentLocation, String id) throws DataTypeException {
         for (Node nEnt : nodesEnt) {
             System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
             storeDetails(currentLocation, id, nEnt.getAttribute("description"), nEnt.getId().getId());
