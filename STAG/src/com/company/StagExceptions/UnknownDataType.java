@@ -1,10 +1,10 @@
 package com.company.StagExceptions;
 
-public class DataTypeException extends StagException{
+public class UnknownDataType extends StagException{
 
     private final String dataType;
 
-    public DataTypeException(String dataType){
+    public UnknownDataType(String dataType){
         this.dataType = dataType;
     }
     public String toString(){

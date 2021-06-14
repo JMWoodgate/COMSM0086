@@ -25,6 +25,23 @@ public class Location implements Element{
         visitor.visit(this);
     }
 
+    public void printLocation(){
+        System.out.println();
+        System.out.println("Location: "+name);
+        System.out.println("Description: "+description);
+        System.out.println("Artefacts: ");
+        System.out.println(artefacts.entrySet());
+        System.out.println("Furniture: ");
+        System.out.println(furniture.entrySet());
+        System.out.println("Characters: ");
+        System.out.println(characters.entrySet());
+        System.out.println("Location "+name+" leads to:");
+        for(String p : paths){
+            System.out.print(p+", ");
+        }
+        System.out.println();
+    }
+
     public void setName(String name){
         this.name = name;
     }
