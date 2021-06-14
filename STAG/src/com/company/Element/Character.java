@@ -2,11 +2,11 @@ package com.company.Element;
 
 import com.company.Visitor.Visitor;
 
-public class Furniture implements Element {
+public class Character implements Element{
     String name;
     String description;
 
-    public Furniture(String name, String description){
+    public Character(String name, String description){
         this.name = name;
         this.description = description;
     }
@@ -16,11 +16,13 @@ public class Furniture implements Element {
         visitor.visit(this);
     }
 
-    public String getName(){
-        return name;
+    @Override
+    public String getName() {
+        return null;
     }
 
-    public String getDescription(){
-        return description;
+    @Override
+    public String getDescription() {
+        return null;
     }
 }

@@ -3,20 +3,19 @@ package com.company.Element;
 import com.company.Visitor.Visitor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Location implements Element{
     private String name;
     private String description;
-    private final HashMap<String, String> artefacts;
-    private final HashMap<String, String> furniture;
-    private final HashMap<String, String> characters;
+    private final ArrayList<Artefact> artefacts;
+    private final ArrayList<Furniture> furniture;
+    private final ArrayList<Character> characters;
     private final ArrayList<String> paths;
 
     public Location(){
-        artefacts = new HashMap<>();
-        furniture = new HashMap<>();
-        characters = new HashMap<>();
+        artefacts = new ArrayList<>();
+        furniture = new ArrayList<>();
+        characters = new ArrayList<>();
         paths = new ArrayList<>();
     }
 
@@ -41,27 +40,30 @@ public class Location implements Element{
         return description;
     }
 
-    public void setArtefact(String key, String value){
-        artefacts.put(key, value);
+    public void setArtefact(String name, String description){
+        Artefact artefact = new Artefact(name, description);
+        artefacts.add(artefact);
     }
 
-    public HashMap<String, String> getArtefacts(){
+    public ArrayList<Artefact> getArtefacts(){
         return artefacts;
     }
 
-    public void setFurniture(String key, String value){
-        furniture.put(key, value);
+    public void setFurniture(String name, String description){
+        Furniture newFurniture = new Furniture(name, description);
+        furniture.add(newFurniture);
     }
 
-    public HashMap<String, String> getFurniture(){
+    public ArrayList<Furniture> getFurniture(){
         return furniture;
     }
 
-    public void setCharacter(String key, String value){
-        characters.put(key, value);
+    public void setCharacter(String name, String description){
+        Character newCharacter = new Character(name, description);
+        characters.add(newCharacter);
     }
 
-    public HashMap<String, String> getCharacters(){
+    public ArrayList<Character> getCharacters(){
         return characters;
     }
 

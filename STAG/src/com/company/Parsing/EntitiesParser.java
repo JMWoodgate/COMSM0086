@@ -5,13 +5,12 @@ import com.company.Element.Location;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.UnknownDataType;
-import com.company.Visitor.Print;
+import com.company.Visitor.PrintVisitor;
 
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class EntitiesParser {
 
@@ -53,8 +52,8 @@ public class EntitiesParser {
         for(Map.Entry<String, Location> entry: locations.entrySet()){
             //String key = (String)entry.getKey();
             Location currentLocation = entry.getValue();
-            Print print = new Print();
-            currentLocation.accept(print);
+            PrintVisitor printVisitor = new PrintVisitor();
+            currentLocation.accept(printVisitor);
         }
     }
 
@@ -130,13 +129,13 @@ public class EntitiesParser {
             String description, String id) throws UnknownDataType {
         switch(dataType){
             case "artefacts":
-                currentLocation.setArtefact(description, id);
+                currentLocation.setArtefact(id, description);
                 break;
             case "furniture":
-                currentLocation.setFurniture(description, id);
+                currentLocation.setFurniture(id, description);
                 break;
             case "characters":
-                currentLocation.setCharacter(description, id);
+                currentLocation.setCharacter(id, description);
                 break;
             default:
                 throw new UnknownDataType(dataType);
