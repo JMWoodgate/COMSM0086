@@ -25,23 +25,6 @@ public class Location implements Element{
         visitor.visit(this);
     }
 
-    public void printLocation(){
-        System.out.println();
-        System.out.println("Location: "+name);
-        System.out.println("Description: "+description);
-        System.out.println("Artefacts: ");
-        System.out.println(artefacts.entrySet());
-        System.out.println("Furniture: ");
-        System.out.println(furniture.entrySet());
-        System.out.println("Characters: ");
-        System.out.println(characters.entrySet());
-        System.out.println("Location "+name+" leads to:");
-        for(String p : paths){
-            System.out.print(p+", ");
-        }
-        System.out.println();
-    }
-
     public void setName(String name){
         this.name = name;
     }
@@ -62,28 +45,32 @@ public class Location implements Element{
         artefacts.put(key, value);
     }
 
-    public String getArtefact(String key){
-        return artefacts.get(key);
+    public HashMap<String, String> getArtefacts(){
+        return artefacts;
     }
 
     public void setFurniture(String key, String value){
         furniture.put(key, value);
     }
 
-    public String getFurniture(String key){
-        return furniture.get(key);
+    public HashMap<String, String> getFurniture(){
+        return furniture;
     }
 
     public void setCharacter(String key, String value){
         characters.put(key, value);
     }
 
-    public String getCharacter(String key){
-        return characters.get(key);
+    public HashMap<String, String> getCharacters(){
+        return characters;
     }
 
     //other locations accessible from the current location
     public void setPath(String target){
         paths.add(target);
+    }
+
+    public ArrayList<String> getPaths(){
+        return paths;
     }
 }

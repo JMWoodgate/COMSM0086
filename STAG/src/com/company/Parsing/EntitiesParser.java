@@ -1,10 +1,11 @@
-package com.company;
+package com.company.Parsing;
 import com.alexmerz.graphviz.*;
 import com.alexmerz.graphviz.objects.*;
 import com.company.Element.Location;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.UnknownDataType;
+import com.company.Visitor.Print;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -12,12 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class GraphParser {
+public class EntitiesParser {
 
     private String entityFilename;
     private final HashMap<String, Location> locations;
 
-    public GraphParser(String entityFilename){
+    public EntitiesParser(String entityFilename){
         locations = new HashMap<>();
         try {
             this.entityFilename = entityFilename;
@@ -47,10 +48,13 @@ public class GraphParser {
             ArrayList<Edge> edges = g.getEdges();
             parseEdges(edges);
         }
+        //to print locations
+
         for(Map.Entry<String, Location> entry: locations.entrySet()){
             //String key = (String)entry.getKey();
             Location currentLocation = entry.getValue();
-            currentLocation.printLocation();
+            Print print = new Print();
+            currentLocation.accept(print);
         }
     }
 

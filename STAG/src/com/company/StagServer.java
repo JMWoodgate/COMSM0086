@@ -1,7 +1,8 @@
 package com.company;
+import com.company.Parsing.EntitiesParser;
+
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 class StagServer
 {
@@ -22,7 +23,7 @@ class StagServer
             System.out.println("Server Listening");
             this.entityFilename = entityFilename;
             this.actionFilename = actionFilename;
-            GraphParser graphParser = new GraphParser(entityFilename);
+            EntitiesParser entitiesParser = new EntitiesParser(entityFilename);
             while(true) acceptNextConnection(ss);
         } catch(IOException ioe) {
             System.err.println(ioe);
