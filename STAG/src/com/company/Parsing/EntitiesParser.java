@@ -48,13 +48,13 @@ public class EntitiesParser {
             parseEdges(edges);
         }
         //to print locations
-
+        /*
         for(Map.Entry<String, Location> entry: locations.entrySet()){
             //String key = (String)entry.getKey();
             Location currentLocation = entry.getValue();
             PrintVisitor printVisitor = new PrintVisitor();
             currentLocation.accept(printVisitor);
-        }
+        }*/
     }
 
     //parses and stores the edges/paths

@@ -3,23 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="created visitor design pattern structure">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Artefact.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Artefact.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Characters.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Characters.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Furniture.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Furniture.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Location.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Location.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Players.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Players.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Parsing/EntitiesParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Parsing/EntitiesParser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Visitor/Print.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Visitor/Visitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Visitor/Visitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Artefact.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Artefact.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Characters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Character.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Element.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Element.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Furniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Furniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Players.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Visitor/PrintVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Visitor/PrintVisitor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Parsing/ActionsParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Parsing/ActionsParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Visitor/Print.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Visitor/PrintVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Visitor/Visitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Visitor/Visitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/StagServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Visitor/PrintVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Visitor/PrintVisitor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

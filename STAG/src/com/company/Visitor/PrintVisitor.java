@@ -45,23 +45,18 @@ public class PrintVisitor implements Visitor{
 
     @Override
     public void visit(Artefact artefact) {
-
     }
 
     @Override
     public void visit(Character characters) {
-
     }
 
     @Override
     public void visit(Furniture furniture) {
-
     }
 
     @Override
     public void visit(Player players) {
-
     }
-
 
 }

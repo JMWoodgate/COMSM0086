@@ -1,6 +1,8 @@
 package com.company;
+import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 
@@ -24,6 +26,7 @@ class StagServer
             this.entityFilename = entityFilename;
             this.actionFilename = actionFilename;
             EntitiesParser entitiesParser = new EntitiesParser(entityFilename);
+            ActionsParser actionsParser = new ActionsParser(actionFilename);
             while(true) acceptNextConnection(ss);
         } catch(IOException ioe) {
             System.err.println(ioe);
