@@ -11,12 +11,13 @@ public class Location implements Element{
     private final HashMap<String, String> artefacts;
     private final HashMap<String, String> furniture;
     private final HashMap<String, String> characters;
-    private ArrayList<String> paths;
+    private final ArrayList<String> paths;
 
     public Location(){
         artefacts = new HashMap<>();
         furniture = new HashMap<>();
         characters = new HashMap<>();
+        paths = new ArrayList<>();
     }
 
     @Override
@@ -65,7 +66,7 @@ public class Location implements Element{
     }
 
     //other locations accessible from the current location
-    public void setPath(String path){
-
+    public void setPath(String target){
+        paths.add(target);
     }
 }

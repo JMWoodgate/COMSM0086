@@ -22,51 +22,54 @@ public class GraphParser {
             parser.parse(reader);
             ArrayList<Graph> graphs = parser.getGraphs();
             ArrayList<Graph> subGraphs = graphs.get(0).getSubgraphs();
-            for(Graph g : subGraphs){
-                System.out.printf("id1 = %s\n",g.getId().getId());
-                String elementId = g.getId().getId();
-                //if first element id is locations, need to create a new instance of locations and store values
-                //if it is paths, need to do something different
-                if(elementId.equals("locations")) {
-                    parseLocation(g);
-                }
-                ArrayList<Edge> edges = g.getEdges();
-                for (Edge e : edges){
-                    System.out.printf("Path from %s to %s\n", e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
-                    //need to iterate through the stored locations
-                    //if the location we are on is equal to the source path, need to store the target location in the object
-                }
-            }
+            parseGraphs(subGraphs);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //stores name and description of current location
-    private void storeNameDescription(Location currentLocation, Node nLoc){
-        String locationDescription = nLoc.getAttribute("description");
-        String clusterName = nLoc.getId().getId();
-        currentLocation.setName(clusterName);
-        currentLocation.setDescription(locationDescription);
-    }
-
-    //stores description and id of artefact/furniture/characters in current location
-    private void storeDetails(Location currentLocation, String dataType, String description, String id) throws DataTypeException {
-        switch(dataType){
-            case "artefact":
-                currentLocation.setArtefact(description, id);
-                break;
-            case "furniture":
-                currentLocation.setFurniture(description, id);
-                break;
-            case "characters":
-                currentLocation.setCharacter(description, id);
-                break;
-            default:
-                throw new DataTypeException(dataType);
+    private void parseGraphs(ArrayList<Graph> subGraphs) throws DataTypeException {
+        for(Graph g : subGraphs){
+            System.out.printf("id1 = %s\n",g.getId().getId());
+            String elementId = g.getId().getId();
+            //if first element id is locations, need to create a new
+            // instance of locations and store values
+            //if it is paths, need to do something different
+            if(elementId.equals("locations")) {
+                parseLocation(g);
+            }
+            else if(!elementId.equals("paths")){
+                throw new DataTypeException(elementId);
+            }
+            ArrayList<Edge> edges = g.getEdges();
+            parseEdges(edges);
         }
     }
 
+    private void parseEdges(ArrayList<Edge> edges){
+        for (Edge e : edges){
+            System.out.printf("Path from %s to %s\n",
+                    e.getSource().getNode().getId().getId(),
+                    e.getTarget().getNode().getId().getId());
+            //need to iterate through the stored locations
+            //if the location we are on is equal to the source path,
+            // need to store the target location in the object
+            String source = e.getSource().getNode().getId().getId();
+            String target = e.getTarget().getNode().getId().getId();
+            storePath(source, target);
+        }
+    }
+
+    //loops through our list of locations and stores the path details
+    private void storePath(String source, String target){
+        for(Location l : locations){
+            if(l.getName().equals(source)){
+                l.setPath(target);
+            }
+        }
+    }
+
+    //loops through graphs and parses each location
     private void parseLocation(Graph g) throws DataTypeException{
         ArrayList<Graph> subGraphs1 = g.getSubgraphs();
         for (Graph g1 : subGraphs1) {
@@ -84,6 +87,14 @@ public class GraphParser {
         }
     }
 
+    //stores name and description of current location
+    private void storeNameDescription(Location currentLocation, Node nLoc){
+        String locationDescription = nLoc.getAttribute("description");
+        String clusterName = nLoc.getId().getId();
+        currentLocation.setName(clusterName);
+        currentLocation.setDescription(locationDescription);
+    }
+
     //loops through inner graphs to parse
     private void parseInnerGraphs(ArrayList<Graph> subGraphs, Location currentLocation) throws DataTypeException{
         for (Graph g2 : subGraphs) {
@@ -99,6 +110,23 @@ public class GraphParser {
         for (Node nEnt : nodesEnt) {
             System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
             storeDetails(currentLocation, id, nEnt.getAttribute("description"), nEnt.getId().getId());
+        }
+    }
+
+    //stores description and id of artefact/furniture/characters in current location
+    private void storeDetails(Location currentLocation, String dataType, String description, String id) throws DataTypeException {
+        switch(dataType){
+            case "artefacts":
+                currentLocation.setArtefact(description, id);
+                break;
+            case "furniture":
+                currentLocation.setFurniture(description, id);
+                break;
+            case "characters":
+                currentLocation.setCharacter(description, id);
+                break;
+            default:
+                throw new DataTypeException(dataType);
         }
     }
 }
