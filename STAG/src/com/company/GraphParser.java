@@ -34,7 +34,6 @@ public class GraphParser {
 
     private void parseGraphs(ArrayList<Graph> subGraphs) throws StagException {
         for(Graph g : subGraphs){
-            System.out.printf("id1 = %s\n",g.getId().getId());
             String elementId = g.getId().getId();
             //if first element id is locations, need to create a new
             // instance of locations and store values
@@ -55,11 +54,9 @@ public class GraphParser {
         }
     }
 
+    //parses and stores the edges/paths
     private void parseEdges(ArrayList<Edge> edges) throws LocationDoesNotExist {
         for (Edge e : edges){
-            System.out.printf("Path from %s to %s\n",
-                    e.getSource().getNode().getId().getId(),
-                    e.getTarget().getNode().getId().getId());
             //need to iterate through the stored locations
             //if the location we are on is equal to the source path,
             // need to store the target location in the object
@@ -88,7 +85,6 @@ public class GraphParser {
             Location currentLocation = new Location();
             ArrayList<Node> nodesLoc = g1.getNodes(false);
             Node nLoc = nodesLoc.get(0);
-            System.out.printf("\tid2 = %s, name = %s, description = %s\n", g1.getId().getId(), nLoc.getId().getId(), nLoc.getAttribute("description"));
             //store name and description of location
             storeNameDescription(currentLocation, nLoc);
             ArrayList<Graph> subGraphs2 = g1.getSubgraphs();
@@ -109,7 +105,6 @@ public class GraphParser {
     //loops through inner graphs to parse
     private void parseInnerGraphs(ArrayList<Graph> subGraphs, Location currentLocation) throws UnknownDataType {
         for (Graph g2 : subGraphs) {
-            System.out.printf("\t\tid3 = %s\n", g2.getId().getId());
             String innerElementId = g2.getId().getId();
             ArrayList<Node> nodesEnt = g2.getNodes(false);
             parseNodes(nodesEnt, currentLocation, innerElementId);
@@ -119,13 +114,16 @@ public class GraphParser {
     //loop through nodes and parse
     private void parseNodes(ArrayList<Node> nodesEnt, Location currentLocation, String id) throws UnknownDataType {
         for (Node nEnt : nodesEnt) {
-            System.out.printf("\t\t\tid4 = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
-            storeDetails(currentLocation, id, nEnt.getAttribute("description"), nEnt.getId().getId());
+            String description = nEnt.getAttribute("description");
+            String newId = nEnt.getId().getId();
+            storeDetails(currentLocation, id, description, newId);
         }
     }
 
     //stores description and id of artefact/furniture/characters in current location
-    private void storeDetails(Location currentLocation, String dataType, String description, String id) throws UnknownDataType {
+    private void storeDetails(
+            Location currentLocation, String dataType,
+            String description, String id) throws UnknownDataType {
         switch(dataType){
             case "artefacts":
                 currentLocation.setArtefact(description, id);
