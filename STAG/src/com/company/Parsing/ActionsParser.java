@@ -16,7 +16,7 @@ public class ActionsParser {
             JSONParser parser = new JSONParser();
             FileReader reader = new FileReader(actionFilename);
             JSONObject parsed = (JSONObject)parser.parse(reader);
-            JSONArray actionList = (JSONArray)parsed;
+            JSONArray actionList = (JSONArray)parsed.get("actions");
             actionList.forEach(action -> parseAction((JSONObject) action));
         } catch (Exception e){
             e.printStackTrace();
@@ -24,14 +24,19 @@ public class ActionsParser {
     }
 
     private void parseAction(JSONObject action){
-        String triggers = (String) action.get("triggers");
-        System.out.println(triggers);
-        String subjects = (String) action.get("subjects");
-        System.out.println(subjects);
-        String consumed = (String) action.get("consumed");
-        System.out.println(consumed);
-        String produced = (String) action.get("produced");
-        System.out.println(produced);
+        System.out.print("\n"+"triggers: ");
+        JSONArray triggers = (JSONArray) action.get("triggers");
+        triggers.forEach(trigger -> System.out.print(trigger+" "));
+        System.out.print("\n"+"subjects: ");
+        JSONArray subjects = (JSONArray) action.get("subjects");
+        subjects.forEach(subject -> System.out.print(subject+" "));
+        System.out.print("\n"+"consumed: ");
+        JSONArray consumed = (JSONArray) action.get("consumed");
+        consumed.forEach(c -> System.out.print(c+" "));
+        System.out.print("\n"+"produced: ");
+        JSONArray produced = (JSONArray) action.get("produced");
+        produced.forEach(p -> System.out.print(p+" "));
+        System.out.print("\n"+"narration: ");
         String narration = (String) action.get("narration");
         System.out.println(narration);
     }
