@@ -24,6 +24,14 @@ public class Location implements Element{
         visitor.visit(this);
     }
 
+    public boolean validPath(String newLocation){
+        if(paths.contains(newLocation)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
     public void setName(String name){
         this.name = name;
     }

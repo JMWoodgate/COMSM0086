@@ -7,6 +7,7 @@ import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
 import com.company.StagExceptions.ArtefactDoesNotExist;
 import com.company.StagExceptions.InvalidCommand;
+import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 
 import java.util.ArrayList;
@@ -42,10 +43,31 @@ public class StagEngine {
                 message = dropCommand(splitString[1]);
                 return message;
             case "goto":
+                message = gotoCommand(splitString[1]);
+                return message;
             case "look":
+                message = lookCommand();
                 return message;
             default:
                 throw new InvalidCommand(command);
+        }
+    }
+
+    private String lookCommand(){
+        //need to return a string that describes the whole location
+        String message = null;
+        return message;
+    }
+
+    private String gotoCommand(String newLocation) throws LocationDoesNotExist{
+        Location playerLocation = currentPlayer.getLocation();
+        if(locations.containsKey(newLocation) && playerLocation.validPath(newLocation)){
+            //need to check path is valid
+            currentPlayer.setLocation(locations.get(newLocation));
+            String message = "You have moved to "+newLocation;
+            return message;
+        } else{
+            throw new LocationDoesNotExist(newLocation);
         }
     }
 
