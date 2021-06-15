@@ -9,7 +9,8 @@ public class PrintVisitor implements Visitor{
 
     @Override
     public void visit(Element element) {
-
+        System.out.println("Name: "+element.getName());
+        System.out.println("Description: "+element.getDescription());
     }
 
     @Override

@@ -49,6 +49,10 @@ public class Location implements Element{
         return artefacts;
     }
 
+    public void removeArtefact(Artefact artefact){
+        artefacts.remove(artefact);
+    }
+
     public void setFurniture(String name, String description){
         Furniture newFurniture = new Furniture(name, description);
         furniture.add(newFurniture);

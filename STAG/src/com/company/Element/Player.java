@@ -26,6 +26,16 @@ public class Player implements Element{
         return inventory;
     }
 
+    public void removeFromInventory(Artefact artefact){
+        inventory.remove(artefact);
+    }
+
+    public void addToInventory(Artefact artefact){
+        //making a deep copy of the artefact so it doesn't get deleted when we remove from location
+        Artefact copy = new Artefact(artefact.getName(), artefact.getDescription());
+        inventory.add(copy);
+    }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
