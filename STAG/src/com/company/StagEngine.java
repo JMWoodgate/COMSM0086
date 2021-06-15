@@ -1,8 +1,10 @@
 package com.company;
 
+import com.company.Element.Artefact;
 import com.company.Element.Location;
 import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
+import com.company.StagExceptions.InvalidCommand;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,33 @@ public class StagEngine {
         ActionsParser actionsParser = new ActionsParser(actionFilename);
         actions = actionsParser.getActions();
         players = new HashMap<>();
+    }
+
+    public String interpretCommand(String command) throws InvalidCommand {
+        String[] splitString = command.split(" ", 2);
+        String message = null;
+        switch(splitString[0]){
+            case "inv":
+            case "inventory":
+                message = getInventory();
+            case "get":
+            case "drop":
+            case "goto":
+            case "look":
+                return message;
+            default:
+                throw new InvalidCommand(command);
+        }
+    }
+
+    private String getInventory(){
+        ArrayList<Artefact> artefacts = currentPlayer.getInventory();
+        StringBuilder inventory = new StringBuilder();
+        for(Artefact a : artefacts){
+            inventory.append(a.getDescription());
+            inventory.append("\n");
+        }
+        return (inventory.toString());
     }
 
     public Player getCurrentPlayer(){
