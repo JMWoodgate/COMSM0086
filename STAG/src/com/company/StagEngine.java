@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StagEngine {
-    private ArrayList<Player> players;
-    private HashMap<String, Location> locations;
-    private ArrayList<Action> actions;
+    private final HashMap<String, Player> players;
+    private final HashMap<String, Location> locations;
+    private final ArrayList<Action> actions;
+    private Player currentPlayer;
 
     public StagEngine(String entityFilename, String actionFilename){
         //parse files and get data
@@ -18,16 +19,26 @@ public class StagEngine {
         locations = entitiesParser.getLocations();
         ActionsParser actionsParser = new ActionsParser(actionFilename);
         actions = actionsParser.getActions();
+        players = new HashMap<>();
     }
 
-    public void addPlayer(String name){
-        Player newPlayer = new Player(name);
+    public Player getCurrentPlayer(){
+        return currentPlayer;
+    }
+
+    public boolean playerExists(String playerName){
+        return players.containsKey(playerName);
+    }
+
+    public void addPlayer(String playerName){
+        Player newPlayer = new Player(playerName);
         //set location to start
         newPlayer.setLocation(locations.get("start"));
-        players.add(newPlayer);
+        players.put(playerName, newPlayer);
+        currentPlayer = newPlayer;
     }
 
-    public ArrayList<Player> getPlayers(){
+    public HashMap<String, Player> getPlayers(){
         return players;
     }
 }

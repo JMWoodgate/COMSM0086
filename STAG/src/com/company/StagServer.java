@@ -12,6 +12,7 @@ class StagServer
 {
     private String entityFilename;
     private String actionFilename;
+    private StagEngine engine;
 
     public static void main(String args[])
     {
@@ -27,14 +28,16 @@ class StagServer
             System.out.println("Server Listening");
             this.entityFilename = entityFilename;
             this.actionFilename = actionFilename;
-            StagEngine engine = new StagEngine(entityFilename, actionFilename);
+            engine = new StagEngine(entityFilename, actionFilename);
             while(true) acceptNextConnection(ss);
-        } catch(IOException ioe) {
+        } catch(IOException | StagException ioe) {
             System.err.println(ioe);
+        } catch(NullPointerException npe) {
+            System.out.println("Connection Lost");
         }
     }
 
-    private void acceptNextConnection(ServerSocket ss)
+    private void acceptNextConnection(ServerSocket ss) throws StagException
     {
         try {
             // Next line will block until a connection is received
@@ -46,10 +49,8 @@ class StagServer
             out.close();
             in.close();
             socket.close();
-        } catch(IOException | StagException ioe) {
+        } catch(IOException ioe) {
             System.err.println(ioe);
-        } catch(NullPointerException npe) {
-            System.out.println("Connection Lost");
         }
     }
 
@@ -58,7 +59,9 @@ class StagServer
         String line = in.readLine();
         out.write("You said... " + line + "\n");
         String[] splitString = line.split(":");
-        System.out.println(splitString[0]);
-
+        if(!engine.playerExists(splitString[0])){
+            engine.addPlayer(splitString[0]);
+            System.out.println("Player added: "+engine.getCurrentPlayer().getName());
+        }
     }
 }
