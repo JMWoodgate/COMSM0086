@@ -2,6 +2,7 @@ package com.company;
 
 import com.company.Element.Artefact;
 import com.company.Element.Location;
+import com.company.Element.Player;
 import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
 import com.company.StagExceptions.InvalidCommand;

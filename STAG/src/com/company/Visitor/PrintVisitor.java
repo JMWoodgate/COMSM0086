@@ -45,18 +45,25 @@ public class PrintVisitor implements Visitor{
 
     @Override
     public void visit(Artefact artefact) {
+        System.out.println("Artefact: "+artefact.getName());
+        System.out.println("Description: "+artefact.getDescription());
     }
 
     @Override
-    public void visit(Character characters) {
+    public void visit(Character character) {
+        System.out.println("Character: "+ character.getName());
+        System.out.println("Description: "+character.getDescription());
     }
 
     @Override
     public void visit(Furniture furniture) {
+        System.out.println("Furniture: "+furniture.getName());
+        System.out.println("Description: "+furniture.getDescription());
     }
 
     @Override
-    public void visit(Player players) {
+    public void visit(Player player) {
+        System.out.println("Player: "+player.getName());
     }
 
 }
