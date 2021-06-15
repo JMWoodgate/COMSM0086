@@ -1,10 +1,12 @@
 package com.company;
 import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
+import com.company.StagExceptions.StagException;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 class StagServer
 {
@@ -39,19 +41,24 @@ class StagServer
             Socket socket = ss.accept();
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            System.out.println("Connection Established");
             processNextCommand(in, out);
             out.close();
             in.close();
             socket.close();
-        } catch(IOException ioe) {
+        } catch(IOException | StagException ioe) {
             System.err.println(ioe);
+        } catch(NullPointerException npe) {
+            System.out.println("Connection Lost");
         }
     }
 
-    private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException
+    private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException, StagException
     {
         String line = in.readLine();
         out.write("You said... " + line + "\n");
+        String[] splitString = line.split(":");
+        System.out.println(splitString[0]);
 
     }
 }
