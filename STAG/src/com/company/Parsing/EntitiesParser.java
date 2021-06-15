@@ -56,6 +56,10 @@ public class EntitiesParser {
         }*/
     }
 
+    public HashMap<String, Location> getLocations(){
+        return locations;
+    }
+
     //parses and stores the edges/paths
     private void parseEdges(ArrayList<Edge> edges) throws LocationDoesNotExist {
         for (Edge e : edges){

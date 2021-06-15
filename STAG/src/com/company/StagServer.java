@@ -25,8 +25,7 @@ class StagServer
             System.out.println("Server Listening");
             this.entityFilename = entityFilename;
             this.actionFilename = actionFilename;
-            EntitiesParser entitiesParser = new EntitiesParser(entityFilename);
-            ActionsParser actionsParser = new ActionsParser(actionFilename);
+            StagEngine engine = new StagEngine(entityFilename, actionFilename);
             while(true) acceptNextConnection(ss);
         } catch(IOException ioe) {
             System.err.println(ioe);
