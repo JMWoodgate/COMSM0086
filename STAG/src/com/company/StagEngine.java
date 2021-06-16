@@ -47,8 +47,44 @@ public class StagEngine {
             case "look":
                 return lookCommand();
             default:
-                throw new InvalidCommand(command);
+                return customCommand(splitString);
         }
+    }
+
+    private String customCommand(String[] command) throws StagException{
+        String message = null;
+        for(Action a : actions){
+            ArrayList<String> triggers = a.getTriggers();
+            if(triggers.contains(command[1])){
+                //check all subjects exist in game and in command
+                assert(checkSubjects(a));
+                //check if anything to consume, if there is, consume it (remove from location or inventory
+                //check if anything to produce, if there is, add to location
+            }
+        }
+        //if we get through all the actions and haven't found it, invalid command
+        throw new InvalidCommand(command.toString());
+    }
+
+    private boolean checkSubjects(Action action){
+        Location playerLocation = currentPlayer.getLocation();
+        ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
+        ArrayList<String> subjects = action.getSubjects();
+        for(String s : subjects){
+            if(inInventory(s)){
+                return true;
+            }
+        }
+    }
+
+    private boolean inInventory(String subject){
+        ArrayList<Artefact> inventory = currentPlayer.getInventory();
+        for(Artefact a : inventory){
+            if(a.getDescription().equals(subject) || a.getName().equals(subject)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private String lookCommand(){
