@@ -54,13 +54,55 @@ public class StagEngine {
             ArrayList<String> triggers = a.getTriggers();
             if(triggers.contains(command[1])){
                 //check all subjects exist in game and in command
-                assert(checkSubjects(a));
-                //check if anything to consume, if there is, consume it (remove from location or inventory
+                if(!checkSubjects(a)){
+                    throw new SubjectDoesNotExist();
+                }
+                //check if anything to consume, if there is, consume it (remove from location or inventory)
+                consume(a);
                 //check if anything to produce, if there is, add to location
+                produce(a);
             }
         }
         //if we get through all the actions and haven't found it, invalid command
         throw new InvalidCommand(command.toString());
+    }
+
+    private void produce(Action action){
+        Location playerLocation = currentPlayer.getLocation();
+        ArrayList<String> produced = action.getProduced();
+        if(produced == null){
+            return;
+        }
+        //loop through items produced and add them to the location
+        //do they need to get moved from unplaced?
+        for(String p : produced){
+            //need to find the unplaced location, and then find the produced item in it#
+            //then need to copy that into a new artefact and put in the current location
+            //do we delete the old one from unplaced?
+            //each artefact needs a name and description
+            Artefact newArtefact = new Artefact(p, p);
+        }
+    }
+
+    private void consume(Action action) throws SubjectDoesNotExist {
+        Location playerLocation = currentPlayer.getLocation();
+        ArrayList<String> consumed = action.getConsumed();
+        //if there is nothing to consume, move on
+        if (consumed == null) {
+            return;
+        }
+        for(String c : consumed) {
+            if (artefactInList(c, playerLocation.getArtefacts())) {
+                //delete from location
+                playerLocation.removeArtefact(c);
+            } else if (artefactInList(c, currentPlayer.getInventory())){
+                //delete from player inventory
+                currentPlayer.removeFromInventory(c);
+            } else{
+                //should be unreachable as we have already checked for this, but just in case
+                throw new SubjectDoesNotExist();
+            }
+        }
     }
 
     private boolean checkSubjects(Action action) throws SubjectDoesNotExist {
@@ -71,7 +113,7 @@ public class StagEngine {
         for(String s : subjects){
             if(!artefactInList(s, inventory)
                 && !artefactInList(s, locationArtefacts)){
-                throw new SubjectDoesNotExist(s);
+                return false;
             }
         } return true;
     }

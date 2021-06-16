@@ -61,6 +61,12 @@ public class Location implements Element{
         artefacts.remove(artefact);
     }
 
+    public void removeArtefact(String artefact){
+        artefacts.removeIf(
+                a -> a.getName().equals(artefact)
+                || a.getDescription().equals(artefact));
+    }
+
     public void setFurniture(String name, String description){
         Furniture newFurniture = new Furniture(name, description);
         furniture.add(newFurniture);
