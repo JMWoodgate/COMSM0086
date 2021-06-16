@@ -10,6 +10,7 @@ import com.company.Visitor.PrintVisitor;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EntitiesParser {
@@ -68,6 +69,8 @@ public class EntitiesParser {
             // need to store the target location in the object
             String source = e.getSource().getNode().getId().getId();
             String target = e.getTarget().getNode().getId().getId();
+            source = source.toLowerCase(Locale.ROOT);
+            target = target.toLowerCase(Locale.ROOT);
             storePath(source, target);
         }
     }
@@ -104,8 +107,8 @@ public class EntitiesParser {
         String locationDescription = nLoc.getAttribute("description");
         String locationName = nLoc.getId().getId();
         locations.put(locationName, currentLocation);
-        currentLocation.setName(locationName);
-        currentLocation.setDescription(locationDescription);
+        currentLocation.setName(locationName.toLowerCase(Locale.ROOT));
+        currentLocation.setDescription(locationDescription.toLowerCase(Locale.ROOT));
     }
 
     //loops through inner graphs to parse
@@ -122,7 +125,7 @@ public class EntitiesParser {
         for (Node nEnt : nodesEnt) {
             String description = nEnt.getAttribute("description");
             String newId = nEnt.getId().getId();
-            storeDetails(currentLocation, id, description, newId);
+            storeDetails(currentLocation, id.toLowerCase(Locale.ROOT), description.toLowerCase(Locale.ROOT), newId.toLowerCase(Locale.ROOT));
         }
     }
 

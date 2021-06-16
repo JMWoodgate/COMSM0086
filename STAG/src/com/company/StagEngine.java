@@ -12,6 +12,7 @@ import com.company.StagExceptions.StagException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class StagEngine {
     private final HashMap<String, Player> players;
@@ -29,25 +30,22 @@ public class StagEngine {
     }
 
     public String interpretCommand(String command) throws StagException {
-        String[] splitString = command.split(" ", 2);
-        String message = null;
-        switch(splitString[0]){
+        command = command.toLowerCase(Locale.ROOT);
+        String[] splitString = command.split(" ", 3);
+        System.out.println("command: "+splitString[1]);
+        System.out.println("full: "+command);
+        switch(splitString[1]){
             case "inv":
             case "inventory":
-                message = listInventory();
-                return message;
+                return listInventory();
             case "get":
-                message = getCommand(splitString[1]);
-                return message;
+                return getCommand(splitString[2]);
             case "drop":
-                message = dropCommand(splitString[1]);
-                return message;
+                return dropCommand(splitString[2]);
             case "goto":
-                message = gotoCommand(splitString[1]);
-                return message;
+                return gotoCommand(splitString[2]);
             case "look":
-                message = lookCommand();
-                return message;
+                return lookCommand();
             default:
                 throw new InvalidCommand(command);
         }
@@ -55,8 +53,22 @@ public class StagEngine {
 
     private String lookCommand(){
         //need to return a string that describes the whole location
-        String message = null;
-        return message;
+        Location playerLocation = currentPlayer.getLocation();
+        StringBuilder stringBuilder = new StringBuilder();
+        //get location name/description
+        stringBuilder.append("You are in "+playerLocation.getDescription()+". ");
+        //list artefacts in the roomc
+        stringBuilder.append("You can see:\n");
+        ArrayList<Artefact> artefacts = playerLocation.getArtefacts();
+        for(Artefact a : artefacts){
+            stringBuilder.append(a.getDescription()+"\n");
+        }
+        stringBuilder.append("You can access from here:\n");
+        ArrayList<String> paths = playerLocation.getPaths();
+        for(String p : paths){
+            stringBuilder.append(p+"\n");
+        }
+        return stringBuilder.toString();
     }
 
     private String gotoCommand(String newLocation) throws LocationDoesNotExist{
@@ -94,7 +106,8 @@ public class StagEngine {
                 playerLocation.removeArtefact(a);
                 return message;
             }
-        } throw new ArtefactDoesNotExist(artefact);
+        }
+        return (artefact+" does not exist here.\n");
     }
 
     private String listInventory(){

@@ -57,6 +57,7 @@ class StagServer
 
     private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException, StagException
     {
+        System.out.println("entered process next command");
         String line = in.readLine();
         out.write("You said... " + line + "\n");
         String[] splitString = line.split(":", 2);
