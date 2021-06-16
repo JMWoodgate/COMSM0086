@@ -5,10 +5,7 @@ import com.company.Element.Location;
 import com.company.Element.Player;
 import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
-import com.company.StagExceptions.ArtefactDoesNotExist;
-import com.company.StagExceptions.InvalidCommand;
-import com.company.StagExceptions.LocationDoesNotExist;
-import com.company.StagExceptions.StagException;
+import com.company.StagExceptions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,21 +63,22 @@ public class StagEngine {
         throw new InvalidCommand(command.toString());
     }
 
-    private boolean checkSubjects(Action action){
+    private boolean checkSubjects(Action action) throws SubjectDoesNotExist {
+        ArrayList<String> subjects = action.getSubjects();
+        ArrayList<Artefact> inventory = currentPlayer.getInventory();
         Location playerLocation = currentPlayer.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
-        ArrayList<String> subjects = action.getSubjects();
         for(String s : subjects){
-            if(inInventory(s)){
-                return true;
+            if(!artefactInList(s, inventory)
+                && !artefactInList(s, locationArtefacts)){
+                throw new SubjectDoesNotExist(s);
             }
-        }
+        } return true;
     }
 
-    private boolean inInventory(String subject){
-        ArrayList<Artefact> inventory = currentPlayer.getInventory();
-        for(Artefact a : inventory){
-            if(a.getDescription().equals(subject) || a.getName().equals(subject)){
+    private boolean artefactInList(String artefact, ArrayList<Artefact> artefactList){
+        for(Artefact a : artefactList){
+            if(a.getDescription().equals(artefact) || a.getName().equals(artefact)){
                 return true;
             }
         }
