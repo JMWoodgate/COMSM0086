@@ -56,13 +56,10 @@ public class StagEngine {
                 if(!checkSubjects(a)){
                     throw new SubjectDoesNotExist();
                 }
-                System.out.println("returned from checkSubjects");
                 //check if anything to consume, if there is, consume it (remove from location or inventory)
                 consume(a);
-                System.out.println("returned from consume");
                 //check if anything to produce, if there is, add to location
                 produce(a);
-                System.out.println("returned from produce");
                 //return the action's narration
                 return a.getNarration();
             }
@@ -85,18 +82,15 @@ public class StagEngine {
 
     private void moveSubjectToProduce(String subject)
             throws SubjectDoesNotExist {
-        System.out.println("entered subjectToProduce");
         Location playerLocation = currentPlayer.getLocation();
         //need to check all locations for the artefact (not just unplaced)
-        Location subjectLocation = (Location) getSpecificElement(subject, new ArrayList<>(locations));
+        Location subjectLocation = (Location) getElement(subject, new ArrayList<>(locations));
         if(subjectLocation!=null){
-            System.out.println("subjectLocation!=null");
             //need to add a path to the new location
             playerLocation.setPath(subject);
             return;
         }
         for(Location l : locations){
-            System.out.println("entered locations loop, subject is "+subject+" location is "+l.getName());
             //check if it is an artefact & move if so
             if(moveArtefact(l, playerLocation, subject)) {
                 return;
@@ -110,17 +104,14 @@ public class StagEngine {
                 return;
             }
         }
-        System.out.println("finished looping through all locations");
         throw new SubjectDoesNotExist();
     }
 
     private boolean moveCharacter(Location locationToCheck, Location playerLocation, String subject){
         //get character from location
-        System.out.println("calling getSpecificElement from moveCharacter");
-        Character character = (Character) getSpecificElement(
+        Character character = (Character) getElement(
                 subject, new ArrayList<>(locationToCheck.getCharacters()));
         if(character!=null){
-            System.out.println("character!=null");
             playerLocation.setCharacter(character.getName(), character.getDescription());
             locationToCheck.removeCharacter(character.getName());
             return true;
@@ -130,11 +121,9 @@ public class StagEngine {
 
     private boolean moveFurniture(Location locationToCheck, Location playerLocation, String subject){
         //get furniture from location
-        System.out.println("calling getSpecificElement from moveFurniture");
-        Furniture furniture = (Furniture) getSpecificElement(
+        Furniture furniture = (Furniture) getElement(
                 subject, new ArrayList<>(locationToCheck.getFurniture()));
         if(furniture!=null){
-            System.out.println("furniture!=null");
             playerLocation.setFurniture(furniture.getName(), furniture.getDescription());
             locationToCheck.removeFurniture(furniture.getName());
             return true;
@@ -144,12 +133,10 @@ public class StagEngine {
 
     private boolean moveArtefact(Location locationToCheck, Location playerLocation, String subject){
         //get artefact from location
-        System.out.println("calling getSpecificElement from moveArtefact");
-        Artefact artefact = (Artefact) getSpecificElement(
+        Artefact artefact = (Artefact) getElement(
                 subject, new ArrayList<>(locationToCheck.getArtefacts()));
         //check if the artefact to produce exists in this location
         if(artefact!=null){
-            System.out.println("artefact!=null");
             //create new artefact in the current location
             playerLocation.setArtefact(artefact.getName(),
                     artefact.getDescription());
@@ -169,19 +156,19 @@ public class StagEngine {
         }
         for(String c : consumed) {
             //we need to check if the artefact, furniture or character is there -- not just artefact
-            if (getSpecificElement(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
+            if (getElement(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
                 //delete artefact from location
                 playerLocation.removeArtefact(c);
-            } else if (getSpecificElement(c, new ArrayList<>(currentPlayer.getInventory()))!=null){
+            } else if (getElement(c, new ArrayList<>(currentPlayer.getInventory()))!=null){
                 //delete artefact from player inventory
                 currentPlayer.removeFromInventory(c);
-            } else if (getSpecificElement(c, new ArrayList<>(playerLocation.getFurniture()))!=null){
+            } else if (getElement(c, new ArrayList<>(playerLocation.getFurniture()))!=null){
                 //delete furniture from location
                 playerLocation.removeFurniture(c);
-            } else if (getSpecificElement(c, new ArrayList<>(playerLocation.getCharacters()))!=null){
+            } else if (getElement(c, new ArrayList<>(playerLocation.getCharacters()))!=null){
                 //delete character from location
                 playerLocation.removeCharacter(c);
-            } else if(getSpecificElement(c, new ArrayList<>(locations))==null){
+            } else if(getElement(c, new ArrayList<>(locations))==null){
                 //delete location
                 locations.removeIf(l -> l.getName().equals(c));
             }else{
@@ -197,15 +184,15 @@ public class StagEngine {
         Location playerLocation = currentPlayer.getLocation();
         for(String s : subjects){
             //check in play inventory
-            if(getSpecificElement(s, new ArrayList<>(currentPlayer.getInventory()))==null){
+            if(getElement(s, new ArrayList<>(currentPlayer.getInventory()))==null){
                 //check in location artefacts
-                if(getSpecificElement(s, new ArrayList<>(playerLocation.getArtefacts()))==null){
+                if(getElement(s, new ArrayList<>(playerLocation.getArtefacts()))==null){
                     //check in location furniture
-                    if(getSpecificElement(s, new ArrayList<>(playerLocation.getFurniture()))==null){
+                    if(getElement(s, new ArrayList<>(playerLocation.getFurniture()))==null){
                         //check in location characters
-                        if(getSpecificElement(s, new ArrayList<>(playerLocation.getCharacters()))==null){
+                        if(getElement(s, new ArrayList<>(playerLocation.getCharacters()))==null){
                             //check in locations
-                            if(getSpecificElement(s, new ArrayList<>(locations))==null){
+                            if(getElement(s, new ArrayList<>(locations))==null){
                                 //if the subject is in none of these, return false
                                 return false;
                             }
@@ -216,15 +203,13 @@ public class StagEngine {
         } return true;
     }
 
-    public Element getSpecificElement(String elementName, ArrayList<Element> elementList){
-        System.out.println("entered getSpecificElement looking for "+elementName);
+    public Element getElement(String elementName, ArrayList<Element> elementList){
         if(elementList == null){
-            System.out.println("elementList is null");
             return null;
         }
+        System.out.println(elementList);
         for(Element e : elementList){
             if(e!=null && e.getName().equals(elementName)){
-                System.out.println("element name: "+e.getName());
                 return e;
             }
         }
