@@ -76,11 +76,11 @@ public class StagEngine {
         }
         //loop through items produced and add them to the location
         for(String p : produced){
-            moveSubjectToProduce(p);
+            moveSubject(p);
         }
     }
 
-    private void moveSubjectToProduce(String subject)
+    private void moveSubject(String subject)
             throws SubjectDoesNotExist {
         Location playerLocation = currentPlayer.getLocation();
         //need to check all locations for the artefact (not just unplaced)
@@ -91,7 +91,7 @@ public class StagEngine {
             return;
         }
         for(Location l : locations){
-            //check if it is an artefact & move if so
+            //check if it is an artefact & move if so (function will return true)
             if(moveArtefact(l, playerLocation, subject)) {
                 return;
             }
@@ -107,7 +107,8 @@ public class StagEngine {
         throw new SubjectDoesNotExist();
     }
 
-    private boolean moveCharacter(Location locationToCheck, Location playerLocation, String subject){
+    private boolean moveCharacter(Location locationToCheck,
+                                  Location playerLocation, String subject){
         //get character from location
         Character character = (Character) getElement(
                 subject, new ArrayList<>(locationToCheck.getCharacters()));
@@ -119,7 +120,8 @@ public class StagEngine {
         return false;
     }
 
-    private boolean moveFurniture(Location locationToCheck, Location playerLocation, String subject){
+    private boolean moveFurniture(Location locationToCheck,
+                                  Location playerLocation, String subject){
         //get furniture from location
         Furniture furniture = (Furniture) getElement(
                 subject, new ArrayList<>(locationToCheck.getFurniture()));
@@ -131,7 +133,8 @@ public class StagEngine {
         return false;
     }
 
-    private boolean moveArtefact(Location locationToCheck, Location playerLocation, String subject){
+    private boolean moveArtefact(Location locationToCheck,
+                                 Location playerLocation, String subject){
         //get artefact from location
         Artefact artefact = (Artefact) getElement(
                 subject, new ArrayList<>(locationToCheck.getArtefacts()));
@@ -207,7 +210,6 @@ public class StagEngine {
         if(elementList == null){
             return null;
         }
-        System.out.println(elementList);
         for(Element e : elementList){
             if(e!=null && e.getName().equals(elementName)){
                 return e;
