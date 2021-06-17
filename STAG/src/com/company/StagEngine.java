@@ -67,20 +67,28 @@ public class StagEngine {
         throw new InvalidCommand(command.toString());
     }
 
-    private void produce(Action action){
+    private void produce(Action action) throws ArtefactDoesNotExist{
         Location playerLocation = currentPlayer.getLocation();
+        //need to check all locations for the artefact (not just unplaced)
+        Location unplaced = locations.get("unplaced");
+        ArrayList<Artefact> unplacedArtefacts = unplaced.getArtefacts();
         ArrayList<String> produced = action.getProduced();
         if(produced == null){
             return;
         }
         //loop through items produced and add them to the location
-        //do they need to get moved from unplaced?
         for(String p : produced){
-            //need to find the unplaced location, and then find the produced item in it#
-            //then need to copy that into a new artefact and put in the current location
-            //do we delete the old one from unplaced?
-            //each artefact needs a name and description
-            Artefact newArtefact = new Artefact(p, p);
+            //get artefact from unplaced
+            Artefact producedArtefact = getSpecificArtefact(p, unplacedArtefacts);
+            //check it exists in unplaced
+            if(producedArtefact!=null){
+                //create new artefact in the current location
+                playerLocation.setArtefact(producedArtefact.getName(), producedArtefact.getDescription());
+                //remove artefact from unplaced
+                unplaced.removeArtefact(producedArtefact);
+            }else{
+                throw new ArtefactDoesNotExist(p);
+            }
         }
     }
 
@@ -92,10 +100,10 @@ public class StagEngine {
             return;
         }
         for(String c : consumed) {
-            if (artefactInList(c, playerLocation.getArtefacts())) {
+            if (getSpecificArtefact(c, playerLocation.getArtefacts())!=null) {
                 //delete from location
                 playerLocation.removeArtefact(c);
-            } else if (artefactInList(c, currentPlayer.getInventory())){
+            } else if (getSpecificArtefact(c, currentPlayer.getInventory())!=null){
                 //delete from player inventory
                 currentPlayer.removeFromInventory(c);
             } else{
@@ -105,26 +113,27 @@ public class StagEngine {
         }
     }
 
-    private boolean checkSubjects(Action action) throws SubjectDoesNotExist {
+    private boolean checkSubjects(Action action) {
         ArrayList<String> subjects = action.getSubjects();
         ArrayList<Artefact> inventory = currentPlayer.getInventory();
         Location playerLocation = currentPlayer.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(String s : subjects){
-            if(!artefactInList(s, inventory)
-                && !artefactInList(s, locationArtefacts)){
+            if(getSpecificArtefact(s, inventory)==null
+                && getSpecificArtefact(s, locationArtefacts)==null){
                 return false;
             }
         } return true;
     }
 
-    private boolean artefactInList(String artefact, ArrayList<Artefact> artefactList){
+    //if the artefact is in the list, return it, otherwise return null
+    public Artefact getSpecificArtefact(String artefactName, ArrayList<Artefact> artefactList){
         for(Artefact a : artefactList){
-            if(a.getDescription().equals(artefact) || a.getName().equals(artefact)){
-                return true;
+            if(a.getDescription().equals(artefactName) || a.getName().equals(artefactName)){
+                return a;
             }
         }
-        return false;
+        return null;
     }
 
     private String lookCommand(){
