@@ -53,10 +53,12 @@ public class Location implements Element{
         return artefacts;
     }
 
+    //visitor? --> similar in Player
     public void removeArtefact(Artefact artefact){
         artefacts.remove(artefact);
     }
 
+    //visitor? --> similar in Player  --> similar for Artefact, Furniture, and Character
     public void removeArtefact(String artefact){
         artefacts.removeIf(
                 a -> a.getName().equals(artefact)
@@ -72,6 +74,13 @@ public class Location implements Element{
         return furniture;
     }
 
+    //visitor? --> similar for Artefact, Furniture, and Character
+    public void removeFurniture(String furnitureName){
+        furniture.removeIf(
+                f -> f.getName().equals(furnitureName)
+                || f.getDescription().equals(furnitureName));
+    }
+
     public void setCharacter(String name, String description){
         Character newCharacter = new Character(name, description);
         characters.add(newCharacter);
@@ -79,6 +88,13 @@ public class Location implements Element{
 
     public ArrayList<Character> getCharacters(){
         return characters;
+    }
+
+    //visitor?  --> similar for Artefact, Furniture, and Character
+    public void removeCharacter(String character){
+        characters.removeIf(
+                c -> c.getName().equals(character)
+                        || c.getDescription().equals(character));
     }
 
     //other locations accessible from the current location

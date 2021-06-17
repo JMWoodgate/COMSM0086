@@ -87,6 +87,7 @@ public class StagEngine {
             throws ArtefactDoesNotExist{
         Location playerLocation = currentPlayer.getLocation();
         //need to check all locations for the artefact (not just unplaced)
+        //could produce an artefact or a location
         for(Location l : locations){
             ArrayList<Artefact> locationArtefacts = l.getArtefacts();
             //get artefact from location
@@ -115,12 +116,17 @@ public class StagEngine {
             return;
         }
         for(String c : consumed) {
+            //we need to check if the artefact, furniture or character is there -- not just artefact
             if (getSpecificArtefact(c, playerLocation.getArtefacts())!=null) {
                 //delete from location
                 playerLocation.removeArtefact(c);
             } else if (getSpecificArtefact(c, currentPlayer.getInventory())!=null){
                 //delete from player inventory
                 currentPlayer.removeFromInventory(c);
+            } else if (getSpecificFurniture(c, playerLocation.getFurniture())!=null){
+                playerLocation.removeFurniture(c);
+            } else if (getSpecificCharacter(c, playerLocation.getCharacters())!=null){
+                playerLocation.removeCharacter(c);
             } else{
                 //should be unreachable as we have already checked for this, but just in case
                 throw new SubjectDoesNotExist();
@@ -134,14 +140,41 @@ public class StagEngine {
         Location playerLocation = currentPlayer.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(String s : subjects){
+            //check if subject exists in artefacts
             if(getSpecificArtefact(s, inventory)==null
                 && getSpecificArtefact(s, locationArtefacts)==null){
-                return false;
+                //check in furniture
+                if(getSpecificFurniture(s, playerLocation.getFurniture())==null){
+                    //check in characters
+                    if(getSpecificCharacter(s, playerLocation.getCharacters())==null){
+                        return false;
+                    }
+                }
             }
         } return true;
     }
 
-    //if the artefact is in the list, return it, otherwise return null
+    //if furniture is in the list, return it, otherwise return null -- visitor method?
+    public Character getSpecificCharacter(String characterName, ArrayList<Character> characterList){
+        for(Character c : characterList){
+            if(c.getName().equals(characterName) || c.getDescription().equals(characterName)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    //if furniture is in the list, return it, otherwise return null -- visitor method?
+    public Furniture getSpecificFurniture(String furnitureName, ArrayList<Furniture> furnitureList){
+        for(Furniture f : furnitureList){
+            if(f.getDescription().equals(furnitureName) || f.getName().equals(furnitureName)){
+                return f;
+            }
+        }
+        return null;
+    }
+
+    //if the artefact is in the list, return it, otherwise return null -- visitor method?
     public Artefact getSpecificArtefact(String artefactName, ArrayList<Artefact> artefactList){
         for(Artefact a : artefactList){
             if(a.getDescription().equals(artefactName) || a.getName().equals(artefactName)){
@@ -167,6 +200,7 @@ public class StagEngine {
         for(Furniture f : playerLocation.getFurniture()){
             stringBuilder.append(f.getDescription()).append("\n");
         }
+        //list characters in location
         for(Character c : playerLocation.getCharacters()){
             stringBuilder.append(c.getDescription()).append(("\n"));
         }
