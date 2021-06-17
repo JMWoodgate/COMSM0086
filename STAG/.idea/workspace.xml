@@ -2,10 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="created visitor design pattern structure">
+      <change afterPath="$PROJECT_DIR$/TestFiles/extended-actions.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestFiles/extended-entities.dot" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Location.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Location.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Element/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/StagEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/StagEngine.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Visitor/DeleteVisitor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Location.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/StagEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Visitor/DeleteVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Visitor/DeleteArtefactVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/StagServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +146,7 @@
     <configuration name="StagServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.company.StagServer" />
       <module name="STAG" />
-      <option name="PROGRAM_PARAMETERS" value="TestFiles\basic-entities.dot TestFiles\basic-actions.json" />
+      <option name="PROGRAM_PARAMETERS" value="TestFiles\extended-entities.dot TestFiles\extended-actions.json" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.company.Visitor.*" />

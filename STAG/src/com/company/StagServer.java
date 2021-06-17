@@ -59,13 +59,18 @@ class StagServer
     {
         System.out.println("entered process next command");
         String line = in.readLine();
-        out.write("You said... " + line + "\n");
         String[] splitString = line.split(":", 2);
         if(!engine.playerExists(splitString[0])){
             engine.addPlayer(splitString[0]);
             System.out.println("Player added: "+engine.getCurrentPlayer().getName());
         }
-        String response = engine.interpretCommand(splitString[1]);
-        out.write(response+"\n");
+        try {
+            String response = engine.interpretCommand(splitString[1]);
+            out.write(response+"\n");
+        }catch(StagException e){
+            e.printStackTrace();
+           out.write(e.toString());
+        }
+
     }
 }

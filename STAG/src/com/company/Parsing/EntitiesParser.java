@@ -16,10 +16,10 @@ import java.util.Map;
 public class EntitiesParser {
 
     private String entityFilename;
-    private final HashMap<String, Location> locations;
+    private final ArrayList<Location> locations;
 
     public EntitiesParser(String entityFilename){
-        locations = new HashMap<>();
+        locations = new ArrayList<>();
         try {
             this.entityFilename = entityFilename;
             Parser parser = new Parser();
@@ -57,7 +57,7 @@ public class EntitiesParser {
         }*/
     }
 
-    public HashMap<String, Location> getLocations(){
+    public ArrayList<Location> getLocations(){
         return locations;
     }
 
@@ -77,13 +77,13 @@ public class EntitiesParser {
 
     //finds our target location (if it exists) and stores the path details
     private void storePath(String source, String target) throws LocationDoesNotExist {
-        if(locations.containsKey(source)) {
-            Location l = locations.get(source);
-            l.setPath(target);
+        for(Location l : locations) {
+            if (l.getName().equals(source)) {
+                l.setPath(target);
+                return;
+            }
         }
-        else{
-            throw new LocationDoesNotExist(source);
-        }
+        throw new LocationDoesNotExist(source);
     }
 
     //loops through graphs and parses each location
@@ -106,9 +106,9 @@ public class EntitiesParser {
     private void storeNameDescription(Location currentLocation, Node nLoc){
         String locationDescription = nLoc.getAttribute("description");
         String locationName = nLoc.getId().getId();
-        locations.put(locationName, currentLocation);
         currentLocation.setName(locationName.toLowerCase(Locale.ROOT));
         currentLocation.setDescription(locationDescription.toLowerCase(Locale.ROOT));
+        locations.add(currentLocation);
     }
 
     //loops through inner graphs to parse

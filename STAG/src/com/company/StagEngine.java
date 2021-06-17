@@ -1,6 +1,8 @@
 package com.company;
 
 import com.company.Element.Artefact;
+import com.company.Element.Character;
+import com.company.Element.Furniture;
 import com.company.Element.Location;
 import com.company.Element.Player;
 import com.company.Parsing.ActionsParser;
@@ -11,7 +13,7 @@ import java.util.*;
 
 public class StagEngine {
     private final HashMap<String, Player> players;
-    private final HashMap<String, Location> locations;
+    private final ArrayList<Location> locations;
     private final ArrayList<Action> actions;
     private Player currentPlayer;
 
@@ -85,10 +87,8 @@ public class StagEngine {
             throws ArtefactDoesNotExist{
         Location playerLocation = currentPlayer.getLocation();
         //need to check all locations for the artefact (not just unplaced)
-        for(Map.Entry<String, Location> set : locations.entrySet()){
-            //get the location from the hashmap
-            Location producedLocation = set.getValue();
-            ArrayList<Artefact> locationArtefacts = producedLocation.getArtefacts();
+        for(Location l : locations){
+            ArrayList<Artefact> locationArtefacts = l.getArtefacts();
             //get artefact from location
             Artefact producedArtefact = getSpecificArtefact(
                     artefactToProduce, locationArtefacts);
@@ -99,7 +99,7 @@ public class StagEngine {
                 playerLocation.setArtefact(producedArtefact.getName(),
                         producedArtefact.getDescription());
                 //remove artefact from old location
-                producedLocation.removeArtefact(producedArtefact);
+                l.removeArtefact(producedArtefact);
                 //exit
                 return;
             }
@@ -159,9 +159,16 @@ public class StagEngine {
         stringBuilder.append("You are in ").append(playerLocation.getDescription()).append(". ");
         //list artefacts in the location
         stringBuilder.append("You can see:\n");
-        ArrayList<Artefact> artefacts = playerLocation.getArtefacts();
-        for(Artefact a : artefacts){
+        //list artefacts in location
+        for(Artefact a : playerLocation.getArtefacts()){
             stringBuilder.append(a.getDescription()).append("\n");
+        }
+        //list furniture in location
+        for(Furniture f : playerLocation.getFurniture()){
+            stringBuilder.append(f.getDescription()).append("\n");
+        }
+        for(Character c : playerLocation.getCharacters()){
+            stringBuilder.append(c.getDescription()).append(("\n"));
         }
         stringBuilder.append("You can access from here:\n");
         ArrayList<String> paths = playerLocation.getPaths();
@@ -173,13 +180,22 @@ public class StagEngine {
 
     private String gotoCommand(String newLocation) throws LocationDoesNotExist{
         Location playerLocation = currentPlayer.getLocation();
-        if(locations.containsKey(newLocation) && playerLocation.validPath(newLocation)){
-            //need to check path is valid
-            currentPlayer.setLocation(locations.get(newLocation));
+        //need to check path is valid
+        if(playerLocation.validPath(newLocation)){
+            //get the object for the new location and set it to the current player's location
+            currentPlayer.setLocation(getSpecificLocation(newLocation));
             return "You have moved to "+newLocation;
         } else{
             throw new LocationDoesNotExist(newLocation);
         }
+    }
+
+    private Location getSpecificLocation(String newLocation) throws LocationDoesNotExist {
+        for(Location l : locations){
+            if(l.getName().equals(newLocation)){
+                return l;
+            }
+        } throw new LocationDoesNotExist(newLocation);
     }
 
     private String dropCommand(String artefact) throws ArtefactDoesNotExist{
@@ -195,7 +211,7 @@ public class StagEngine {
         } throw new ArtefactDoesNotExist(artefact);
     }
 
-    private String getCommand(String artefact) {
+    private String getCommand(String artefact) throws ArtefactDoesNotExist {
         Location playerLocation = currentPlayer.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(Artefact a : locationArtefacts){
@@ -206,7 +222,7 @@ public class StagEngine {
                 return message;
             }
         }
-        return (artefact+" does not exist here.\n");
+        throw new ArtefactDoesNotExist(artefact);
     }
 
     private String listInventory(){
@@ -230,12 +246,9 @@ public class StagEngine {
     public void addPlayer(String playerName){
         Player newPlayer = new Player(playerName);
         //set location to start
-        newPlayer.setLocation(locations.get("start"));
+        newPlayer.setLocation(locations.get(0));
         players.put(playerName, newPlayer);
         currentPlayer = newPlayer;
     }
 
-    public HashMap<String, Player> getPlayers(){
-        return players;
-    }
 }

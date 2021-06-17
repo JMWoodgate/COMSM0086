@@ -25,11 +25,7 @@ public class Location implements Element{
     }
 
     public boolean validPath(String newLocation){
-        if(paths.contains(newLocation)){
-            return true;
-        } else{
-            return false;
-        }
+        return paths.contains(newLocation);
     }
 
     public void setName(String name){
