@@ -7,9 +7,7 @@ import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
 import com.company.StagExceptions.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.*;
 
 public class StagEngine {
     private final HashMap<String, Player> players;
@@ -49,9 +47,11 @@ public class StagEngine {
     }
 
     private String customCommand(String[] command) throws StagException{
-        String message = null;
+        //loop through all of the actions we have read in from file
         for(Action a : actions){
+            //get the action's triggers
             ArrayList<String> triggers = a.getTriggers();
+            //if the command matches a trigger word of the action, check subjects, consume, produce, then return narration
             if(triggers.contains(command[1])){
                 //check all subjects exist in game and in command
                 if(!checkSubjects(a)){
@@ -61,35 +61,50 @@ public class StagEngine {
                 consume(a);
                 //check if anything to produce, if there is, add to location
                 produce(a);
+                //return the action's narration
+                return a.getNarration();
             }
         }
         //if we get through all the actions and haven't found it, invalid command
-        throw new InvalidCommand(command.toString());
+        throw new InvalidCommand(Arrays.toString(command));
     }
 
-    private void produce(Action action) throws ArtefactDoesNotExist{
-        Location playerLocation = currentPlayer.getLocation();
-        //need to check all locations for the artefact (not just unplaced)
-        Location unplaced = locations.get("unplaced");
-        ArrayList<Artefact> unplacedArtefacts = unplaced.getArtefacts();
+    private void produce(Action action) throws ArtefactDoesNotExist {
         ArrayList<String> produced = action.getProduced();
+        //if there is nothing to produce by the action, we can skip this
         if(produced == null){
             return;
         }
         //loop through items produced and add them to the location
         for(String p : produced){
-            //get artefact from unplaced
-            Artefact producedArtefact = getSpecificArtefact(p, unplacedArtefacts);
-            //check it exists in unplaced
+            moveArtefactToProduce(p);
+        }
+    }
+
+    private void moveArtefactToProduce(String artefactToProduce)
+            throws ArtefactDoesNotExist{
+        Location playerLocation = currentPlayer.getLocation();
+        //need to check all locations for the artefact (not just unplaced)
+        for(Map.Entry<String, Location> set : locations.entrySet()){
+            //get the location from the hashmap
+            Location producedLocation = set.getValue();
+            ArrayList<Artefact> locationArtefacts = producedLocation.getArtefacts();
+            //get artefact from location
+            Artefact producedArtefact = getSpecificArtefact(
+                    artefactToProduce, locationArtefacts);
+            //check if the artefact to produce exists in this location,
+            // otherwise move to next location
             if(producedArtefact!=null){
                 //create new artefact in the current location
-                playerLocation.setArtefact(producedArtefact.getName(), producedArtefact.getDescription());
-                //remove artefact from unplaced
-                unplaced.removeArtefact(producedArtefact);
-            }else{
-                throw new ArtefactDoesNotExist(p);
+                playerLocation.setArtefact(producedArtefact.getName(),
+                        producedArtefact.getDescription());
+                //remove artefact from old location
+                producedLocation.removeArtefact(producedArtefact);
+                //exit
+                return;
             }
         }
+        throw new ArtefactDoesNotExist(artefactToProduce);
     }
 
     private void consume(Action action) throws SubjectDoesNotExist {
@@ -141,17 +156,17 @@ public class StagEngine {
         Location playerLocation = currentPlayer.getLocation();
         StringBuilder stringBuilder = new StringBuilder();
         //get location name/description
-        stringBuilder.append("You are in "+playerLocation.getDescription()+". ");
-        //list artefacts in the roomc
+        stringBuilder.append("You are in ").append(playerLocation.getDescription()).append(". ");
+        //list artefacts in the location
         stringBuilder.append("You can see:\n");
         ArrayList<Artefact> artefacts = playerLocation.getArtefacts();
         for(Artefact a : artefacts){
-            stringBuilder.append(a.getDescription()+"\n");
+            stringBuilder.append(a.getDescription()).append("\n");
         }
         stringBuilder.append("You can access from here:\n");
         ArrayList<String> paths = playerLocation.getPaths();
         for(String p : paths){
-            stringBuilder.append(p+"\n");
+            stringBuilder.append(p).append("\n");
         }
         return stringBuilder.toString();
     }
@@ -161,8 +176,7 @@ public class StagEngine {
         if(locations.containsKey(newLocation) && playerLocation.validPath(newLocation)){
             //need to check path is valid
             currentPlayer.setLocation(locations.get(newLocation));
-            String message = "You have moved to "+newLocation;
-            return message;
+            return "You have moved to "+newLocation;
         } else{
             throw new LocationDoesNotExist(newLocation);
         }
@@ -181,7 +195,7 @@ public class StagEngine {
         } throw new ArtefactDoesNotExist(artefact);
     }
 
-    private String getCommand(String artefact) throws ArtefactDoesNotExist {
+    private String getCommand(String artefact) {
         Location playerLocation = currentPlayer.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(Artefact a : locationArtefacts){

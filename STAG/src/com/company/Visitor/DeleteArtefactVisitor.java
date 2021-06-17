@@ -3,7 +3,7 @@ package com.company.Visitor;
 import com.company.Element.*;
 import com.company.Element.Character;
 
-public class DeleteVisitor implements Visitor{
+public class DeleteArtefactVisitor implements Visitor{
     @Override
     public void visit(Element element) {
 
@@ -11,6 +11,7 @@ public class DeleteVisitor implements Visitor{
 
     @Override
     public void visit(Location location) {
+
     }
 
     @Override

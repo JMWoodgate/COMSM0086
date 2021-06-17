@@ -5,13 +5,12 @@ import com.company.Visitor.Visitor;
 import java.util.ArrayList;
 
 public class Player implements Element{
-    private String name;
-    private ArrayList<Artefact> inventory;
+    private final String name;
+    private final ArrayList<Artefact> inventory = new ArrayList<>();
     private Location location;
 
     public Player(String name){
         this.name = name;
-        inventory = new ArrayList<>();
     }
 
     public Location getLocation(){
