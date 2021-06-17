@@ -56,10 +56,13 @@ public class StagEngine {
                 if(!checkSubjects(a)){
                     throw new SubjectDoesNotExist();
                 }
+                System.out.println("returned from checkSubjects");
                 //check if anything to consume, if there is, consume it (remove from location or inventory)
                 consume(a);
+                System.out.println("returned from consume");
                 //check if anything to produce, if there is, add to location
                 produce(a);
+                System.out.println("returned from produce");
                 //return the action's narration
                 return a.getNarration();
             }
@@ -68,7 +71,7 @@ public class StagEngine {
         throw new InvalidCommand(Arrays.toString(command));
     }
 
-    private void produce(Action action) throws ArtefactDoesNotExist {
+    private void produce(Action action) throws SubjectDoesNotExist {
         ArrayList<String> produced = action.getProduced();
         //if there is nothing to produce by the action, we can skip this
         if(produced == null){
@@ -76,33 +79,85 @@ public class StagEngine {
         }
         //loop through items produced and add them to the location
         for(String p : produced){
-            moveArtefactToProduce(p);
+            moveSubjectToProduce(p);
         }
     }
 
-    private void moveArtefactToProduce(String artefactToProduce)
-            throws ArtefactDoesNotExist{
+    private void moveSubjectToProduce(String subject)
+            throws SubjectDoesNotExist {
+        System.out.println("entered subjectToProduce");
         Location playerLocation = currentPlayer.getLocation();
         //need to check all locations for the artefact (not just unplaced)
-        //could produce an artefact or a location
+        Location subjectLocation = (Location) getSpecificElement(subject, new ArrayList<>(locations));
+        if(subjectLocation!=null){
+            System.out.println("subjectLocation!=null");
+            //need to add a path to the new location
+            playerLocation.setPath(subject);
+            return;
+        }
         for(Location l : locations){
-            ArrayList<Artefact> locationArtefacts = l.getArtefacts();
-            //get artefact from location
-            Artefact producedArtefact = getSpecificArtefact(
-                    artefactToProduce, locationArtefacts);
-            //check if the artefact to produce exists in this location,
-            // otherwise move to next location
-            if(producedArtefact!=null){
-                //create new artefact in the current location
-                playerLocation.setArtefact(producedArtefact.getName(),
-                        producedArtefact.getDescription());
-                //remove artefact from old location
-                l.removeArtefact(producedArtefact);
-                //exit
+            System.out.println("entered locations loop, subject is "+subject+" location is "+l.getName());
+            //check if it is an artefact & move if so
+            if(moveArtefact(l, playerLocation, subject)) {
+                return;
+            }
+            //check if it is furniture & move if so
+            if(moveFurniture(l, playerLocation, subject)) {
+                return;
+            }
+            //check if it is a character & move if so
+            if(moveCharacter(l, playerLocation, subject)){
                 return;
             }
         }
-        throw new ArtefactDoesNotExist(artefactToProduce);
+        System.out.println("finished looping through all locations");
+        throw new SubjectDoesNotExist();
+    }
+
+    private boolean moveCharacter(Location locationToCheck, Location playerLocation, String subject){
+        //get character from location
+        System.out.println("calling getSpecificElement from moveCharacter");
+        Character character = (Character) getSpecificElement(
+                subject, new ArrayList<>(locationToCheck.getCharacters()));
+        if(character!=null){
+            System.out.println("character!=null");
+            playerLocation.setCharacter(character.getName(), character.getDescription());
+            locationToCheck.removeCharacter(character.getName());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean moveFurniture(Location locationToCheck, Location playerLocation, String subject){
+        //get furniture from location
+        System.out.println("calling getSpecificElement from moveFurniture");
+        Furniture furniture = (Furniture) getSpecificElement(
+                subject, new ArrayList<>(locationToCheck.getFurniture()));
+        if(furniture!=null){
+            System.out.println("furniture!=null");
+            playerLocation.setFurniture(furniture.getName(), furniture.getDescription());
+            locationToCheck.removeFurniture(furniture.getName());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean moveArtefact(Location locationToCheck, Location playerLocation, String subject){
+        //get artefact from location
+        System.out.println("calling getSpecificElement from moveArtefact");
+        Artefact artefact = (Artefact) getSpecificElement(
+                subject, new ArrayList<>(locationToCheck.getArtefacts()));
+        //check if the artefact to produce exists in this location
+        if(artefact!=null){
+            System.out.println("artefact!=null");
+            //create new artefact in the current location
+            playerLocation.setArtefact(artefact.getName(),
+                    artefact.getDescription());
+            //remove artefact from old location
+            locationToCheck.removeArtefact(artefact.getName());
+            return true;
+        }
+        return false;
     }
 
     private void consume(Action action) throws SubjectDoesNotExist {
@@ -162,8 +217,14 @@ public class StagEngine {
     }
 
     public Element getSpecificElement(String elementName, ArrayList<Element> elementList){
+        System.out.println("entered getSpecificElement looking for "+elementName);
+        if(elementList == null){
+            System.out.println("elementList is null");
+            return null;
+        }
         for(Element e : elementList){
-            if(e.getName().equals(elementName)){
+            if(e!=null && e.getName().equals(elementName)){
+                System.out.println("element name: "+e.getName());
                 return e;
             }
         }
