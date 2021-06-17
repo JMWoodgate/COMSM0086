@@ -181,9 +181,11 @@ public class StagEngine {
         //need to check that at least one subject is present in the command (if required)
         if(command.length>=3 && action.getSubjects()!=null) {
             if (!checkCommandSubjects(command[2], action)) {
+                System.out.println("Throwing error from checkCommand length >=3");
                 throw new SubjectDoesNotExist();
             }
         }else{
+            System.out.println("Throwing error from checkCommand length < 3");
             throw new SubjectDoesNotExist();
         }
     }
@@ -201,6 +203,7 @@ public class StagEngine {
     private void checkSubjects(Action action) throws SubjectDoesNotExist {
         ArrayList<String> subjects = action.getSubjects();
         for(String s : subjects){
+            System.out.println("checking subject: "+s);
             //check in play inventory
             if(getElement(s, new ArrayList<>(currentPlayer.getInventory()))==null){
                 //check in location artefacts
@@ -212,6 +215,7 @@ public class StagEngine {
                             //check in locations
                             if(getElement(s, new ArrayList<>(locations))==null){
                                 //if the subject is in none of these, throw error
+                                System.out.println("Throwing error from checkSubjects");
                                 throw new SubjectDoesNotExist();
                             }
                         }
@@ -226,6 +230,9 @@ public class StagEngine {
             return null;
         }
         for(Element e : elementList){
+            if(e!=null){
+                System.out.println(e.getName());
+            }
             if(e!=null && e.getName().equals(elementName)){
                 return e;
             }
