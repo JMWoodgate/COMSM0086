@@ -13,6 +13,7 @@ public class StagEngine {
     private final ArrayList<Location> locations;
     private final ArrayList<Action> actions;
     private Player currentPlayer;
+    private Location playerLocation;
 
     public StagEngine(String entityFilename, String actionFilename){
         //parse files and get data
@@ -26,8 +27,6 @@ public class StagEngine {
     public String interpretCommand(String command) throws StagException {
         command = command.toLowerCase(Locale.ROOT);
         String[] splitString = command.split(" ", 3);
-        System.out.println("command: "+splitString[1]);
-        System.out.println("full: "+command);
         switch(splitString[1]){
             case "inv":
             case "inventory":
@@ -50,13 +49,13 @@ public class StagEngine {
         for(Action a : actions){
             //get the action's triggers
             ArrayList<String> triggers = a.getTriggers();
-            //if the command matches a trigger word of the action, check subjects, consume, produce, then return narration
+            //if the command matches a trigger word of the action, check subjects,
+            // consume, produce, then return narration
             if(triggers.contains(command[1])){
-                //check all subjects exist in game and in command
-                if(!checkSubjects(a)){
-                    throw new SubjectDoesNotExist();
-                }
-                //check if anything to consume, if there is, consume it (remove from location or inventory)
+                //check all subjects exist in command and in game
+                checkCommand(command, a);
+                checkSubjects(a);
+                //check if anything to consume, if there is, remove from location/inventory
                 consume(a);
                 //check if anything to produce, if there is, add to location
                 produce(a);
@@ -82,7 +81,6 @@ public class StagEngine {
 
     private void moveSubject(String subject)
             throws SubjectDoesNotExist {
-        Location playerLocation = currentPlayer.getLocation();
         //need to check all locations for the artefact (not just unplaced)
         Location subjectLocation = (Location) getElement(subject, new ArrayList<>(locations));
         if(subjectLocation!=null){
@@ -92,23 +90,22 @@ public class StagEngine {
         }
         for(Location l : locations){
             //check if it is an artefact & move if so (function will return true)
-            if(moveArtefact(l, playerLocation, subject)) {
+            if(moveArtefact(l, subject)) {
                 return;
             }
             //check if it is furniture & move if so
-            if(moveFurniture(l, playerLocation, subject)) {
+            if(moveFurniture(l, subject)) {
                 return;
             }
             //check if it is a character & move if so
-            if(moveCharacter(l, playerLocation, subject)){
+            if(moveCharacter(l, subject)){
                 return;
             }
         }
         throw new SubjectDoesNotExist();
     }
 
-    private boolean moveCharacter(Location locationToCheck,
-                                  Location playerLocation, String subject){
+    private boolean moveCharacter(Location locationToCheck, String subject){
         //get character from location
         Character character = (Character) getElement(
                 subject, new ArrayList<>(locationToCheck.getCharacters()));
@@ -120,8 +117,7 @@ public class StagEngine {
         return false;
     }
 
-    private boolean moveFurniture(Location locationToCheck,
-                                  Location playerLocation, String subject){
+    private boolean moveFurniture(Location locationToCheck, String subject){
         //get furniture from location
         Furniture furniture = (Furniture) getElement(
                 subject, new ArrayList<>(locationToCheck.getFurniture()));
@@ -133,8 +129,7 @@ public class StagEngine {
         return false;
     }
 
-    private boolean moveArtefact(Location locationToCheck,
-                                 Location playerLocation, String subject){
+    private boolean moveArtefact(Location locationToCheck, String subject){
         //get artefact from location
         Artefact artefact = (Artefact) getElement(
                 subject, new ArrayList<>(locationToCheck.getArtefacts()));
@@ -151,7 +146,7 @@ public class StagEngine {
     }
 
     private void consume(Action action) throws SubjectDoesNotExist {
-        Location playerLocation = currentPlayer.getLocation();
+        //check if subject is in player inventory or current player location
         ArrayList<String> consumed = action.getConsumed();
         //if there is nothing to consume, move on
         if (consumed == null) {
@@ -172,7 +167,7 @@ public class StagEngine {
                 //delete character from location
                 playerLocation.removeCharacter(c);
             } else if(getElement(c, new ArrayList<>(locations))==null){
-                //delete location
+                //delete paths to location -> not the actual location
                 locations.removeIf(l -> l.getName().equals(c));
             }else{
                 //should be unreachable as we have already checked for this, but just in case
@@ -182,9 +177,29 @@ public class StagEngine {
         }
     }
 
-    private boolean checkSubjects(Action action) {
+    private void checkCommand(String[] command, Action action) throws SubjectDoesNotExist {
+        //need to check that at least one subject is present in the command (if required)
+        if(command.length>=3 && action.getSubjects()!=null) {
+            if (!checkCommandSubjects(command[2], action)) {
+                throw new SubjectDoesNotExist();
+            }
+        }else{
+            throw new SubjectDoesNotExist();
+        }
+    }
+
+    private boolean checkCommandSubjects(String command, Action a){
+        ArrayList<String> subjects = a.getSubjects();
+        for(String s : subjects){
+            if(command.contains(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void checkSubjects(Action action) throws SubjectDoesNotExist {
         ArrayList<String> subjects = action.getSubjects();
-        Location playerLocation = currentPlayer.getLocation();
         for(String s : subjects){
             //check in play inventory
             if(getElement(s, new ArrayList<>(currentPlayer.getInventory()))==null){
@@ -196,14 +211,14 @@ public class StagEngine {
                         if(getElement(s, new ArrayList<>(playerLocation.getCharacters()))==null){
                             //check in locations
                             if(getElement(s, new ArrayList<>(locations))==null){
-                                //if the subject is in none of these, return false
-                                return false;
+                                //if the subject is in none of these, throw error
+                                throw new SubjectDoesNotExist();
                             }
                         }
                     }
                 }
             }
-        } return true;
+        }
     }
 
     public Element getElement(String elementName, ArrayList<Element> elementList){
@@ -220,7 +235,6 @@ public class StagEngine {
 
     private String lookCommand(){
         //need to return a string that describes the whole location
-        Location playerLocation = currentPlayer.getLocation();
         StringBuilder stringBuilder = new StringBuilder();
         //get location name/description
         stringBuilder.append("You are in ").append(playerLocation.getDescription()).append(". ");
@@ -247,11 +261,11 @@ public class StagEngine {
     }
 
     private String gotoCommand(String newLocation) throws LocationDoesNotExist{
-        Location playerLocation = currentPlayer.getLocation();
         //need to check path is valid
         if(playerLocation.validPath(newLocation)){
             //get the object for the new location and set it to the current player's location
             currentPlayer.setLocation(getSpecificLocation(newLocation));
+            playerLocation = currentPlayer.getLocation();
             return "You have moved to "+newLocation;
         } else{
             throw new LocationDoesNotExist(newLocation);
@@ -267,7 +281,6 @@ public class StagEngine {
     }
 
     private String dropCommand(String artefact) throws ArtefactDoesNotExist{
-        Location playerLocation = currentPlayer.getLocation();
         ArrayList<Artefact> inventory = currentPlayer.getInventory();
         for(Artefact a : inventory){
             if(a.getName().equals(artefact) || a.getDescription().equals(artefact)){
@@ -280,7 +293,6 @@ public class StagEngine {
     }
 
     private String getCommand(String artefact) throws ArtefactDoesNotExist {
-        Location playerLocation = currentPlayer.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(Artefact a : locationArtefacts){
             if(a.getName().equals(artefact) || a.getDescription().equals(artefact)){
@@ -317,6 +329,7 @@ public class StagEngine {
         newPlayer.setLocation(locations.get(0));
         players.put(playerName, newPlayer);
         currentPlayer = newPlayer;
+        playerLocation = currentPlayer.getLocation();
     }
 
 }
