@@ -37,6 +37,10 @@ public class StagEngine {
             return gotoCommand(command);
         } else if(command.contains("look")) {
             return lookCommand();
+        } else if(command.contains("health")){
+            String s = currentPlayer.getName() + "\'s current health is: "
+                    + currentPlayer.getHealth() + "\n";
+            return s;
         } else {
             return customCommand(command);
         }
@@ -75,7 +79,11 @@ public class StagEngine {
         }
         //loop through items produced and add them to the location
         for(String p : produced){
-            moveSubject(p);
+            if(p.equals("health")){
+                currentPlayer.changeHealth(true);
+            }else{
+                moveSubject(p);
+            }
         }
     }
 
@@ -153,8 +161,11 @@ public class StagEngine {
             return;
         }
         for(String c : consumed) {
+            if(c.equals("health")){
+                consumeHealth();
+            }
             //we need to check if the artefact, furniture or character is there -- not just artefact
-            if (getElement(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
+            else if (getElement(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
                 //delete artefact from location
                 playerLocation.removeArtefact(c);
             } else if (getElement(c, new ArrayList<>(currentPlayer.getInventory()))!=null){
@@ -174,6 +185,25 @@ public class StagEngine {
                 //should we be checking for this twice..?
                 throw new SubjectDoesNotExist();
             }
+        }
+    }
+
+    private void consumeHealth(){
+        currentPlayer.changeHealth(false);
+        //if health is zero, need to drop all items in inventory
+        if(currentPlayer.getHealth()==0){
+            //get player inventory
+            ArrayList<Artefact> inventory = currentPlayer.getInventory();
+            for(Artefact a : inventory){
+                //put each artefact in the location
+                playerLocation.setArtefact(a.getName(), a.getDescription());
+                //remove from the player's inventory
+                currentPlayer.removeFromInventory(a);
+            }
+            //return player to start
+            currentPlayer.setLocation(locations.get(0));
+            playerLocation = currentPlayer.getLocation();
+            currentPlayer.resetHealth();
         }
     }
 

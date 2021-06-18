@@ -8,9 +8,27 @@ public class Player implements Element{
     private final String name;
     private final ArrayList<Artefact> inventory = new ArrayList<>();
     private Location location;
+    private int health;
 
     public Player(String name){
         this.name = name;
+        health = 3;
+    }
+
+    public void changeHealth(boolean minusOrPlus){
+        if(minusOrPlus){
+            health++;
+        }else{
+            health--;
+        }
+    }
+
+    public void resetHealth(){
+        health = 3;
+    }
+
+    public int getHealth(){
+        return health;
     }
 
     public Location getLocation(){
