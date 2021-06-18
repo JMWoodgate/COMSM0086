@@ -27,44 +27,44 @@ public class StagEngine {
     public String interpretCommand(String command) throws StagException {
         command = command.toLowerCase(Locale.ROOT);
         String[] splitString = command.split(" ", 3);
-        switch(splitString[1]){
-            case "inv":
-            case "inventory":
-                return listInventory();
-            case "get":
-                return getCommand(splitString[2]);
-            case "drop":
-                return dropCommand(splitString[2]);
-            case "goto":
-                return gotoCommand(splitString[2]);
-            case "look":
-                return lookCommand();
-            default:
-                return customCommand(splitString);
+        if(command.contains("inv")) {
+            return listInventory();
+        } else if(command.contains("get")) {
+            return getCommand(command);
+        } else if(command.contains("drop")) {
+            return dropCommand(command);
+        } else if(command.contains("goto")) {
+            return gotoCommand(command);
+        } else if(command.contains("look")) {
+            return lookCommand();
+        } else {
+            return customCommand(command);
         }
     }
 
-    private String customCommand(String[] command) throws StagException{
+    private String customCommand(String command) throws StagException{
         //loop through all of the actions we have read in from file
         for(Action a : actions){
             //get the action's triggers
             ArrayList<String> triggers = a.getTriggers();
             //if the command matches a trigger word of the action, check subjects,
             // consume, produce, then return narration
-            if(triggers.contains(command[1])){
-                //check all subjects exist in command and in game
-                checkCommand(command, a);
-                checkSubjects(a);
-                //check if anything to consume, if there is, remove from location/inventory
-                consume(a);
-                //check if anything to produce, if there is, add to location
-                produce(a);
-                //return the action's narration
-                return a.getNarration();
+            for(String t : triggers) {
+                if (command.contains(t)) {
+                    //check all subjects exist in command and in game
+                    checkCommand(command, a);
+                    checkSubjects(a);
+                    //check if anything to consume, if there is, remove from location/inventory
+                    consume(a);
+                    //check if anything to produce, if there is, add to location
+                    produce(a);
+                    //return the action's narration
+                    return a.getNarration();
+                }
             }
         }
         //if we get through all the actions and haven't found it, invalid command
-        throw new InvalidCommand(Arrays.toString(command));
+        throw new InvalidCommand(command);
     }
 
     private void produce(Action action) throws SubjectDoesNotExist {
@@ -177,10 +177,10 @@ public class StagEngine {
         }
     }
 
-    private void checkCommand(String[] command, Action action) throws SubjectDoesNotExist {
+    private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
         //need to check that at least one subject is present in the command (if required)
-        if(command.length>=3 && action.getSubjects()!=null) {
-            if (!checkCommandSubjects(command[2], action)) {
+        if(action.getSubjects()!=null) {
+            if (!checkCommandSubjects(command, action)) {
                 throw new SubjectDoesNotExist();
             }
         }else{
@@ -260,16 +260,19 @@ public class StagEngine {
         return stringBuilder.toString();
     }
 
-    private String gotoCommand(String newLocation) throws LocationDoesNotExist{
-        //need to check path is valid
-        if(playerLocation.validPath(newLocation)){
-            //get the object for the new location and set it to the current player's location
-            currentPlayer.setLocation(getSpecificLocation(newLocation));
-            playerLocation = currentPlayer.getLocation();
-            return "You have moved to "+newLocation;
-        } else{
-            throw new LocationDoesNotExist(newLocation);
+    private String gotoCommand(String command) throws LocationDoesNotExist{
+        String newLocation = null;
+        //get location
+        for(Location l : locations){
+            if(command.contains(l.getName())||command.contains(l.getDescription())) {
+                newLocation = l.getName();
+                //get the object for the new location and set it to the current player's location
+                currentPlayer.setLocation(getSpecificLocation(newLocation));
+                playerLocation = currentPlayer.getLocation();
+                return "You have moved to " + newLocation;
+            }
         }
+        throw new LocationDoesNotExist(command);
     }
 
     private Location getSpecificLocation(String newLocation) throws LocationDoesNotExist {
@@ -280,29 +283,29 @@ public class StagEngine {
         } throw new LocationDoesNotExist(newLocation);
     }
 
-    private String dropCommand(String artefact) throws ArtefactDoesNotExist{
+    private String dropCommand(String command) throws ArtefactDoesNotExist{
         ArrayList<Artefact> inventory = currentPlayer.getInventory();
         for(Artefact a : inventory){
-            if(a.getName().equals(artefact) || a.getDescription().equals(artefact)){
+            if(command.contains(a.getName()) || command.contains(a.getDescription())){
                 playerLocation.setArtefact(a.getName(), a.getDescription());
                 String message = "You dropped "+a.getDescription()+" in "+playerLocation.getName();
                 currentPlayer.removeFromInventory(a);
                 return message;
             }
-        } throw new ArtefactDoesNotExist(artefact);
+        } throw new ArtefactDoesNotExist(command);
     }
 
-    private String getCommand(String artefact) throws ArtefactDoesNotExist {
+    private String getCommand(String command) throws ArtefactDoesNotExist {
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(Artefact a : locationArtefacts){
-            if(a.getName().equals(artefact) || a.getDescription().equals(artefact)){
+            if(command.contains(a.getName()) || command.contains(a.getDescription())){
                 currentPlayer.addToInventory(a);
                 String message = "You picked up "+(a.getDescription());
                 playerLocation.removeArtefact(a);
                 return message;
             }
         }
-        throw new ArtefactDoesNotExist(artefact);
+        throw new ArtefactDoesNotExist(command);
     }
 
     private String listInventory(){
