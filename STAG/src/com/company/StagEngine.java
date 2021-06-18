@@ -252,6 +252,17 @@ public class StagEngine {
         for(Character c : playerLocation.getCharacters()){
             stringBuilder.append(c.getDescription()).append(("\n"));
         }
+        //list other players in location
+        for(Map.Entry<String, Player> set : players.entrySet()){
+            Player checkPlayer = set.getValue();
+            String checkName = checkPlayer.getName();
+            String checkLocation = checkPlayer.getLocation().getName();
+            String currentName = currentPlayer.getName();
+            String currentLocation = playerLocation.getName();
+            if(checkLocation.equals(currentLocation)&&!checkName.equals(currentName)){
+                stringBuilder.append(checkPlayer.getName()).append("\n");
+            }
+        }
         stringBuilder.append("You can access from here:\n");
         ArrayList<String> paths = playerLocation.getPaths();
         for(String p : paths){
@@ -316,6 +327,11 @@ public class StagEngine {
             inventory.append("\n");
         }
         return (inventory.toString());
+    }
+
+    public void changePlayer(String playerName){
+        currentPlayer = players.get(playerName);
+        playerLocation = currentPlayer.getLocation();
     }
 
     public Player getCurrentPlayer(){

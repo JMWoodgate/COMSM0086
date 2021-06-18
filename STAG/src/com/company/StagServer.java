@@ -59,9 +59,13 @@ class StagServer
     {
         String line = in.readLine();
         String[] splitString = line.split(":", 2);
+        //check if the player already exists
         if(!engine.playerExists(splitString[0])){
             engine.addPlayer(splitString[0]);
             System.out.println("Player added: "+engine.getCurrentPlayer().getName());
+        } //check if the player is the current player or different
+        else if(!engine.getCurrentPlayer().getName().equals(splitString[0])){
+            engine.changePlayer(splitString[0]);
         }
         try {
             String response = engine.interpretCommand(splitString[1]);
