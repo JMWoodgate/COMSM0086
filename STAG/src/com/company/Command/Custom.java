@@ -5,7 +5,6 @@ import com.company.StagExceptions.InvalidCommand;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.SubjectDoesNotExist;
 import com.company.Subject.*;
-import com.company.Subject.Character;
 
 import java.util.ArrayList;
 
@@ -39,9 +38,11 @@ public class Custom implements Command{
                     checkCommand(command, a);
                     checkSubjects(a);
                     //check if anything to consume, if there is, remove from location/inventory
-                    String message = consume(a);
+                    Consume consume = new Consume(a);
+                    String message = consume.execute(player);
                     //check if anything to produce, if there is, add to location
-                    produce(a);
+                    Produce produce = new Produce(a, locations);
+                    produce.execute(player);
                     //return the action's narration - with message if health ran out
                     if(message!=null){
                         return a.getNarration()+"\n"+message;
@@ -55,7 +56,7 @@ public class Custom implements Command{
         throw new InvalidCommand(command);
     }
 
-    private void produce(Action action) throws SubjectDoesNotExist {
+    /*private void produce(Action action) throws SubjectDoesNotExist {
         ArrayList<String> produced = action.getProduced();
         //if there is nothing to produce by the action, we can skip this
         if(produced == null){
@@ -95,9 +96,9 @@ public class Custom implements Command{
             }
         }
         throw new SubjectDoesNotExist();
-    }
+    }*/
 
-    private boolean moveCharacter(Location locationToCheck, String subject){
+    /*private boolean moveCharacter(Location locationToCheck, String subject){
         //get character from location
         Character character = (Character) getElement(
                 subject, new ArrayList<>(locationToCheck.getCharacters()));
@@ -135,9 +136,9 @@ public class Custom implements Command{
             return true;
         }
         return false;
-    }
+    }*/
 
-    private String consume(Action action) throws SubjectDoesNotExist {
+    /*private String consume(Action action) throws SubjectDoesNotExist {
         String message = null;
         //check if subject is in player inventory or current player location
         ArrayList<String> consumed = action.getConsumed();
@@ -172,9 +173,9 @@ public class Custom implements Command{
             }
         }
         return message;
-    }
+    }*/
 
-    private String consumeHealth(){
+    /*private String consumeHealth(){
         String message = null;
         player.changeHealth(false);
         //if health is zero, need to drop all items in inventory
@@ -191,9 +192,9 @@ public class Custom implements Command{
             message = "You ran out of health! You have lost your inventory and been returned to the start.";
         }
         return message;
-    }
+    }*/
 
-    private void emptyInventory(ArrayList<Artefact> inventory){
+    /*private void emptyInventory(ArrayList<Artefact> inventory){
         while (!inventory.isEmpty()) {
             Artefact a = inventory.get(0);
             //put each artefact in the location
@@ -201,7 +202,7 @@ public class Custom implements Command{
             //remove from the player's inventory
             player.removeFromInventory(a);
         }
-    }
+    }*/
 
     private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
         //need to check that at least one subject is present in the command (if required)
