@@ -26,7 +26,6 @@ public class StagEngine {
 
     public String interpretCommand(String command) throws StagException {
         command = command.toLowerCase(Locale.ROOT);
-        String[] splitString = command.split(" ", 3);
         if(command.contains("inv")) {
             return listInventory();
         } else if(command.contains("get")) {
@@ -38,9 +37,8 @@ public class StagEngine {
         } else if(command.contains("look")) {
             return lookCommand();
         } else if(command.contains("health")){
-            String s = currentPlayer.getName() + "\'s current health is: "
+            return currentPlayer.getName() + "'s current health is: "
                     + currentPlayer.getHealth() + "\n";
-            return s;
         } else {
             return customCommand(command);
         }
@@ -196,25 +194,13 @@ public class StagEngine {
 
     private String consumeHealth(){
         String message = null;
-        if(currentPlayer.getHealth()!=0)
         currentPlayer.changeHealth(false);
         //if health is zero, need to drop all items in inventory
         if(currentPlayer.getHealth()==0){
             //get player inventory
             ArrayList<Artefact> inventory = currentPlayer.getInventory();
-            if(inventory!=null) {
-                for(Artefact a : inventory){
-                    System.out.println(a.getName());
-                }
-                int i = 0;
-                while (!inventory.isEmpty()) {
-                    Artefact a = inventory.get(i);
-                    //put each artefact in the location
-                    playerLocation.setArtefact(a.getName(), a.getDescription());
-                    //remove from the player's inventory
-                    currentPlayer.removeFromInventory(a);
-                }
-            }
+            //if there are items in inventory, place them in the current location
+            emptyInventory(inventory);
             //return player to start
             currentPlayer.setLocation(locations.get(0));
             playerLocation = currentPlayer.getLocation();
@@ -223,6 +209,16 @@ public class StagEngine {
             message = "You ran out of health! You have lost your inventory and been returned to the start.";
         }
         return message;
+    }
+
+    private void emptyInventory(ArrayList<Artefact> inventory){
+        while (!inventory.isEmpty()) {
+            Artefact a = inventory.get(0);
+            //put each artefact in the location
+            playerLocation.setArtefact(a.getName(), a.getDescription());
+            //remove from the player's inventory
+            currentPlayer.removeFromInventory(a);
+        }
     }
 
     private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
@@ -320,7 +316,7 @@ public class StagEngine {
     }
 
     private String gotoCommand(String command) throws LocationDoesNotExist{
-        String newLocation = null;
+        String newLocation;
         //get location
         for(Location l : locations){
             if(command.contains(l.getName())||command.contains(l.getDescription())) {
