@@ -45,7 +45,6 @@ class StagServer
             Socket socket = ss.accept();
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            System.out.println("Connection Established");
             processNextCommand(in, out);
             out.close();
             in.close();
@@ -62,7 +61,6 @@ class StagServer
         //check if the player already exists
         if(!engine.playerExists(splitString[0])){
             engine.addPlayer(splitString[0]);
-            System.out.println("Player added: "+engine.getCurrentPlayer().getName());
         } //check if the player is the current player or different
         else if(!engine.getCurrentPlayer().getName().equals(splitString[0])){
             engine.changePlayer(splitString[0]);

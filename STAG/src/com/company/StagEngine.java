@@ -59,11 +59,15 @@ public class StagEngine {
                     checkCommand(command, a);
                     checkSubjects(a);
                     //check if anything to consume, if there is, remove from location/inventory
-                    consume(a);
+                    String message = consume(a);
                     //check if anything to produce, if there is, add to location
                     produce(a);
-                    //return the action's narration
-                    return a.getNarration();
+                    //return the action's narration - with message if health ran out
+                    if(message!=null){
+                        return a.getNarration()+"\n"+message;
+                    } else{
+                        return a.getNarration();
+                    }
                 }
             }
         }
@@ -153,16 +157,17 @@ public class StagEngine {
         return false;
     }
 
-    private void consume(Action action) throws SubjectDoesNotExist {
+    private String consume(Action action) throws SubjectDoesNotExist {
+        String message = null;
         //check if subject is in player inventory or current player location
         ArrayList<String> consumed = action.getConsumed();
         //if there is nothing to consume, move on
         if (consumed == null) {
-            return;
+            return null;
         }
         for(String c : consumed) {
             if(c.equals("health")){
-                consumeHealth();
+                message = consumeHealth();
             }
             //we need to check if the artefact, furniture or character is there -- not just artefact
             else if (getElement(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
@@ -186,25 +191,38 @@ public class StagEngine {
                 throw new SubjectDoesNotExist();
             }
         }
+        return message;
     }
 
-    private void consumeHealth(){
+    private String consumeHealth(){
+        String message = null;
+        if(currentPlayer.getHealth()!=0)
         currentPlayer.changeHealth(false);
         //if health is zero, need to drop all items in inventory
         if(currentPlayer.getHealth()==0){
             //get player inventory
             ArrayList<Artefact> inventory = currentPlayer.getInventory();
-            for(Artefact a : inventory){
-                //put each artefact in the location
-                playerLocation.setArtefact(a.getName(), a.getDescription());
-                //remove from the player's inventory
-                currentPlayer.removeFromInventory(a);
+            if(inventory!=null) {
+                for(Artefact a : inventory){
+                    System.out.println(a.getName());
+                }
+                int i = 0;
+                while (!inventory.isEmpty()) {
+                    Artefact a = inventory.get(i);
+                    //put each artefact in the location
+                    playerLocation.setArtefact(a.getName(), a.getDescription());
+                    //remove from the player's inventory
+                    currentPlayer.removeFromInventory(a);
+                }
             }
             //return player to start
             currentPlayer.setLocation(locations.get(0));
             playerLocation = currentPlayer.getLocation();
             currentPlayer.resetHealth();
+            //return message
+            message = "You ran out of health! You have lost your inventory and been returned to the start.";
         }
+        return message;
     }
 
     private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
