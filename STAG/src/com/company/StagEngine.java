@@ -43,8 +43,8 @@ public class StagEngine {
             Look look = new Look(players);
             return look.execute(currentPlayer);
         } else if(command.contains("health")){
-            return currentPlayer.getName() + "'s current health is: "
-                    + currentPlayer.getHealth() + "\n";
+            Health health = new Health();
+            return health.execute(currentPlayer);
         } else {
             return customCommand(command);
         }
