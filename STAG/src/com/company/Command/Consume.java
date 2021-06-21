@@ -36,7 +36,7 @@ public class Consume implements Command{
             if(c.equals("health")){
                 message = consumeHealth();
             }
-            //we need to check if the artefact, furniture or character is there -- not just artefact
+            //we need to check if the artefact, furniture or character is there
             else if (getSubject(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
                 //delete artefact from location
                 playerLocation.removeArtefact(c);

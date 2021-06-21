@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="created visitor design pattern structure">
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Custom.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Custom.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Produce.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Produce.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Consume.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Consume.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Custom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Custom.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
