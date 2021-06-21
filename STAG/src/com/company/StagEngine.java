@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.Command.Get;
 import com.company.Command.Inventory;
 import com.company.Command.Look;
 import com.company.Subject.*;
@@ -32,7 +33,8 @@ public class StagEngine {
             Inventory inventory = new Inventory();
             return inventory.execute(currentPlayer);
         } else if(command.contains("get")) {
-            return getCommand(command);
+            Get get = new Get(command);
+            return get.execute(currentPlayer);
         } else if(command.contains("drop")) {
             return dropCommand(command);
         } else if(command.contains("goto")) {
@@ -355,7 +357,7 @@ public class StagEngine {
         } throw new ArtefactDoesNotExist(command);
     }
 
-    private String getCommand(String command) throws ArtefactDoesNotExist {
+    /*private String getCommand(String command) throws ArtefactDoesNotExist {
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(Artefact a : locationArtefacts){
             if(command.contains(a.getName()) || command.contains(a.getDescription())){
@@ -366,7 +368,7 @@ public class StagEngine {
             }
         }
         throw new ArtefactDoesNotExist(command);
-    }
+    }*/
 
     /*private String listInventory(){
         ArrayList<Artefact> artefacts = currentPlayer.getInventory();
