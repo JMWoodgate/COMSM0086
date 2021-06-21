@@ -16,8 +16,9 @@ public class Consume implements Command{
     Location playerLocation;
     ArrayList<Location> locations;
 
-    public Consume(Action action){
+    public Consume(Action action, ArrayList<Location> locations){
         this.action = action;
+        this.locations = locations;
     }
 
     @Override

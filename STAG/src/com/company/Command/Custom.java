@@ -38,13 +38,11 @@ public class Custom implements Command{
                     checkCommand(command, a);
                     checkSubjects(a);
                     //check if anything to consume, if there is, remove from location/inventory
-                    Consume consume = new Consume(a);
+                    Consume consume = new Consume(a, locations);
                     String message = consume.execute(player);
-                    System.out.println("returned from consume");
                     //check if anything to produce, if there is, add to location
                     Produce produce = new Produce(a, locations);
                     produce.execute(player);
-                    System.out.println("returned from produce");
                     //return the action's narration - with message if health ran out
                     if(message!=null){
                         return a.getNarration()+"\n"+message;
@@ -57,154 +55,6 @@ public class Custom implements Command{
         //if we get through all the actions and haven't found it, invalid command
         throw new InvalidCommand(command);
     }
-
-    /*private void produce(Action action) throws SubjectDoesNotExist {
-        ArrayList<String> produced = action.getProduced();
-        //if there is nothing to produce by the action, we can skip this
-        if(produced == null){
-            return;
-        }
-        //loop through items produced and add them to the location
-        for(String p : produced){
-            if(p.equals("health")){
-                player.changeHealth(true);
-            }else{
-                moveSubject(p);
-            }
-        }
-    }
-
-    private void moveSubject(String subject)
-            throws SubjectDoesNotExist {
-        //need to check all locations for the artefact (not just unplaced)
-        Location subjectLocation = (Location) getElement(subject, new ArrayList<>(locations));
-        if(subjectLocation!=null){
-            //need to add a path to the new location
-            playerLocation.setPath(subject);
-            return;
-        }
-        for(Location l : locations){
-            //check if it is an artefact & move if so (function will return true)
-            if(moveArtefact(l, subject)) {
-                return;
-            }
-            //check if it is furniture & move if so
-            if(moveFurniture(l, subject)) {
-                return;
-            }
-            //check if it is a character & move if so
-            if(moveCharacter(l, subject)){
-                return;
-            }
-        }
-        throw new SubjectDoesNotExist();
-    }*/
-
-    /*private boolean moveCharacter(Location locationToCheck, String subject){
-        //get character from location
-        Character character = (Character) getElement(
-                subject, new ArrayList<>(locationToCheck.getCharacters()));
-        if(character!=null){
-            playerLocation.setCharacter(character.getName(), character.getDescription());
-            locationToCheck.removeCharacter(character.getName());
-            return true;
-        }
-        return false;
-    }
-
-    private boolean moveFurniture(Location locationToCheck, String subject){
-        //get furniture from location
-        Furniture furniture = (Furniture) getElement(
-                subject, new ArrayList<>(locationToCheck.getFurniture()));
-        if(furniture!=null){
-            playerLocation.setFurniture(furniture.getName(), furniture.getDescription());
-            locationToCheck.removeFurniture(furniture.getName());
-            return true;
-        }
-        return false;
-    }
-
-    private boolean moveArtefact(Location locationToCheck, String subject){
-        //get artefact from location
-        Artefact artefact = (Artefact) getElement(
-                subject, new ArrayList<>(locationToCheck.getArtefacts()));
-        //check if the artefact to produce exists in this location
-        if(artefact!=null){
-            //create new artefact in the current location
-            playerLocation.setArtefact(artefact.getName(),
-                    artefact.getDescription());
-            //remove artefact from old location
-            locationToCheck.removeArtefact(artefact.getName());
-            return true;
-        }
-        return false;
-    }*/
-
-    /*private String consume(Action action) throws SubjectDoesNotExist {
-        String message = null;
-        //check if subject is in player inventory or current player location
-        ArrayList<String> consumed = action.getConsumed();
-        //if there is nothing to consume, move on
-        if (consumed == null) {
-            return null;
-        }
-        for(String c : consumed) {
-            if(c.equals("health")){
-                message = consumeHealth();
-            }
-            //we need to check if the artefact, furniture or character is there -- not just artefact
-            else if (getElement(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
-                //delete artefact from location
-                playerLocation.removeArtefact(c);
-            } else if (getElement(c, new ArrayList<>(player.getInventory()))!=null){
-                //delete artefact from player inventory
-                player.removeFromInventory(c);
-            } else if (getElement(c, new ArrayList<>(playerLocation.getFurniture()))!=null){
-                //delete furniture from location
-                playerLocation.removeFurniture(c);
-            } else if (getElement(c, new ArrayList<>(playerLocation.getCharacters()))!=null){
-                //delete character from location
-                playerLocation.removeCharacter(c);
-            } else if(getElement(c, new ArrayList<>(locations))==null){
-                //delete paths to location -> not the actual location
-                locations.removeIf(l -> l.getName().equals(c));
-            }else{
-                //should be unreachable as we have already checked for this, but just in case
-                //should we be checking for this twice..?
-                throw new SubjectDoesNotExist();
-            }
-        }
-        return message;
-    }*/
-
-    /*private String consumeHealth(){
-        String message = null;
-        player.changeHealth(false);
-        //if health is zero, need to drop all items in inventory
-        if(player.getHealth()==0){
-            //get player inventory
-            ArrayList<Artefact> inventory = player.getInventory();
-            //if there are items in inventory, place them in the current location
-            emptyInventory(inventory);
-            //return player to start
-            player.setLocation(locations.get(0));
-            playerLocation = player.getLocation();
-            player.resetHealth();
-            //return message
-            message = "You ran out of health! You have lost your inventory and been returned to the start.";
-        }
-        return message;
-    }*/
-
-    /*private void emptyInventory(ArrayList<Artefact> inventory){
-        while (!inventory.isEmpty()) {
-            Artefact a = inventory.get(0);
-            //put each artefact in the location
-            playerLocation.setArtefact(a.getName(), a.getDescription());
-            //remove from the player's inventory
-            player.removeFromInventory(a);
-        }
-    }*/
 
     private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
         //need to check that at least one subject is present in the command (if required)
