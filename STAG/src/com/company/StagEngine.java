@@ -324,7 +324,7 @@ public class StagEngine {
                 //get the object for the new location and set it to the current player's location
                 currentPlayer.setLocation(getSpecificLocation(newLocation));
                 playerLocation = currentPlayer.getLocation();
-                return "You have moved to " + newLocation;
+                return "You have moved to " + newLocation + "\n" + lookCommand();
             }
         }
         throw new LocationDoesNotExist(command);
