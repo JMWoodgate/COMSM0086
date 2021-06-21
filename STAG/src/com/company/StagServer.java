@@ -1,18 +1,10 @@
 package com.company;
-import com.company.Parsing.ActionsParser;
-import com.company.Parsing.EntitiesParser;
-import com.company.StagExceptions.InvalidCommand;
 import com.company.StagExceptions.StagException;
-
-import javax.swing.*;
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 
 class StagServer
 {
-    private String entityFilename;
-    private String actionFilename;
     private StagEngine engine;
 
     public static void main(String args[])
@@ -27,8 +19,6 @@ class StagServer
             //open connection
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Server Listening");
-            this.entityFilename = entityFilename;
-            this.actionFilename = actionFilename;
             engine = new StagEngine(entityFilename, actionFilename);
             while(true) acceptNextConnection(ss);
         } catch(IOException | StagException ioe) {
@@ -54,7 +44,7 @@ class StagServer
         }
     }
 
-    private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException, StagException
+    private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException
     {
         String line = in.readLine();
         String[] splitString = line.split(":", 2);
