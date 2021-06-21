@@ -1,55 +1,32 @@
-package com.company;
+package com.company.Command;
 
-import com.company.Command.*;
+import com.company.Action;
+import com.company.StagExceptions.InvalidCommand;
+import com.company.StagExceptions.StagException;
+import com.company.StagExceptions.SubjectDoesNotExist;
 import com.company.Subject.*;
-import com.company.Parsing.ActionsParser;
-import com.company.Parsing.EntitiesParser;
-import com.company.StagExceptions.*;
+import com.company.Subject.Character;
 
-import java.util.*;
+import java.util.ArrayList;
 
-public class StagEngine {
-    private final HashMap<String, Player> players;
-    private final ArrayList<Location> locations;
-    private final ArrayList<Action> actions;
-    private Player currentPlayer;
+public class Custom implements Command{
 
-    public StagEngine(String entityFilename, String actionFilename){
-        //parse files and get data
-        EntitiesParser entitiesParser = new EntitiesParser(entityFilename);
-        locations = entitiesParser.getLocations();
-        ActionsParser actionsParser = new ActionsParser(actionFilename);
-        actions = actionsParser.getActions();
-        players = new HashMap<>();
+    String command;
+    ArrayList<Action> actions;
+    Location playerLocation;
+    Player player;
+    ArrayList<Location> locations;
+
+    public Custom(String command, ArrayList<Action> actions, ArrayList<Location> locations){
+        this.command = command;
+        this.actions = actions;
+        this.locations = locations;
     }
 
-    public String interpretCommand(String command) throws StagException {
-        command = command.toLowerCase(Locale.ROOT);
-        if(command.contains("inv")) {
-            Inventory inventory = new Inventory();
-            return inventory.execute(currentPlayer);
-        } else if(command.contains("get")) {
-            Get get = new Get(command);
-            return get.execute(currentPlayer);
-        } else if(command.contains("drop")) {
-            Drop drop = new Drop(command);
-            return drop.execute(currentPlayer);
-        } else if(command.contains("goto")) {
-            GoTo goTo = new GoTo(command, locations, players);
-            return goTo.execute(currentPlayer);
-        } else if(command.contains("look")) {
-            Look look = new Look(players);
-            return look.execute(currentPlayer);
-        } else if(command.contains("health")){
-            Health health = new Health();
-            return health.execute(currentPlayer);
-        } else {
-            Custom custom = new Custom(command, actions, locations);
-            return custom.execute(currentPlayer);
-        }
-    }
-
-    /*private String customCommand(String command) throws StagException{
+    @Override
+    public String execute(Player player) throws StagException {
+        playerLocation = player.getLocation();
+        this.player = player;
         //loop through all of the actions we have read in from file
         for(Action a : actions){
             //get the action's triggers
@@ -87,7 +64,7 @@ public class StagEngine {
         //loop through items produced and add them to the location
         for(String p : produced){
             if(p.equals("health")){
-                currentPlayer.changeHealth(true);
+                player.changeHealth(true);
             }else{
                 moveSubject(p);
             }
@@ -176,9 +153,9 @@ public class StagEngine {
             else if (getElement(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
                 //delete artefact from location
                 playerLocation.removeArtefact(c);
-            } else if (getElement(c, new ArrayList<>(currentPlayer.getInventory()))!=null){
+            } else if (getElement(c, new ArrayList<>(player.getInventory()))!=null){
                 //delete artefact from player inventory
-                currentPlayer.removeFromInventory(c);
+                player.removeFromInventory(c);
             } else if (getElement(c, new ArrayList<>(playerLocation.getFurniture()))!=null){
                 //delete furniture from location
                 playerLocation.removeFurniture(c);
@@ -199,17 +176,17 @@ public class StagEngine {
 
     private String consumeHealth(){
         String message = null;
-        currentPlayer.changeHealth(false);
+        player.changeHealth(false);
         //if health is zero, need to drop all items in inventory
-        if(currentPlayer.getHealth()==0){
+        if(player.getHealth()==0){
             //get player inventory
-            ArrayList<Artefact> inventory = currentPlayer.getInventory();
+            ArrayList<Artefact> inventory = player.getInventory();
             //if there are items in inventory, place them in the current location
             emptyInventory(inventory);
             //return player to start
-            currentPlayer.setLocation(locations.get(0));
-            playerLocation = currentPlayer.getLocation();
-            currentPlayer.resetHealth();
+            player.setLocation(locations.get(0));
+            playerLocation = player.getLocation();
+            player.resetHealth();
             //return message
             message = "You ran out of health! You have lost your inventory and been returned to the start.";
         }
@@ -222,7 +199,7 @@ public class StagEngine {
             //put each artefact in the location
             playerLocation.setArtefact(a.getName(), a.getDescription());
             //remove from the player's inventory
-            currentPlayer.removeFromInventory(a);
+            player.removeFromInventory(a);
         }
     }
 
@@ -251,7 +228,7 @@ public class StagEngine {
         ArrayList<String> subjects = action.getSubjects();
         for(String s : subjects){
             //check in play inventory
-            if(getElement(s, new ArrayList<>(currentPlayer.getInventory()))==null){
+            if(getElement(s, new ArrayList<>(player.getInventory()))==null){
                 //check in location artefacts
                 if(getElement(s, new ArrayList<>(playerLocation.getArtefacts()))==null){
                     //check in location furniture
@@ -280,123 +257,6 @@ public class StagEngine {
             }
         }
         return null;
-    }*/
-
-    /*private String lookCommand(){
-        //need to return a string that describes the whole location
-        StringBuilder stringBuilder = new StringBuilder();
-        //get location name/description
-        stringBuilder.append("You are in ").append(playerLocation.getDescription()).append(". ");
-        //list artefacts in the location
-        stringBuilder.append("You can see:\n");
-        //list artefacts in location
-        for(Artefact a : playerLocation.getArtefacts()){
-            stringBuilder.append(a.getDescription()).append("\n");
-        }
-        //list furniture in location
-        for(Furniture f : playerLocation.getFurniture()){
-            stringBuilder.append(f.getDescription()).append("\n");
-        }
-        //list characters in location
-        for(Character c : playerLocation.getCharacters()){
-            stringBuilder.append(c.getDescription()).append(("\n"));
-        }
-        //list other players in location
-        for(Map.Entry<String, Player> set : players.entrySet()){
-            Player checkPlayer = set.getValue();
-            String checkName = checkPlayer.getName();
-            String checkLocation = checkPlayer.getLocation().getName();
-            String currentName = currentPlayer.getName();
-            String currentLocation = playerLocation.getName();
-            if(checkLocation.equals(currentLocation)&&!checkName.equals(currentName)){
-                stringBuilder.append(checkPlayer.getName()).append("\n");
-            }
-        }
-        stringBuilder.append("You can access from here:\n");
-        ArrayList<String> paths = playerLocation.getPaths();
-        for(String p : paths){
-            stringBuilder.append(p).append("\n");
-        }
-        return stringBuilder.toString();
-    }*/
-
-    /*private String gotoCommand(String command) throws LocationDoesNotExist{
-        String newLocation;
-        //get location
-        for(Location l : locations){
-            if(command.contains(l.getName())||command.contains(l.getDescription())) {
-                newLocation = l.getName();
-                //get the object for the new location and set it to the current player's location
-                currentPlayer.setLocation(getSpecificLocation(newLocation));
-                playerLocation = currentPlayer.getLocation();
-                Look look = new Look(players);
-                return "You have moved to " + newLocation + "\n" + look.execute(currentPlayer);
-            }
-        }
-        throw new LocationDoesNotExist(command);
-    }
-
-    private Location getSpecificLocation(String newLocation) throws LocationDoesNotExist {
-        for(Location l : locations){
-            if(l.getName().equals(newLocation)){
-                return l;
-            }
-        } throw new LocationDoesNotExist(newLocation);
-    }*/
-
-    /*private String dropCommand(String command) throws ArtefactDoesNotExist{
-        ArrayList<Artefact> inventory = currentPlayer.getInventory();
-        for(Artefact a : inventory){
-            if(command.contains(a.getName()) || command.contains(a.getDescription())){
-                playerLocation.setArtefact(a.getName(), a.getDescription());
-                String message = "You dropped "+a.getDescription()+" in "+playerLocation.getName();
-                currentPlayer.removeFromInventory(a);
-                return message;
-            }
-        } throw new ArtefactDoesNotExist(command);
-    }*/
-
-    /*private String getCommand(String command) throws ArtefactDoesNotExist {
-        ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
-        for(Artefact a : locationArtefacts){
-            if(command.contains(a.getName()) || command.contains(a.getDescription())){
-                currentPlayer.addToInventory(a);
-                String message = "You picked up "+(a.getDescription());
-                playerLocation.removeArtefact(a);
-                return message;
-            }
-        }
-        throw new ArtefactDoesNotExist(command);
-    }*/
-
-    /*private String listInventory(){
-        ArrayList<Artefact> artefacts = currentPlayer.getInventory();
-        StringBuilder inventory = new StringBuilder();
-        for(Artefact a : artefacts){
-            inventory.append(a.getDescription());
-            inventory.append("\n");
-        }
-        return (inventory.toString());
-    }*/
-
-    public void changePlayer(String playerName){
-        currentPlayer = players.get(playerName);
-    }
-
-    public Player getCurrentPlayer(){
-        return currentPlayer;
-    }
-
-    public boolean playerExists(String playerName){
-        return players.containsKey(playerName);
-    }
-
-    public void addPlayer(String playerName){
-        Player newPlayer = new Player(playerName);
-        //set location to start
-        newPlayer.setLocation(locations.get(0));
-        players.put(playerName, newPlayer);
-        currentPlayer = newPlayer;
     }
 
 }
