@@ -1,19 +1,12 @@
-package com.company.Element;
+package com.company.Subject;
 
-import com.company.Visitor.Visitor;
-
-public class Character implements Element{
+public class Character implements Subject {
     String name;
     String description;
 
     public Character(String name, String description){
         this.name = name;
         this.description = description;
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
     }
 
     @Override

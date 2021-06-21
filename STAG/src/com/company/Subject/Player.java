@@ -1,10 +1,8 @@
-package com.company.Element;
-
-import com.company.Visitor.Visitor;
+package com.company.Subject;
 
 import java.util.ArrayList;
 
-public class Player implements Element{
+public class Player implements Subject {
     private final String name;
     private final ArrayList<Artefact> inventory = new ArrayList<>();
     private Location location;
@@ -57,11 +55,6 @@ public class Player implements Element{
         //making a deep copy of the artefact so it doesn't get deleted when we remove from location
         Artefact copy = new Artefact(artefact.getName(), artefact.getDescription());
         inventory.add(copy);
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
     }
 
     @Override

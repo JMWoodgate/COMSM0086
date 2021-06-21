@@ -1,10 +1,8 @@
-package com.company.Element;
-
-import com.company.Visitor.Visitor;
+package com.company.Subject;
 
 import java.util.ArrayList;
 
-public class Location implements Element{
+public class Location implements Subject {
     private String name;
     private String description;
     private final ArrayList<Artefact> artefacts;
@@ -17,11 +15,6 @@ public class Location implements Element{
         furniture = new ArrayList<>();
         characters = new ArrayList<>();
         paths = new ArrayList<>();
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
     }
 
     public void setName(String name){

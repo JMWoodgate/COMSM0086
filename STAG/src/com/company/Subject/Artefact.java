@@ -1,19 +1,12 @@
-package com.company.Element;
+package com.company.Subject;
 
-import com.company.Visitor.Visitor;
-
-public class Artefact implements Element{
+public class Artefact implements Subject {
     public String name;
     public String description;
 
     public Artefact(String name, String description){
         this.name = name;
         this.description = description;
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
     }
 
     public String getName(){

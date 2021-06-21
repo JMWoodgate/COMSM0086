@@ -1,7 +1,8 @@
 package com.company;
 
-import com.company.Element.*;
-import com.company.Element.Character;
+import com.company.Command.Look;
+import com.company.Subject.*;
+import com.company.Subject.Character;
 import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
 import com.company.StagExceptions.*;
@@ -35,7 +36,8 @@ public class StagEngine {
         } else if(command.contains("goto")) {
             return gotoCommand(command);
         } else if(command.contains("look")) {
-            return lookCommand();
+            Look look = new Look(players);
+            return look.execute(currentPlayer);
         } else if(command.contains("health")){
             return currentPlayer.getName() + "'s current health is: "
                     + currentPlayer.getHealth() + "\n";
@@ -265,11 +267,11 @@ public class StagEngine {
         }
     }
 
-    public Element getElement(String elementName, ArrayList<Element> elementList){
-        if(elementList == null){
+    public Subject getElement(String elementName, ArrayList<Subject> subjectList){
+        if(subjectList == null){
             return null;
         }
-        for(Element e : elementList){
+        for(Subject e : subjectList){
             if(e!=null && e.getName().equals(elementName)){
                 return e;
             }
@@ -277,7 +279,7 @@ public class StagEngine {
         return null;
     }
 
-    private String lookCommand(){
+    /*private String lookCommand(){
         //need to return a string that describes the whole location
         StringBuilder stringBuilder = new StringBuilder();
         //get location name/description
@@ -313,7 +315,7 @@ public class StagEngine {
             stringBuilder.append(p).append("\n");
         }
         return stringBuilder.toString();
-    }
+    }*/
 
     private String gotoCommand(String command) throws LocationDoesNotExist{
         String newLocation;
@@ -324,7 +326,8 @@ public class StagEngine {
                 //get the object for the new location and set it to the current player's location
                 currentPlayer.setLocation(getSpecificLocation(newLocation));
                 playerLocation = currentPlayer.getLocation();
-                return "You have moved to " + newLocation + "\n" + lookCommand();
+                Look look = new Look(players);
+                return "You have moved to " + newLocation + "\n" + look.execute(currentPlayer);
             }
         }
         throw new LocationDoesNotExist(command);

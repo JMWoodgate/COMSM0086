@@ -1,17 +1,14 @@
 package com.company.Parsing;
 import com.alexmerz.graphviz.*;
 import com.alexmerz.graphviz.objects.*;
-import com.company.Element.Location;
+import com.company.Subject.Location;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.UnknownDataType;
-import com.company.Visitor.PrintVisitor;
 
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class EntitiesParser {
 
