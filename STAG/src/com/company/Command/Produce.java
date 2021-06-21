@@ -20,6 +20,7 @@ public class Produce implements Command{
 
     @Override
     public String execute(Player player) throws SubjectDoesNotExist {
+        playerLocation = player.getLocation();
         ArrayList<String> produced = action.getProduced();
         //if there is nothing to produce by the action, we can skip this
         if(produced == null){
@@ -105,9 +106,9 @@ public class Produce implements Command{
         if(subjectList == null){
             return null;
         }
-        for(Subject e : subjectList){
-            if(e!=null && e.getName().equals(subjectName)){
-                return e;
+        for(Subject s : subjectList){
+            if(s.getName().equals(subjectName)){
+                return s;
             }
         }
         return null;

@@ -40,9 +40,11 @@ public class Custom implements Command{
                     //check if anything to consume, if there is, remove from location/inventory
                     Consume consume = new Consume(a);
                     String message = consume.execute(player);
+                    System.out.println("returned from consume");
                     //check if anything to produce, if there is, add to location
                     Produce produce = new Produce(a, locations);
                     produce.execute(player);
+                    System.out.println("returned from produce");
                     //return the action's narration - with message if health ran out
                     if(message!=null){
                         return a.getNarration()+"\n"+message;
