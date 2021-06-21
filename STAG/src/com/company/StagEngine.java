@@ -1,9 +1,6 @@
 package com.company;
 
-import com.company.Command.Drop;
-import com.company.Command.Get;
-import com.company.Command.Inventory;
-import com.company.Command.Look;
+import com.company.Command.*;
 import com.company.Subject.*;
 import com.company.Subject.Character;
 import com.company.Parsing.ActionsParser;
@@ -40,7 +37,8 @@ public class StagEngine {
             Drop drop = new Drop(command);
             return drop.execute(currentPlayer);
         } else if(command.contains("goto")) {
-            return gotoCommand(command);
+            GoTo goTo = new GoTo(command, locations, players);
+            return goTo.execute(currentPlayer);
         } else if(command.contains("look")) {
             Look look = new Look(players);
             return look.execute(currentPlayer);
@@ -323,7 +321,7 @@ public class StagEngine {
         return stringBuilder.toString();
     }*/
 
-    private String gotoCommand(String command) throws LocationDoesNotExist{
+    /*private String gotoCommand(String command) throws LocationDoesNotExist{
         String newLocation;
         //get location
         for(Location l : locations){
@@ -345,7 +343,7 @@ public class StagEngine {
                 return l;
             }
         } throw new LocationDoesNotExist(newLocation);
-    }
+    }*/
 
     /*private String dropCommand(String command) throws ArtefactDoesNotExist{
         ArrayList<Artefact> inventory = currentPlayer.getInventory();
