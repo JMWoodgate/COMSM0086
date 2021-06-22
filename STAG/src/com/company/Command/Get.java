@@ -1,7 +1,6 @@
 package com.company.Command;
 
 import com.company.StagExceptions.ArtefactDoesNotExist;
-import com.company.Subject.Artefact;
 import com.company.Subject.Location;
 import com.company.Subject.Player;
 import com.company.Subject.Subject;
@@ -10,10 +9,12 @@ import java.util.ArrayList;
 
 public class Get implements Command{
 
-    String command;
+    private final String command;
+    private final Subject subjectUtility;
 
     public Get(String command){
         this.command = command;
+        subjectUtility = new Subject(null, null);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class Get implements Command{
                     || command.contains(s.getDescription())){
                 player.addToInventory(s);
                 String message = "You picked up "+(s.getDescription());
-                playerLocation.removeSubject(s, player.getLocation().getArtefacts());
+                subjectUtility.removeSubject(s, player.getLocation().getArtefacts());
                 return message;
             }
         }

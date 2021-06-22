@@ -1,6 +1,7 @@
 package com.company.Command;
 
 import com.company.StagExceptions.LocationDoesNotExist;
+import com.company.Subject.Element;
 import com.company.Subject.Location;
 import com.company.Subject.Player;
 
@@ -10,10 +11,10 @@ import java.util.HashMap;
 public class GoTo implements Command{
 
     String command;
-    ArrayList<Location> locations;
+    ArrayList<Element> locations;
     HashMap<String, Player> players;
 
-    public GoTo(String command, ArrayList<Location> locations,
+    public GoTo(String command, ArrayList<Element> locations,
                 HashMap<String, Player> players){
         this.command = command;
         this.locations = locations;
@@ -24,7 +25,7 @@ public class GoTo implements Command{
     public String run(Player player) throws LocationDoesNotExist {
         String newLocation;
         //get location
-        for(Location l : locations){
+        for(Element l : locations){
             if(command.contains(l.getName())
                     ||command.contains(l.getDescription())) {
                 newLocation = l.getName();
@@ -40,9 +41,9 @@ public class GoTo implements Command{
 
     private Location getLocation(String newLocation)
             throws LocationDoesNotExist {
-        for(Location l : locations){
+        for(Element l : locations){
             if(l.getName().equals(newLocation)){
-                return l;
+                return (Location)l;
             }
         } throw new LocationDoesNotExist(newLocation);
     }

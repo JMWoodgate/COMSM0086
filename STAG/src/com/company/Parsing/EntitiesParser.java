@@ -5,6 +5,7 @@ import com.company.Subject.Location;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.UnknownDataType;
+import com.company.Subject.Subject;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -13,8 +14,10 @@ import java.util.Locale;
 public class EntitiesParser {
 
     private final ArrayList<Location> locations;
+    private final Subject subjectUtility;
 
     public EntitiesParser(String entityFilename){
+        subjectUtility = new Subject(null, null);
         locations = new ArrayList<>();
         try {
             Parser parser = new Parser();
@@ -123,13 +126,13 @@ public class EntitiesParser {
             String description, String id) throws UnknownDataType {
         switch(dataType){
             case "artefacts":
-                currentLocation.setArtefact(id, description);
+                subjectUtility.setSubject(id, description, currentLocation.getArtefacts());
                 break;
             case "furniture":
-                currentLocation.setFurniture(id, description);
+                subjectUtility.setSubject(id, description, currentLocation.getFurniture());
                 break;
             case "characters":
-                currentLocation.setCharacter(id, description);
+                subjectUtility.setSubject(id, description, currentLocation.getCharacters());
                 break;
             default:
                 throw new UnknownDataType(dataType);

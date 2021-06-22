@@ -14,12 +14,14 @@ public class Custom implements Command{
     ArrayList<Action> actions;
     Location playerLocation;
     Player player;
-    ArrayList<Location> locations;
+    ArrayList<Element> locations;
+    Subject subjectUtility;
 
-    public Custom(String command, ArrayList<Action> actions, ArrayList<Location> locations){
+    public Custom(String command, ArrayList<Action> actions, ArrayList<Element> locations){
         this.command = command;
         this.actions = actions;
         this.locations = locations;
+        subjectUtility = new Subject(null, null);
     }
 
     @Override
@@ -81,15 +83,15 @@ public class Custom implements Command{
         ArrayList<String> subjects = action.getSubjects();
         for(String s : subjects){
             //check in play inventory
-            if(getElement(s, new ArrayList<>(player.getInventory()))==null){
+            if(subjectUtility.getElement(s, new ArrayList<>(player.getInventory()))==null){
                 //check in location artefacts
-                if(getElement(s, new ArrayList<>(playerLocation.getArtefacts()))==null){
+                if(subjectUtility.getElement(s, new ArrayList<>(playerLocation.getArtefacts()))==null){
                     //check in location furniture
-                    if(getElement(s, new ArrayList<>(playerLocation.getFurniture()))==null){
+                    if(subjectUtility.getElement(s, new ArrayList<>(playerLocation.getFurniture()))==null){
                         //check in location characters
-                        if(getElement(s, new ArrayList<>(playerLocation.getCharacters()))==null){
+                        if(subjectUtility.getElement(s, new ArrayList<>(playerLocation.getCharacters()))==null){
                             //check in locations
-                            if(getElement(s, new ArrayList<>(locations))==null){
+                            if(subjectUtility.getElement(s, locations)==null){
                                 //if the subject is in none of these, throw error
                                 throw new SubjectDoesNotExist();
                             }
@@ -100,7 +102,7 @@ public class Custom implements Command{
         }
     }
 
-    public Subject getElement(String elementName, ArrayList<Subject> subjectList){
+    /*public Subject getElement(String elementName, ArrayList<Subject> subjectList){
         if(subjectList == null){
             return null;
         }
@@ -110,6 +112,6 @@ public class Custom implements Command{
             }
         }
         return null;
-    }
+    }*/
 
 }

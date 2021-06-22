@@ -2,10 +2,7 @@ package com.company.Command;
 
 import com.company.Action;
 import com.company.StagExceptions.SubjectDoesNotExist;
-import com.company.Subject.Artefact;
-import com.company.Subject.Location;
-import com.company.Subject.Player;
-import com.company.Subject.Subject;
+import com.company.Subject.*;
 
 import java.util.ArrayList;
 
@@ -14,11 +11,14 @@ public class Consume implements Command{
     Action action;
     Player player;
     Location playerLocation;
-    ArrayList<Location> locations;
+    ArrayList<Element> locations;
+    Subject subjectUtility;
 
-    public Consume(Action action, ArrayList<Location> locations){
+    public Consume(Action action, ArrayList<Element> locations){
         this.action = action;
         this.locations = locations;
+        //this can be used to access the utility functions inside Subject
+        subjectUtility = new Subject(null, null){};
     }
 
     @Override
@@ -37,22 +37,22 @@ public class Consume implements Command{
                 message = consumeHealth();
             }
             //we need to check if the artefact, furniture or character is there
-            else if (getSubject(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
+            else if (subjectUtility.getSubject(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
                 //delete artefact from location
                 //playerLocation.removeArtefact(c);
-                playerLocation.removeSubject(c, playerLocation.getArtefacts());
-            } else if (getSubject(c, new ArrayList<>(player.getInventory()))!=null){
+                subjectUtility.removeSubject(c, playerLocation.getArtefacts());
+            } else if (subjectUtility.getSubject(c, player.getInventory())!=null){
                 //delete artefact from player inventory
                 player.removeFromInventory(c);
-            } else if (getSubject(c, new ArrayList<>(playerLocation.getFurniture()))!=null){
+            } else if (subjectUtility.getSubject(c, playerLocation.getFurniture())!=null){
                 //delete furniture from location
                 //playerLocation.removeFurniture(c);
-                playerLocation.removeSubject(c, playerLocation.getFurniture());
-            } else if (getSubject(c, new ArrayList<>(playerLocation.getCharacters()))!=null){
+                subjectUtility.removeSubject(c, playerLocation.getFurniture());
+            } else if (subjectUtility.getSubject(c, playerLocation.getCharacters())!=null){
                 //delete character from location
                 //playerLocation.removeCharacter(c);
-                playerLocation.removeSubject(c, playerLocation.getCharacters());
-            } else if(getSubject(c, new ArrayList<>(locations))==null){
+                subjectUtility.removeSubject(c, playerLocation.getCharacters());
+            } else if(subjectUtility.getElement(c, new ArrayList<>(locations))==null){
                 //delete paths to location -> not the actual location
                 locations.removeIf(l -> l.getName().equals(c));
             }else{
@@ -74,7 +74,7 @@ public class Consume implements Command{
             //if there are items in inventory, place them in the current location
             emptyInventory(inventory);
             //return player to start
-            player.setLocation(locations.get(0));
+            player.setLocation((Location)locations.get(0));
             playerLocation = player.getLocation();
             player.resetHealth();
             //return message
@@ -87,21 +87,9 @@ public class Consume implements Command{
         while (!inventory.isEmpty()) {
             Subject s = inventory.get(0);
             //put each artefact in the location
-            playerLocation.setArtefact(s.getName(), s.getDescription());
+            s.setSubject(s.getName(), s.getDescription(), playerLocation.getArtefacts());
             //remove from the player's inventory
             player.removeFromInventory(s);
         }
-    }
-
-    public Subject getSubject(String subjectName, ArrayList<Subject> subjectList){
-        if(subjectList == null){
-            return null;
-        }
-        for(Subject e : subjectList){
-            if(e!=null && e.getName().equals(subjectName)){
-                return e;
-            }
-        }
-        return null;
     }
 }

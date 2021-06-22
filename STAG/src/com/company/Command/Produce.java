@@ -3,7 +3,6 @@ package com.company.Command;
 import com.company.Action;
 import com.company.StagExceptions.SubjectDoesNotExist;
 import com.company.Subject.*;
-import com.company.Subject.Character;
 
 import java.util.ArrayList;
 
@@ -11,11 +10,13 @@ public class Produce implements Command{
 
     Action action;
     Location playerLocation;
-    ArrayList<Location> locations;
+    ArrayList<Element> locations;
+    Subject subjectUtility;
 
-    public Produce(Action action, ArrayList<Location> locations){
+    public Produce(Action action, ArrayList<Element> locations){
         this.action = action;
         this.locations = locations;
+        subjectUtility = new Subject(null, null);
     }
 
     @Override
@@ -39,25 +40,25 @@ public class Produce implements Command{
     private void moveSubject(String subject)
             throws SubjectDoesNotExist {
         //need to check all locations for the artefact (not just unplaced)
-        Location subjectLocation = (Location) getSubject(
-                subject, new ArrayList<>(locations));
+        Location subjectLocation = (Location) subjectUtility.getElement(
+                subject, locations);
         //if subjectLocation returns null, the subject is itself a location
         if(subjectLocation!=null){
             //need to add a path to the new location from the current
             playerLocation.setPath(subject);
             return;
         }
-        for(Location l : locations){
+        for(Element l : locations){
             //check if subject is an artefact & move if so
-            if(moveArtefact(l, subject)) {
+            if(moveArtefact((Location)l, subject)) {
                 return;
             }
             //check if it is furniture & move if so
-            if(moveFurniture(l, subject)) {
+            if(moveFurniture((Location)l, subject)) {
                 return;
             }
             //check if it is a character & move if so
-            if(moveCharacter(l, subject)){
+            if(moveCharacter((Location)l, subject)){
                 return;
             }
         }
@@ -66,13 +67,13 @@ public class Produce implements Command{
 
     private boolean moveCharacter(Location locationToCheck, String subject){
         //get character from location
-        Character character = (Character) getSubject(
+        Subject character = subjectUtility.getSubject(
                 subject, new ArrayList<>(locationToCheck.getCharacters()));
         if(character!=null){
-            playerLocation.setCharacter(character.getName(),
-                    character.getDescription());
+            subjectUtility.setSubject(character.getName(),
+                    character.getDescription(), playerLocation.getCharacters());
             //locationToCheck.removeCharacter(character.getName());
-            locationToCheck.removeSubject(character.getName(), locationToCheck.getCharacters());
+            subjectUtility.removeSubject(character.getName(), locationToCheck.getCharacters());
             return true;
         }
         return false;
@@ -80,13 +81,13 @@ public class Produce implements Command{
 
     private boolean moveFurniture(Location locationToCheck, String subject){
         //get furniture from location
-        Furniture furniture = (Furniture) getSubject(
+        Subject furniture = subjectUtility.getSubject(
                 subject, new ArrayList<>(locationToCheck.getFurniture()));
         if(furniture!=null){
-            playerLocation.setFurniture(furniture.getName(),
-                    furniture.getDescription());
+            subjectUtility.setSubject(furniture.getName(),
+                    furniture.getDescription(), playerLocation.getFurniture());
             //locationToCheck.removeFurniture(furniture.getName());
-            locationToCheck.removeSubject(furniture.getName(), locationToCheck.getFurniture());
+            subjectUtility.removeSubject(furniture.getName(), locationToCheck.getFurniture());
             return true;
         }
         return false;
@@ -94,32 +95,18 @@ public class Produce implements Command{
 
     private boolean moveArtefact(Location locationToCheck, String subject){
         //get artefact from location
-        Artefact artefact = (Artefact) getSubject(
+        Subject artefact = subjectUtility.getSubject(
                 subject, new ArrayList<>(locationToCheck.getArtefacts()));
         //check if the artefact to produce exists in this location
         if(artefact!=null){
             //create new artefact in the current location
-            playerLocation.setArtefact(artefact.getName(),
-                    artefact.getDescription());
-            System.out.println("Set artefact "+artefact.getName());
+            subjectUtility.setSubject(artefact.getName(),
+                    artefact.getDescription(), playerLocation.getArtefacts());
             //remove artefact from old location
             //locationToCheck.removeArtefact(artefact.getName());
-            locationToCheck.removeSubject(artefact.getName(), locationToCheck.getArtefacts());
+            subjectUtility.removeSubject(artefact.getName(), locationToCheck.getArtefacts());
             return true;
         }
         return false;
-    }
-
-    public Subject getSubject(String subjectName,
-                              ArrayList<Subject> subjectList){
-        if(subjectList == null){
-            return null;
-        }
-        for(Subject s : subjectList){
-            if(s.getName().equals(subjectName)){
-                return s;
-            }
-        }
-        return null;
     }
 }

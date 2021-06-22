@@ -10,14 +10,14 @@ import java.util.*;
 
 public class StagEngine {
     private final HashMap<String, Player> players;
-    private final ArrayList<Location> locations;
+    private final ArrayList<Element> locations;
     private final ArrayList<Action> actions;
     private Player currentPlayer;
 
     public StagEngine(String entityFilename, String actionFilename){
         //parse files and get data
         EntitiesParser entitiesParser = new EntitiesParser(entityFilename);
-        locations = entitiesParser.getLocations();
+        locations = new ArrayList<>(entitiesParser.getLocations());
         ActionsParser actionsParser = new ActionsParser(actionFilename);
         actions = actionsParser.getActions();
         players = new HashMap<>();
@@ -64,7 +64,7 @@ public class StagEngine {
     public void addPlayer(String playerName){
         Player newPlayer = new Player(playerName);
         //set location to start
-        newPlayer.setLocation(locations.get(0));
+        newPlayer.setLocation((Location)locations.get(0));
         players.put(playerName, newPlayer);
         currentPlayer = newPlayer;
     }
