@@ -1,7 +1,7 @@
 package com.company.Command;
 
-import com.company.Subject.Player;
-import com.company.Subject.Subject;
+import com.company.Element.Player;
+import com.company.Element.Subject;
 
 import java.util.ArrayList;
 

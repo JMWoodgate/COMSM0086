@@ -1,9 +1,9 @@
 package com.company.Command;
 
 import com.company.StagExceptions.ArtefactDoesNotExist;
-import com.company.Subject.Location;
-import com.company.Subject.Player;
-import com.company.Subject.Subject;
+import com.company.Element.Location;
+import com.company.Element.Player;
+import com.company.Element.Subject;
 
 import java.util.ArrayList;
 

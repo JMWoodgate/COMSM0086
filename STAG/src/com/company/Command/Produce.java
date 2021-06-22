@@ -2,7 +2,7 @@ package com.company.Command;
 
 import com.company.Action;
 import com.company.StagExceptions.SubjectDoesNotExist;
-import com.company.Subject.*;
+import com.company.Element.*;
 
 import java.util.ArrayList;
 
@@ -23,18 +23,22 @@ public class Produce implements Command{
     public String run(Player player) throws SubjectDoesNotExist {
         playerLocation = player.getLocation();
         ArrayList<String> produced = action.getProduced();
+        String message = null;
         //if there is nothing to produce by the action, we can skip this
         if(produced == null){
-            return null;
+            return message;
         }
         //loop through items produced and add them to the location
         for(String p : produced){
+            //if the item produced is health, we increase the player's health
             if(p.equals("health")){
                 player.changeHealth(true);
+                message = "Your health has increased!";
             }else{
+                //otherwise we move the item produce to the player's location
                 moveSubject(p);
             }
-        } return null;
+        } return message;
     }
 
     private void moveSubject(String subject)

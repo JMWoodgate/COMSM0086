@@ -1,11 +1,11 @@
 package com.company.Parsing;
 import com.alexmerz.graphviz.*;
 import com.alexmerz.graphviz.objects.*;
-import com.company.Subject.Location;
+import com.company.Element.Location;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.UnknownDataType;
-import com.company.Subject.Subject;
+import com.company.Element.Subject;
 
 import java.io.FileReader;
 import java.util.ArrayList;

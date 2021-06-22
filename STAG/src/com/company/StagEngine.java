@@ -1,7 +1,7 @@
 package com.company;
 
 import com.company.Command.*;
-import com.company.Subject.*;
+import com.company.Element.*;
 import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
 import com.company.StagExceptions.*;

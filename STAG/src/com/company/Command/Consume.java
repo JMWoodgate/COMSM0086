@@ -2,7 +2,7 @@ package com.company.Command;
 
 import com.company.Action;
 import com.company.StagExceptions.SubjectDoesNotExist;
-import com.company.Subject.*;
+import com.company.Element.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +37,7 @@ public class Consume implements Command{
             return null;
         }
         for(String c : consumed) {
+            //if the item is health, we
             if(c.equals("health")){
                 message = consumeHealth();
             }
@@ -82,7 +83,8 @@ public class Consume implements Command{
             playerLocation = player.getLocation();
             player.resetHealth();
             //return message
-            message = "You ran out of health! You have lost your inventory and been returned to the start.\n";
+            message = "You ran out of health! You have lost your " +
+                    "inventory and been returned to the start.\n";
             Look look = new Look(players);
             message += look.run(player);
         }
@@ -93,7 +95,8 @@ public class Consume implements Command{
         while (!inventory.isEmpty()) {
             Subject s = inventory.get(0);
             //put each artefact in the location
-            s.setSubject(s.getName(), s.getDescription(), playerLocation.getArtefacts());
+            s.setSubject(s.getName(), s.getDescription(),
+                    playerLocation.getArtefacts());
             //remove from the player's inventory
             subjectUtility.removeSubject(s, player.getInventory());
         }

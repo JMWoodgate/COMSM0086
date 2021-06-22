@@ -1,6 +1,6 @@
 package com.company.Command;
 
-import com.company.Subject.*;
+import com.company.Element.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

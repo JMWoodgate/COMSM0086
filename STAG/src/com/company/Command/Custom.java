@@ -4,7 +4,7 @@ import com.company.Action;
 import com.company.StagExceptions.InvalidCommand;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.SubjectDoesNotExist;
-import com.company.Subject.*;
+import com.company.Element.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,16 +45,18 @@ public class Custom implements Command{
                     checkSubjects(a);
                     //check if anything to consume, if there is, remove from location/inventory
                     Consume consume = new Consume(a, locations, players);
-                    String message = consume.run(player);
+                    String consumeMessage = consume.run(player);
                     //check if anything to produce, if there is, add to location
                     Produce produce = new Produce(a, locations);
-                    produce.run(player);
+                    String produceMessage = produce.run(player);
                     //return the action's narration - with message if health ran out
-                    if(message!=null){
-                        return a.getNarration()+"\n"+message;
-                    } else{
-                        return a.getNarration();
+                    String message = null;
+                    if(consumeMessage!=null){
+                        message = consumeMessage;
+                    } if(produceMessage!=null){
+                        message = produceMessage;
                     }
+                    return message + a.getNarration();
                 }
             }
         }
