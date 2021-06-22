@@ -33,6 +33,11 @@ public class Location implements Subject {
         return description;
     }
 
+    public void setSubject(String name, String description, ArrayList<Subject> subjectList){
+        Subject subject = new Subject(name, description);
+        subjectList.add(subject);
+    }
+
     public void setArtefact(String name, String description){
         Subject artefact = new Artefact(name, description);
         artefacts.add(artefact);
@@ -40,18 +45,6 @@ public class Location implements Subject {
 
     public ArrayList<Subject> getArtefacts(){
         return artefacts;
-    }
-
-    //visitor? --> similar in Player
-    public void removeArtefact(Artefact artefact){
-        artefacts.remove(artefact);
-    }
-
-    //visitor? --> similar in Player  --> similar for Artefact, Furniture, and Character
-    public void removeArtefact(String artefact){
-        artefacts.removeIf(
-                a -> a.getName().equals(artefact)
-                || a.getDescription().equals(artefact));
     }
 
     public void setFurniture(String name, String description){
@@ -63,13 +56,6 @@ public class Location implements Subject {
         return furniture;
     }
 
-    //visitor? --> similar for Artefact, Furniture, and Character
-    public void removeFurniture(String furnitureName){
-        furniture.removeIf(
-                f -> f.getName().equals(furnitureName)
-                || f.getDescription().equals(furnitureName));
-    }
-
     public void setCharacter(String name, String description){
         Character newCharacter = new Character(name, description);
         characters.add(newCharacter);
@@ -77,13 +63,6 @@ public class Location implements Subject {
 
     public ArrayList<Subject> getCharacters(){
         return characters;
-    }
-
-    //visitor?  --> similar for Artefact, Furniture, and Character
-    public void removeCharacter(String character){
-        characters.removeIf(
-                c -> c.getName().equals(character)
-                        || c.getDescription().equals(character));
     }
 
     public void removeSubject(String subject, ArrayList<Subject> subjectList){
