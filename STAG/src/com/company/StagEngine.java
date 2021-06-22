@@ -23,12 +23,14 @@ public class StagEngine {
         players = new HashMap<>();
     }
 
-    public String execute(String commandString) throws StagException{
+    public String execute(String commandString) throws StagException {
+        //get which type of command it is
         Command command = interpretCommand(commandString);
+        //run the command & return the response to print to console
         return command.run(currentPlayer);
     }
 
-    public Command interpretCommand(String command) throws StagException {
+    public Command interpretCommand(String command) {
         command = command.toLowerCase(Locale.ROOT);
         if(command.contains("inv")) {
             return new Inventory();
@@ -46,32 +48,6 @@ public class StagEngine {
             return new Custom(command, actions, locations);
         }
     }
-
-    /*public String interpretCommand(String command) throws StagException {
-        command = command.toLowerCase(Locale.ROOT);
-        if(command.contains("inv")) {
-            Inventory inventory = new Inventory();
-            return inventory.run(currentPlayer);
-        } else if(command.contains("get")) {
-            Get get = new Get(command);
-            return get.run(currentPlayer);
-        } else if(command.contains("drop")) {
-            Drop drop = new Drop(command);
-            return drop.run(currentPlayer);
-        } else if(command.contains("goto")) {
-            GoTo goTo = new GoTo(command, locations, players);
-            return goTo.run(currentPlayer);
-        } else if(command.contains("look")) {
-            Look look = new Look(players);
-            return look.run(currentPlayer);
-        } else if(command.contains("health")){
-            Health health = new Health();
-            return health.run(currentPlayer);
-        } else {
-            Custom custom = new Custom(command, actions, locations);
-            return custom.run(currentPlayer);
-        }
-    }*/
 
     public void changePlayer(String playerName){
         currentPlayer = players.get(playerName);
