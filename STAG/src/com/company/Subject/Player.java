@@ -42,12 +42,6 @@ public class Player implements Element {
         return inventory;
     }
 
-    public void addToInventory(Subject subject){
-        //making a deep copy of the artefact so not deleted when removed from location
-        Subject copy = new Subject(subject.getName(), subject.getDescription());
-        inventory.add(copy);
-    }
-
     public String getName() {
         return name;
     }

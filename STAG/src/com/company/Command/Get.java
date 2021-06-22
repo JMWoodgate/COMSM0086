@@ -14,7 +14,7 @@ public class Get implements Command{
 
     public Get(String command){
         this.command = command;
-        subjectUtility = new Subject(null, null);
+        subjectUtility = new Subject();
     }
 
     @Override
@@ -24,7 +24,8 @@ public class Get implements Command{
         for(Subject s : locationArtefacts){
             if(command.contains(s.getName())
                     || command.contains(s.getDescription())){
-                player.addToInventory(s);
+                subjectUtility.setSubject(
+                        s.getName(), s.getDescription(), player.getInventory());
                 String message = "You picked up "+(s.getDescription());
                 subjectUtility.removeSubject(s, player.getLocation().getArtefacts());
                 return message;
