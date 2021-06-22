@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class Drop implements Command {
 
-    String command;
-    Subject subjectUtility;
+    private final String command;
+    private final Subject subjectUtility;
 
     public Drop(String command){
         this.command = command;
-        subjectUtility = new Subject(null, null);
+        subjectUtility = new Subject();
     }
 
     @Override

@@ -8,17 +8,17 @@ import java.util.ArrayList;
 
 public class Consume implements Command{
 
-    Action action;
-    Player player;
-    Location playerLocation;
-    ArrayList<Element> locations;
-    Subject subjectUtility;
+    private final Action action;
+    private Player player;
+    private Location playerLocation;
+    private final ArrayList<Element> locations;
+    private final Subject subjectUtility;
 
     public Consume(Action action, ArrayList<Element> locations){
         this.action = action;
         this.locations = locations;
         //this can be used to access the utility functions inside Subject
-        subjectUtility = new Subject(null, null){};
+        subjectUtility = new Subject();
     }
 
     @Override

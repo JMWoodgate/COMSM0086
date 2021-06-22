@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public class Produce implements Command{
 
-    Action action;
-    Location playerLocation;
-    ArrayList<Element> locations;
-    Subject subjectUtility;
+    private final Action action;
+    private Location playerLocation;
+    private final ArrayList<Element> locations;
+    private final Subject subjectUtility;
 
     public Produce(Action action, ArrayList<Element> locations){
         this.action = action;
         this.locations = locations;
-        subjectUtility = new Subject(null, null);
+        subjectUtility = new Subject();
     }
 
     @Override

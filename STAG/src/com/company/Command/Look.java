@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class Look implements Command{
 
-    HashMap<String, Player> players;
-    Player player;
-    Location playerLocation;
+    private final HashMap<String, Player> players;
+    private Player player;
+    private Location playerLocation;
 
     public Look(HashMap<String, Player> players){
         this.players = players;

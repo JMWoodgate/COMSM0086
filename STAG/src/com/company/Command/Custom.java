@@ -10,18 +10,18 @@ import java.util.ArrayList;
 
 public class Custom implements Command{
 
-    String command;
-    ArrayList<Action> actions;
-    Location playerLocation;
-    Player player;
-    ArrayList<Element> locations;
-    Subject subjectUtility;
+    private final String command;
+    private final ArrayList<Action> actions;
+    private Location playerLocation;
+    private Player player;
+    private final ArrayList<Element> locations;
+    private final Subject subjectUtility;
 
     public Custom(String command, ArrayList<Action> actions, ArrayList<Element> locations){
         this.command = command;
         this.actions = actions;
         this.locations = locations;
-        subjectUtility = new Subject(null, null);
+        subjectUtility = new Subject();
     }
 
     @Override
@@ -101,17 +101,4 @@ public class Custom implements Command{
             }
         }
     }
-
-    /*public Subject getElement(String elementName, ArrayList<Subject> subjectList){
-        if(subjectList == null){
-            return null;
-        }
-        for(Subject e : subjectList){
-            if(e!=null && e.getName().equals(elementName)){
-                return e;
-            }
-        }
-        return null;
-    }*/
-
 }

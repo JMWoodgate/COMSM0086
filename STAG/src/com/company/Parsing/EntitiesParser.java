@@ -17,7 +17,7 @@ public class EntitiesParser {
     private final Subject subjectUtility;
 
     public EntitiesParser(String entityFilename){
-        subjectUtility = new Subject(null, null);
+        subjectUtility = new Subject();
         locations = new ArrayList<>();
         try {
             Parser parser = new Parser();
@@ -31,7 +31,8 @@ public class EntitiesParser {
         }
     }
 
-    private void parseGraphs(ArrayList<Graph> subGraphs) throws StagException {
+    private void parseGraphs(ArrayList<Graph> subGraphs)
+            throws StagException {
         for(Graph g : subGraphs){
             String elementId = g.getId().getId();
             //if first element id is locations, need to create a new
@@ -53,7 +54,8 @@ public class EntitiesParser {
     }
 
     //parses and stores the edges/paths
-    private void parseEdges(ArrayList<Edge> edges) throws LocationDoesNotExist {
+    private void parseEdges(ArrayList<Edge> edges)
+            throws LocationDoesNotExist {
         for (Edge e : edges){
             //need to iterate through the stored locations
             //if the location we are on is equal to the source path,
@@ -67,7 +69,8 @@ public class EntitiesParser {
     }
 
     //finds our target location (if it exists) and stores the path details
-    private void storePath(String source, String target) throws LocationDoesNotExist {
+    private void storePath(String source, String target)
+            throws LocationDoesNotExist {
         for(Location l : locations) {
             if (l.getName().equals(source)) {
                 l.setPath(target);
@@ -81,7 +84,7 @@ public class EntitiesParser {
     private void parseLocation(Graph g) throws UnknownDataType {
         ArrayList<Graph> subGraphs1 = g.getSubgraphs();
         for (Graph g1 : subGraphs1) {
-            //create new location and store in array -- this is overwriting each time so need to change
+            //create new location and store in array
             Location currentLocation = new Location();
             ArrayList<Node> nodesLoc = g1.getNodes(false);
             Node nLoc = nodesLoc.get(0);
@@ -98,12 +101,15 @@ public class EntitiesParser {
         String locationDescription = nLoc.getAttribute("description");
         String locationName = nLoc.getId().getId();
         currentLocation.setName(locationName.toLowerCase(Locale.ROOT));
-        currentLocation.setDescription(locationDescription.toLowerCase(Locale.ROOT));
+        currentLocation.setDescription(
+                locationDescription.toLowerCase(Locale.ROOT));
         locations.add(currentLocation);
     }
 
     //loops through inner graphs to parse
-    private void parseInnerGraphs(ArrayList<Graph> subGraphs, Location currentLocation) throws UnknownDataType {
+    private void parseInnerGraphs(ArrayList<Graph> subGraphs,
+                                  Location currentLocation)
+            throws UnknownDataType {
         for (Graph g2 : subGraphs) {
             String innerElementId = g2.getId().getId();
             ArrayList<Node> nodesEnt = g2.getNodes(false);
@@ -112,11 +118,16 @@ public class EntitiesParser {
     }
 
     //loop through nodes and parse
-    private void parseNodes(ArrayList<Node> nodesEnt, Location currentLocation, String id) throws UnknownDataType {
+    private void parseNodes(ArrayList<Node> nodesEnt,
+                            Location currentLocation, String id)
+            throws UnknownDataType {
         for (Node nEnt : nodesEnt) {
             String description = nEnt.getAttribute("description");
             String newId = nEnt.getId().getId();
-            storeDetails(currentLocation, id.toLowerCase(Locale.ROOT), description.toLowerCase(Locale.ROOT), newId.toLowerCase(Locale.ROOT));
+            storeDetails(currentLocation,
+                    id.toLowerCase(Locale.ROOT),
+                    description.toLowerCase(Locale.ROOT),
+                    newId.toLowerCase(Locale.ROOT));
         }
     }
 
@@ -126,13 +137,16 @@ public class EntitiesParser {
             String description, String id) throws UnknownDataType {
         switch(dataType){
             case "artefacts":
-                subjectUtility.setSubject(id, description, currentLocation.getArtefacts());
+                subjectUtility.setSubject(
+                        id, description, currentLocation.getArtefacts());
                 break;
             case "furniture":
-                subjectUtility.setSubject(id, description, currentLocation.getFurniture());
+                subjectUtility.setSubject(
+                        id, description, currentLocation.getFurniture());
                 break;
             case "characters":
-                subjectUtility.setSubject(id, description, currentLocation.getCharacters());
+                subjectUtility.setSubject(
+                        id, description, currentLocation.getCharacters());
                 break;
             default:
                 throw new UnknownDataType(dataType);
