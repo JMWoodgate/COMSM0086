@@ -16,7 +16,7 @@ public class Get implements Command{
     }
 
     @Override
-    public String execute(Player player) throws ArtefactDoesNotExist {
+    public String run(Player player) throws ArtefactDoesNotExist {
         Location playerLocation = player.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(Artefact a : locationArtefacts){

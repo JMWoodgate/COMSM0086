@@ -19,7 +19,7 @@ public class Produce implements Command{
     }
 
     @Override
-    public String execute(Player player) throws SubjectDoesNotExist {
+    public String run(Player player) throws SubjectDoesNotExist {
         playerLocation = player.getLocation();
         ArrayList<String> produced = action.getProduced();
         //if there is nothing to produce by the action, we can skip this
@@ -40,13 +40,14 @@ public class Produce implements Command{
             throws SubjectDoesNotExist {
         //need to check all locations for the artefact (not just unplaced)
         Location subjectLocation = (Location) getSubject(subject, new ArrayList<>(locations));
+        //if subjectLocation returns null, the subject is itself a location
         if(subjectLocation!=null){
-            //need to add a path to the new location
+            //need to add a path to the new location from the current
             playerLocation.setPath(subject);
             return;
         }
         for(Location l : locations){
-            //check if it is an artefact & move if so (function will return true)
+            //check if subject is an artefact & move if so (function will return true)
             if(moveArtefact(l, subject)) {
                 return;
             }

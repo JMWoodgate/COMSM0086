@@ -23,7 +23,7 @@ public class Custom implements Command{
     }
 
     @Override
-    public String execute(Player player) throws StagException {
+    public String run(Player player) throws StagException {
         playerLocation = player.getLocation();
         this.player = player;
         //loop through all of the actions we have read in from file
@@ -39,10 +39,10 @@ public class Custom implements Command{
                     checkSubjects(a);
                     //check if anything to consume, if there is, remove from location/inventory
                     Consume consume = new Consume(a, locations);
-                    String message = consume.execute(player);
+                    String message = consume.run(player);
                     //check if anything to produce, if there is, add to location
                     Produce produce = new Produce(a, locations);
-                    produce.execute(player);
+                    produce.run(player);
                     //return the action's narration - with message if health ran out
                     if(message!=null){
                         return a.getNarration()+"\n"+message;

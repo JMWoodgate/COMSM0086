@@ -22,7 +22,7 @@ public class Consume implements Command{
     }
 
     @Override
-    public String execute(Player player) throws SubjectDoesNotExist {
+    public String run(Player player) throws SubjectDoesNotExist {
         String message = null;
         this.player = player;
         playerLocation = player.getLocation();

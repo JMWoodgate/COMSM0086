@@ -20,7 +20,7 @@ public class GoTo implements Command{
     }
 
     @Override
-    public String execute(Player player) throws LocationDoesNotExist {
+    public String run(Player player) throws LocationDoesNotExist {
         String newLocation;
         //get location
         for(Location l : locations){
@@ -30,7 +30,7 @@ public class GoTo implements Command{
                 player.setLocation(getSpecificLocation(newLocation));
                 Look look = new Look(players);
                 return "You have moved to " + newLocation + "\n"
-                        + look.execute(player);
+                        + look.run(player);
             }
         }
         throw new LocationDoesNotExist(command);

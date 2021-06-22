@@ -4,5 +4,5 @@ import com.company.StagExceptions.StagException;
 import com.company.Subject.Player;
 
 public interface Command {
-    String execute(Player player) throws StagException;
+    String run(Player player) throws StagException;
 }

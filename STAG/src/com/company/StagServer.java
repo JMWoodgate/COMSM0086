@@ -1,7 +1,11 @@
 package com.company;
+import com.company.Command.*;
 import com.company.StagExceptions.StagException;
+import com.company.Subject.Player;
+
 import java.io.*;
 import java.net.*;
+import java.util.Locale;
 
 class StagServer
 {
@@ -56,12 +60,11 @@ class StagServer
             engine.changePlayer(splitString[0]);
         }
         try {
-            String response = engine.interpretCommand(splitString[1]);
+            String response = engine.execute(splitString[1]);
             out.write(response+"\n");
         }catch(Exception e){
             e.printStackTrace();
             out.write(e.toString());
         }
-
     }
 }

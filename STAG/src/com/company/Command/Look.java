@@ -18,7 +18,7 @@ public class Look implements Command{
     }
 
     @Override
-    public String execute(Player player) {
+    public String run(Player player) {
         this.player = player;
         playerLocation = player.getLocation();
         //need to return a string that describes the whole location

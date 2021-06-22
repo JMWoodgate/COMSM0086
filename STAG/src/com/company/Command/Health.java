@@ -8,7 +8,7 @@ public class Health implements Command{
     public Health(){}
 
     @Override
-    public String execute(Player player) throws StagException {
+    public String run(Player player) throws StagException {
         return player.getName() + "'s current health is: "
                 + player.getHealth() + "\n";
     }

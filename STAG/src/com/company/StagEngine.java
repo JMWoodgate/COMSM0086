@@ -23,31 +23,55 @@ public class StagEngine {
         players = new HashMap<>();
     }
 
-    public String interpretCommand(String command) throws StagException {
+    public String execute(String commandString) throws StagException{
+        Command command = interpretCommand(commandString);
+        return command.run(currentPlayer);
+    }
+
+    public Command interpretCommand(String command) throws StagException {
+        command = command.toLowerCase(Locale.ROOT);
+        if(command.contains("inv")) {
+            return new Inventory();
+        } else if(command.contains("get")) {
+            return new Get(command);
+        } else if(command.contains("drop")) {
+            return new Drop(command);
+        } else if(command.contains("goto")) {
+            return new GoTo(command, locations, players);
+        } else if(command.contains("look")) {
+            return new Look(players);
+        } else if(command.contains("health")){
+            return new Health();
+        } else {
+            return new Custom(command, actions, locations);
+        }
+    }
+
+    /*public String interpretCommand(String command) throws StagException {
         command = command.toLowerCase(Locale.ROOT);
         if(command.contains("inv")) {
             Inventory inventory = new Inventory();
-            return inventory.execute(currentPlayer);
+            return inventory.run(currentPlayer);
         } else if(command.contains("get")) {
             Get get = new Get(command);
-            return get.execute(currentPlayer);
+            return get.run(currentPlayer);
         } else if(command.contains("drop")) {
             Drop drop = new Drop(command);
-            return drop.execute(currentPlayer);
+            return drop.run(currentPlayer);
         } else if(command.contains("goto")) {
             GoTo goTo = new GoTo(command, locations, players);
-            return goTo.execute(currentPlayer);
+            return goTo.run(currentPlayer);
         } else if(command.contains("look")) {
             Look look = new Look(players);
-            return look.execute(currentPlayer);
+            return look.run(currentPlayer);
         } else if(command.contains("health")){
             Health health = new Health();
-            return health.execute(currentPlayer);
+            return health.run(currentPlayer);
         } else {
             Custom custom = new Custom(command, actions, locations);
-            return custom.execute(currentPlayer);
+            return custom.run(currentPlayer);
         }
-    }
+    }*/
 
     public void changePlayer(String playerName){
         currentPlayer = players.get(playerName);
