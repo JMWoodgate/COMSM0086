@@ -4,47 +4,42 @@ import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.Subject.Element;
 import com.company.Subject.Location;
 import com.company.Subject.Player;
+import com.company.Subject.Subject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GoTo implements Command{
 
-    String command;
-    ArrayList<Element> locations;
-    HashMap<String, Player> players;
+    private final String command;
+    private final ArrayList<Element> locations;
+    private final HashMap<String, Player> players;
+    private final Subject subjectUtility;
 
     public GoTo(String command, ArrayList<Element> locations,
                 HashMap<String, Player> players){
         this.command = command;
         this.locations = locations;
         this.players = players;
+        subjectUtility = new Subject();
     }
 
     @Override
     public String run(Player player) throws LocationDoesNotExist {
-        String newLocation;
+        String locationName;
         //get location
         for(Element l : locations){
             if(command.contains(l.getName())
                     ||command.contains(l.getDescription())) {
-                newLocation = l.getName();
+                locationName = l.getName();
                 //get the object for new location & set to player's location
-                player.setLocation(getLocation(newLocation));
+                Location newLocation = (Location) subjectUtility.getElement(locationName, locations);
+                player.setLocation(newLocation);
                 Look look = new Look(players);
-                return "You have moved to " + newLocation + "\n"
+                return "You have moved to " + locationName + "\n"
                         + look.run(player);
             }
         }
         throw new LocationDoesNotExist(command);
-    }
-
-    private Location getLocation(String newLocation)
-            throws LocationDoesNotExist {
-        for(Element l : locations){
-            if(l.getName().equals(newLocation)){
-                return (Location)l;
-            }
-        } throw new LocationDoesNotExist(newLocation);
     }
 }

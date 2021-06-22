@@ -6,6 +6,8 @@ public class Subject implements Element {
     private String name;
     private String description;
 
+    public Subject(){}
+
     public Subject(String name, String description){
         this.name = name;
         this.description = description;
