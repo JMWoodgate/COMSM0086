@@ -58,9 +58,9 @@ class StagServer
         try {
             String response = engine.interpretCommand(splitString[1]);
             out.write(response+"\n");
-        }catch(StagException e){
+        }catch(Exception e){
             e.printStackTrace();
-           out.write(e.toString());
+            out.write(e.toString());
         }
 
     }

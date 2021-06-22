@@ -12,13 +12,11 @@ import java.util.Locale;
 
 public class EntitiesParser {
 
-    private String entityFilename;
     private final ArrayList<Location> locations;
 
     public EntitiesParser(String entityFilename){
         locations = new ArrayList<>();
         try {
-            this.entityFilename = entityFilename;
             Parser parser = new Parser();
             FileReader reader = new FileReader(entityFilename);
             parser.parse(reader);
@@ -45,11 +43,6 @@ public class EntitiesParser {
             ArrayList<Edge> edges = g.getEdges();
             parseEdges(edges);
         }
-        //to print locations
-        /*for(Location l : locations){
-            PrintVisitor printVisitor = new PrintVisitor();
-            l.accept(printVisitor);
-        }*/
     }
 
     public ArrayList<Location> getLocations(){
