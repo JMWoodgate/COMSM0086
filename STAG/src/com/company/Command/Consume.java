@@ -5,6 +5,7 @@ import com.company.StagExceptions.SubjectDoesNotExist;
 import com.company.Subject.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Consume implements Command{
 
@@ -13,10 +14,13 @@ public class Consume implements Command{
     private Location playerLocation;
     private final ArrayList<Element> locations;
     private final Subject subjectUtility;
+    private final HashMap<String, Player> players;
 
-    public Consume(Action action, ArrayList<Element> locations){
+    public Consume(Action action, ArrayList<Element> locations,
+                   HashMap<String, Player> players){
         this.action = action;
         this.locations = locations;
+        this.players = players;
         //this can be used to access the utility functions inside Subject
         subjectUtility = new Subject();
     }
@@ -78,7 +82,9 @@ public class Consume implements Command{
             playerLocation = player.getLocation();
             player.resetHealth();
             //return message
-            message = "You ran out of health! You have lost your inventory and been returned to the start.";
+            message = "You ran out of health! You have lost your inventory and been returned to the start.\n";
+            Look look = new Look(players);
+            message += look.run(player);
         }
         return message;
     }

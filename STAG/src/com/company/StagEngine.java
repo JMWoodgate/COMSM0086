@@ -45,7 +45,7 @@ public class StagEngine {
         } else if(command.contains("health")){
             return new Health();
         } else {
-            return new Custom(command, actions, locations);
+            return new Custom(command, actions, locations, players);
         }
     }
 
