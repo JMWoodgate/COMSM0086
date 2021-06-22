@@ -27,7 +27,7 @@ public class Drop implements Command {
                 subjectUtility.setSubject(s.getName(), s.getDescription(), playerLocation.getArtefacts());
                 String message = "You dropped "+s.getDescription()
                         +" in "+playerLocation.getName();
-                player.removeFromInventory(s);
+                subjectUtility.removeSubject(s, player.getInventory());
                 return message;
             }
         } throw new ArtefactDoesNotExist(command);

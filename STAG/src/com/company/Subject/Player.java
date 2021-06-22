@@ -42,16 +42,6 @@ public class Player implements Element {
         return inventory;
     }
 
-    public void removeFromInventory(String subject){
-        inventory.removeIf(
-                a -> a.getName().equals(subject)
-                        || a.getDescription().equals(subject));
-    }
-
-    public void removeFromInventory(Subject subject){
-        inventory.remove(subject);
-    }
-
     public void addToInventory(Subject subject){
         //making a deep copy of the artefact so it doesn't get deleted when we remove from location
         Subject copy = new Subject(subject.getName(), subject.getDescription());

@@ -43,7 +43,7 @@ public class Consume implements Command{
                 subjectUtility.removeSubject(c, playerLocation.getArtefacts());
             } else if (subjectUtility.getSubject(c, player.getInventory())!=null){
                 //delete artefact from player inventory
-                player.removeFromInventory(c);
+                subjectUtility.removeSubject(c, player.getInventory());
             } else if (subjectUtility.getSubject(c, playerLocation.getFurniture())!=null){
                 //delete furniture from location
                 //playerLocation.removeFurniture(c);
@@ -89,7 +89,7 @@ public class Consume implements Command{
             //put each artefact in the location
             s.setSubject(s.getName(), s.getDescription(), playerLocation.getArtefacts());
             //remove from the player's inventory
-            player.removeFromInventory(s);
+            subjectUtility.removeSubject(s, player.getInventory());
         }
     }
 }
