@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Location implements Subject {
     private String name;
     private String description;
-    private final ArrayList<Artefact> artefacts;
-    private final ArrayList<Furniture> furniture;
-    private final ArrayList<Character> characters;
+    private final ArrayList<Subject> artefacts;
+    private final ArrayList<Subject> furniture;
+    private final ArrayList<Subject> characters;
     private final ArrayList<String> paths;
 
     public Location(){
@@ -34,11 +34,11 @@ public class Location implements Subject {
     }
 
     public void setArtefact(String name, String description){
-        Artefact artefact = new Artefact(name, description);
+        Subject artefact = new Artefact(name, description);
         artefacts.add(artefact);
     }
 
-    public ArrayList<Artefact> getArtefacts(){
+    public ArrayList<Subject> getArtefacts(){
         return artefacts;
     }
 
@@ -59,7 +59,7 @@ public class Location implements Subject {
         furniture.add(newFurniture);
     }
 
-    public ArrayList<Furniture> getFurniture(){
+    public ArrayList<Subject> getFurniture(){
         return furniture;
     }
 
@@ -75,7 +75,7 @@ public class Location implements Subject {
         characters.add(newCharacter);
     }
 
-    public ArrayList<Character> getCharacters(){
+    public ArrayList<Subject> getCharacters(){
         return characters;
     }
 
@@ -84,6 +84,16 @@ public class Location implements Subject {
         characters.removeIf(
                 c -> c.getName().equals(character)
                         || c.getDescription().equals(character));
+    }
+
+    public void removeSubject(String subject, ArrayList<Subject> subjectList){
+        subjectList.removeIf(
+                s -> s.getName().equals(subject)
+                || s.getDescription().equals(subject));
+    }
+
+    public void removeSubject(Subject subject, ArrayList<Subject> subjectList){
+        subjectList.remove(subject);
     }
 
     //other locations accessible from the current location

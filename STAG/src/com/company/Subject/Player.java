@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Player implements Subject {
     private final String name;
-    private final ArrayList<Artefact> inventory = new ArrayList<>();
+    private final ArrayList<Subject> inventory = new ArrayList<>();
     private Location location;
     private int health;
 
@@ -37,23 +37,38 @@ public class Player implements Subject {
         this.location = location;
     }
 
-    public ArrayList<Artefact> getInventory(){
+    public ArrayList<Subject> getInventory(){
         return inventory;
     }
 
-    public void removeFromInventory(Artefact artefact){
+    /*public void removeFromInventory(Artefact artefact){
         inventory.remove(artefact);
-    }
+    }*/
 
-    public void removeFromInventory(String artefact){
+    /*public void removeFromInventory(String artefact){
         inventory.removeIf(
                 a -> a.getName().equals(artefact)
                 || a.getDescription().equals(artefact));
+    }*/
+
+    public void removeFromInventory(String subject){
+        inventory.removeIf(
+                a -> a.getName().equals(subject)
+                        || a.getDescription().equals(subject));
+    }
+
+    public void removeFromInventory(Subject subject){
+        inventory.remove(subject);
     }
 
     public void addToInventory(Artefact artefact){
         //making a deep copy of the artefact so it doesn't get deleted when we remove from location
         Artefact copy = new Artefact(artefact.getName(), artefact.getDescription());
+        inventory.add(copy);
+    }
+
+    public void addToInventory(Subject subject){
+        Subject copy = new Artefact(subject.getName(), subject.getDescription());
         inventory.add(copy);
     }
 

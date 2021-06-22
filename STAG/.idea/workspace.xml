@@ -6,14 +6,11 @@
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Consume.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Consume.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Drop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Drop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Get.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Get.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/GoTo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/GoTo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Inventory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Look.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Look.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Produce.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Produce.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/StagEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/StagExceptions/ArtefactDoesNotExist.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagExceptions/ArtefactDoesNotExist.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/StagExceptions/LocationDoesNotExist.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagExceptions/LocationDoesNotExist.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/StagServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Subject/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Subject/Location.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Subject/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Subject/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -71,7 +71,8 @@ public class Produce implements Command{
         if(character!=null){
             playerLocation.setCharacter(character.getName(),
                     character.getDescription());
-            locationToCheck.removeCharacter(character.getName());
+            //locationToCheck.removeCharacter(character.getName());
+            locationToCheck.removeSubject(character.getName(), locationToCheck.getCharacters());
             return true;
         }
         return false;
@@ -84,7 +85,8 @@ public class Produce implements Command{
         if(furniture!=null){
             playerLocation.setFurniture(furniture.getName(),
                     furniture.getDescription());
-            locationToCheck.removeFurniture(furniture.getName());
+            //locationToCheck.removeFurniture(furniture.getName());
+            locationToCheck.removeSubject(furniture.getName(), locationToCheck.getFurniture());
             return true;
         }
         return false;
@@ -99,8 +101,10 @@ public class Produce implements Command{
             //create new artefact in the current location
             playerLocation.setArtefact(artefact.getName(),
                     artefact.getDescription());
+            System.out.println("Set artefact "+artefact.getName());
             //remove artefact from old location
-            locationToCheck.removeArtefact(artefact.getName());
+            //locationToCheck.removeArtefact(artefact.getName());
+            locationToCheck.removeSubject(artefact.getName(), locationToCheck.getArtefacts());
             return true;
         }
         return false;

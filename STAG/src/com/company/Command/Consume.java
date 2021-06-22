@@ -39,16 +39,19 @@ public class Consume implements Command{
             //we need to check if the artefact, furniture or character is there
             else if (getSubject(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
                 //delete artefact from location
-                playerLocation.removeArtefact(c);
+                //playerLocation.removeArtefact(c);
+                playerLocation.removeSubject(c, playerLocation.getArtefacts());
             } else if (getSubject(c, new ArrayList<>(player.getInventory()))!=null){
                 //delete artefact from player inventory
                 player.removeFromInventory(c);
             } else if (getSubject(c, new ArrayList<>(playerLocation.getFurniture()))!=null){
                 //delete furniture from location
-                playerLocation.removeFurniture(c);
+                //playerLocation.removeFurniture(c);
+                playerLocation.removeSubject(c, playerLocation.getFurniture());
             } else if (getSubject(c, new ArrayList<>(playerLocation.getCharacters()))!=null){
                 //delete character from location
-                playerLocation.removeCharacter(c);
+                //playerLocation.removeCharacter(c);
+                playerLocation.removeSubject(c, playerLocation.getCharacters());
             } else if(getSubject(c, new ArrayList<>(locations))==null){
                 //delete paths to location -> not the actual location
                 locations.removeIf(l -> l.getName().equals(c));
@@ -67,7 +70,7 @@ public class Consume implements Command{
         //if health is zero, need to drop all items in inventory
         if(player.getHealth()==0){
             //get player inventory
-            ArrayList<Artefact> inventory = player.getInventory();
+            ArrayList<Subject> inventory = player.getInventory();
             //if there are items in inventory, place them in the current location
             emptyInventory(inventory);
             //return player to start
@@ -80,13 +83,13 @@ public class Consume implements Command{
         return message;
     }
 
-    private void emptyInventory(ArrayList<Artefact> inventory){
+    private void emptyInventory(ArrayList<Subject> inventory){
         while (!inventory.isEmpty()) {
-            Artefact a = inventory.get(0);
+            Subject s = inventory.get(0);
             //put each artefact in the location
-            playerLocation.setArtefact(a.getName(), a.getDescription());
+            playerLocation.setArtefact(s.getName(), s.getDescription());
             //remove from the player's inventory
-            player.removeFromInventory(a);
+            player.removeFromInventory(s);
         }
     }
 

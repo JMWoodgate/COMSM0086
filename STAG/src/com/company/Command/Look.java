@@ -40,16 +40,16 @@ public class Look implements Command{
 
     private void listSubjects(StringBuilder stringBuilder){
         //list artefacts in location
-        for(Artefact a : playerLocation.getArtefacts()){
-            stringBuilder.append(a.getDescription()).append("\n");
+        for(Subject s : playerLocation.getArtefacts()){
+            stringBuilder.append(s.getDescription()).append("\n");
         }
         //list furniture in location
-        for(Furniture f : playerLocation.getFurniture()){
-            stringBuilder.append(f.getDescription()).append("\n");
+        for(Subject s : playerLocation.getFurniture()){
+            stringBuilder.append(s.getDescription()).append("\n");
         }
         //list characters in location
-        for(Character c : playerLocation.getCharacters()){
-            stringBuilder.append(c.getDescription()).append(("\n"));
+        for(Subject s : playerLocation.getCharacters()){
+            stringBuilder.append(s.getDescription()).append(("\n"));
         }
     }
 

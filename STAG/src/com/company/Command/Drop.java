@@ -4,6 +4,7 @@ import com.company.StagExceptions.ArtefactDoesNotExist;
 import com.company.Subject.Artefact;
 import com.company.Subject.Location;
 import com.company.Subject.Player;
+import com.company.Subject.Subject;
 
 import java.util.ArrayList;
 
@@ -18,14 +19,14 @@ public class Drop implements Command {
     @Override
     public String run(Player player) throws ArtefactDoesNotExist {
         Location playerLocation = player.getLocation();
-        ArrayList<Artefact> inventory = player.getInventory();
-        for(Artefact a : inventory){
-            if(command.contains(a.getName()) ||
-                    command.contains(a.getDescription())){
-                playerLocation.setArtefact(a.getName(), a.getDescription());
-                String message = "You dropped "+a.getDescription()
+        ArrayList<Subject> inventory = player.getInventory();
+        for(Subject s : inventory){
+            if(command.contains(s.getName()) ||
+                    command.contains(s.getDescription())){
+                playerLocation.setArtefact(s.getName(), s.getDescription());
+                String message = "You dropped "+s.getDescription()
                         +" in "+playerLocation.getName();
-                player.removeFromInventory(a);
+                player.removeFromInventory(s);
                 return message;
             }
         } throw new ArtefactDoesNotExist(command);
