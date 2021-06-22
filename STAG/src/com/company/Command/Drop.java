@@ -20,9 +20,11 @@ public class Drop implements Command {
         Location playerLocation = player.getLocation();
         ArrayList<Artefact> inventory = player.getInventory();
         for(Artefact a : inventory){
-            if(command.contains(a.getName()) || command.contains(a.getDescription())){
+            if(command.contains(a.getName()) ||
+                    command.contains(a.getDescription())){
                 playerLocation.setArtefact(a.getName(), a.getDescription());
-                String message = "You dropped "+a.getDescription()+" in "+playerLocation.getName();
+                String message = "You dropped "+a.getDescription()
+                        +" in "+playerLocation.getName();
                 player.removeFromInventory(a);
                 return message;
             }

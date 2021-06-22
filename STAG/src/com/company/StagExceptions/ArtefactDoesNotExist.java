@@ -8,6 +8,6 @@ public class ArtefactDoesNotExist extends StagException{
     }
 
     public String toString(){
-        return (artefact+" does not exist here.");
+        return (artefact+" does not exist.");
     }
 }

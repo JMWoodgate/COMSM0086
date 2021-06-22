@@ -24,7 +24,8 @@ public class Look implements Command{
         //need to return a string that describes the whole location
         StringBuilder stringBuilder = new StringBuilder();
         //get location name/description
-        stringBuilder.append("You are in ").append(playerLocation.getDescription()).append(". ");
+        stringBuilder.append("You are in ")
+                .append(playerLocation.getDescription()).append(". ");
         //list subjects (& players) in the location
         stringBuilder.append("You can see:\n");
         listSubjects(stringBuilder);
@@ -55,13 +56,14 @@ public class Look implements Command{
     private void listPlayers(StringBuilder stringBuilder){
         //list other players in location
         for(Map.Entry<String, Player> set : players.entrySet()){
-            Player checkPlayer = set.getValue();
-            String checkName = checkPlayer.getName();
-            String checkLocation = checkPlayer.getLocation().getName();
+            Player comparePlayer = set.getValue();
+            String compareName = comparePlayer.getName();
+            String compareLocation = comparePlayer.getLocation().getName();
             String currentName = player.getName();
             String currentLocation = playerLocation.getName();
-            if(checkLocation.equals(currentLocation)&&!checkName.equals(currentName)){
-                stringBuilder.append(checkPlayer.getName()).append("\n");
+            if(compareLocation.equals(currentLocation)&&
+                    !compareName.equals(currentName)){
+                stringBuilder.append(comparePlayer.getName()).append("\n");
             }
         }
     }

@@ -8,5 +8,5 @@ public class LocationDoesNotExist extends StagException{
         this.locationName = locationName;
     }
 
-    public String toString(){ return ("Location does not exist "+locationName); }
+    public String toString(){ return ("Can't find location "+locationName); }
 }

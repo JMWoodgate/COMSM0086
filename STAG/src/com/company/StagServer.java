@@ -9,7 +9,8 @@ class StagServer
 
     public static void main(String args[])
     {
-        if(args.length != 2) System.out.println("Usage: java StagServer <entity-file> <action-file>");
+        if(args.length != 2) System.out.println(
+                "Usage: java StagServer <entity-file> <action-file>");
         else new StagServer(args[0], args[1], 8888);
     }
 
@@ -33,8 +34,10 @@ class StagServer
         try {
             // Next line will block until a connection is received
             Socket socket = ss.accept();
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            BufferedWriter out = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream()));
             processNextCommand(in, out);
             out.close();
             in.close();
@@ -44,7 +47,8 @@ class StagServer
         }
     }
 
-    private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException
+    private void processNextCommand(BufferedReader in, BufferedWriter out)
+            throws IOException
     {
         String line = in.readLine();
         String[] splitString = line.split(":", 2);

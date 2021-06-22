@@ -39,7 +39,8 @@ public class Produce implements Command{
     private void moveSubject(String subject)
             throws SubjectDoesNotExist {
         //need to check all locations for the artefact (not just unplaced)
-        Location subjectLocation = (Location) getSubject(subject, new ArrayList<>(locations));
+        Location subjectLocation = (Location) getSubject(
+                subject, new ArrayList<>(locations));
         //if subjectLocation returns null, the subject is itself a location
         if(subjectLocation!=null){
             //need to add a path to the new location from the current
@@ -47,7 +48,7 @@ public class Produce implements Command{
             return;
         }
         for(Location l : locations){
-            //check if subject is an artefact & move if so (function will return true)
+            //check if subject is an artefact & move if so
             if(moveArtefact(l, subject)) {
                 return;
             }
@@ -68,7 +69,8 @@ public class Produce implements Command{
         Character character = (Character) getSubject(
                 subject, new ArrayList<>(locationToCheck.getCharacters()));
         if(character!=null){
-            playerLocation.setCharacter(character.getName(), character.getDescription());
+            playerLocation.setCharacter(character.getName(),
+                    character.getDescription());
             locationToCheck.removeCharacter(character.getName());
             return true;
         }
@@ -80,7 +82,8 @@ public class Produce implements Command{
         Furniture furniture = (Furniture) getSubject(
                 subject, new ArrayList<>(locationToCheck.getFurniture()));
         if(furniture!=null){
-            playerLocation.setFurniture(furniture.getName(), furniture.getDescription());
+            playerLocation.setFurniture(furniture.getName(),
+                    furniture.getDescription());
             locationToCheck.removeFurniture(furniture.getName());
             return true;
         }
@@ -103,7 +106,8 @@ public class Produce implements Command{
         return false;
     }
 
-    public Subject getSubject(String subjectName, ArrayList<Subject> subjectList){
+    public Subject getSubject(String subjectName,
+                              ArrayList<Subject> subjectList){
         if(subjectList == null){
             return null;
         }

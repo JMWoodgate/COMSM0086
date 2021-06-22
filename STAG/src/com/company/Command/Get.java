@@ -20,7 +20,8 @@ public class Get implements Command{
         Location playerLocation = player.getLocation();
         ArrayList<Artefact> locationArtefacts = playerLocation.getArtefacts();
         for(Artefact a : locationArtefacts){
-            if(command.contains(a.getName()) || command.contains(a.getDescription())){
+            if(command.contains(a.getName())
+                    || command.contains(a.getDescription())){
                 player.addToInventory(a);
                 String message = "You picked up "+(a.getDescription());
                 playerLocation.removeArtefact(a);

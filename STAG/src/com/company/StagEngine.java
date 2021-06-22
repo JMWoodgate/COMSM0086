@@ -30,7 +30,7 @@ public class StagEngine {
         return command.run(currentPlayer);
     }
 
-    public Command interpretCommand(String command) {
+    private Command interpretCommand(String command) {
         command = command.toLowerCase(Locale.ROOT);
         if(command.contains("inv")) {
             return new Inventory();
