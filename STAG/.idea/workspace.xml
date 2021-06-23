@@ -3,36 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="created visitor design pattern structure">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Consume.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Consume.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Custom.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Custom.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Drop.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Drop.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Get.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Get.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/GoTo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/GoTo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Inventory.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Inventory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Look.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Look.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Produce.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Command/Produce.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Parsing/EntitiesParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/Parsing/EntitiesParser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/StagEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/STAG/com/company/StagEngine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Subject/Element.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Subject/Location.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Subject/Player.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/STAG/com/company/Subject/Subject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Consume.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Consume.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Custom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Custom.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Drop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Drop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Get.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Get.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/GoTo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/GoTo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Health.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Health.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Inventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Look.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Look.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Produce.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Produce.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/StagEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/StagEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Subject/Element.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Element.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Subject/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Subject/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Subject/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Subject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Subject.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,5 +198,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="created visitor design pattern structure" />
     <option name="LAST_COMMIT_MESSAGE" value="created visitor design pattern structure" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/company/Element/Subject.java</url>
+          <line>53</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

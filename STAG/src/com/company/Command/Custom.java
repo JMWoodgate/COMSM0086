@@ -45,18 +45,15 @@ public class Custom implements Command{
                     checkSubjects(a);
                     //check if anything to consume, if there is, remove from location/inventory
                     Consume consume = new Consume(a, locations, players);
-                    String consumeMessage = consume.run(player);
+                    String message = consume.run(player);
                     //check if anything to produce, if there is, add to location
                     Produce produce = new Produce(a, locations);
-                    String produceMessage = produce.run(player);
+                    produce.run(player);
                     //return the action's narration - with message if health ran out
-                    String message = null;
-                    if(consumeMessage!=null){
-                        message = consumeMessage;
-                    } if(produceMessage!=null){
-                        message = produceMessage;
+                    if(message!=null){
+                        return message+a.getNarration();
                     }
-                    return message + a.getNarration();
+                    return a.getNarration();
                 }
             }
         }

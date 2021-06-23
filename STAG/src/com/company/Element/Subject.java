@@ -22,6 +22,25 @@ public class Subject implements Element {
         return description;
     }
 
+    public boolean moveSubject(String subject,
+                                ArrayList<Subject> subjectListToCheck,
+                                ArrayList<Subject> currentLocationSubjectList){
+        //get subject object from location
+        Subject subjectObject = getSubject(subject, subjectListToCheck);
+        //check if the subject to produce exists in this location
+        if(subjectObject!=null){
+            //create new subject in the current location
+            setSubject(subjectObject.getName(),
+                    subjectObject.getDescription(),
+                    currentLocationSubjectList);
+            //remove subject from its old location
+            removeSubject(subjectObject.getName(), subjectListToCheck);
+            return true;
+        }
+        return false;
+    }
+
+
     public void setSubject(String name, String description,
                            ArrayList<Subject> subjectList){
         Subject subject = new Subject(name, description);
