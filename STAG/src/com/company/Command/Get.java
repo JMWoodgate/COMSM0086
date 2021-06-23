@@ -1,5 +1,6 @@
 package com.company.Command;
 
+import com.company.Element.SubjectUtility;
 import com.company.StagExceptions.ArtefactDoesNotExist;
 import com.company.Element.Location;
 import com.company.Element.Player;
@@ -10,11 +11,11 @@ import java.util.ArrayList;
 public class Get implements Command{
 
     private final String command;
-    private final Subject subjectUtility;
+    private final SubjectUtility subjectUtility;
 
     public Get(String command){
         this.command = command;
-        subjectUtility = new Subject();
+        subjectUtility = new SubjectUtility();
     }
 
     @Override

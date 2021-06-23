@@ -11,12 +11,12 @@ public class Produce implements Command{
     private final Action action;
     private Location playerLocation;
     private final ArrayList<Element> locations;
-    private final Subject subjectUtility;
+    private final SubjectUtility subjectUtility;
 
     public Produce(Action action, ArrayList<Element> locations){
         this.action = action;
         this.locations = locations;
-        subjectUtility = new Subject();
+        subjectUtility = new SubjectUtility();
     }
 
     @Override

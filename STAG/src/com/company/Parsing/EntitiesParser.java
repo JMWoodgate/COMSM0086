@@ -2,6 +2,7 @@ package com.company.Parsing;
 import com.alexmerz.graphviz.*;
 import com.alexmerz.graphviz.objects.*;
 import com.company.Element.Location;
+import com.company.Element.SubjectUtility;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.UnknownDataType;
@@ -14,10 +15,10 @@ import java.util.Locale;
 public class EntitiesParser {
 
     private final ArrayList<Location> locations;
-    private final Subject subjectUtility;
+    private final SubjectUtility subjectUtility;
 
     public EntitiesParser(String entityFilename){
-        subjectUtility = new Subject();
+        subjectUtility = new SubjectUtility();
         locations = new ArrayList<>();
         try {
             Parser parser = new Parser();

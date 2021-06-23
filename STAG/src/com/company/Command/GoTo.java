@@ -1,10 +1,7 @@
 package com.company.Command;
 
+import com.company.Element.*;
 import com.company.StagExceptions.LocationDoesNotExist;
-import com.company.Element.Element;
-import com.company.Element.Location;
-import com.company.Element.Player;
-import com.company.Element.Subject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,14 +11,14 @@ public class GoTo implements Command{
     private final String command;
     private final ArrayList<Element> locations;
     private final HashMap<String, Player> players;
-    private final Subject subjectUtility;
+    private final SubjectUtility subjectUtility;
 
     public GoTo(String command, ArrayList<Element> locations,
                 HashMap<String, Player> players){
         this.command = command;
         this.locations = locations;
         this.players = players;
-        subjectUtility = new Subject();
+        subjectUtility = new SubjectUtility();
     }
 
     @Override

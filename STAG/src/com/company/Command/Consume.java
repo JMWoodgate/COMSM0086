@@ -13,7 +13,7 @@ public class Consume implements Command{
     private Player player;
     private Location playerLocation;
     private final ArrayList<Element> locations;
-    private final Subject subjectUtility;
+    private final SubjectUtility subjectUtility;
     private final HashMap<String, Player> players;
 
     public Consume(Action action, ArrayList<Element> locations,
@@ -22,7 +22,7 @@ public class Consume implements Command{
         this.locations = locations;
         this.players = players;
         //this can be used to access the utility functions inside Subject
-        subjectUtility = new Subject();
+        subjectUtility = new SubjectUtility();
     }
 
     @Override
@@ -30,38 +30,39 @@ public class Consume implements Command{
         String message = null;
         this.player = player;
         playerLocation = player.getLocation();
-        //check if subject is in player inventory or current player location
         ArrayList<String> consumed = action.getConsumed();
         //if there is nothing to consume, move on
         if (consumed == null) {
             return null;
         }
         for(String c : consumed) {
-            //if the item is health, we detract from player's health level
+            //loop through each item and consume health or subject
             if(c.equals("health")){
                 message = consumeHealth();
             }else {
-                //look for subject in locations
-                Subject subject = subjectUtility.getSubjectFromLocation(c, playerLocation);
-                if (subject != null) {
-                    subjectUtility.removeSubjectFromLocation(subject);
-                } //look for subject in player inventory
-                else if (subjectUtility.getSubject(c, player.getInventory()) != null) {
-                    //delete subject from player inventory
-                    subjectUtility.removeSubject(c, player.getInventory());
-                } //look for subject in location paths
-                else if (subjectUtility.getElement(c, new ArrayList<>(locations)) == null) {
-                    //delete paths to location -> not the actual location
-                    locations.removeIf(l -> l.getName().equals(c));
-                }
-                else {
-                    //should be unreachable as we have already checked for this, but just in case
-                    //should we be checking for this twice..?
-                    throw new SubjectDoesNotExist();
-                }
+                consumeSubject(c);
             }
         }
         return message;
+    }
+
+    private void consumeSubject(String consumed) throws SubjectDoesNotExist {
+        //look for subject in locations
+        Subject subject = subjectUtility.getSubjectFromLocation(consumed, playerLocation);
+        if (subject != null) {
+            subjectUtility.removeSubjectFromLocation(subject);
+        } //look for subject in player inventory
+        else if (subjectUtility.getSubject(consumed, player.getInventory()) != null) {
+            //delete subject from player inventory
+            subjectUtility.removeSubject(consumed, player.getInventory());
+        } //look for subject in location paths
+        else if (subjectUtility.getElement(consumed, new ArrayList<>(locations)) == null) {
+            //delete paths to location -> not the actual location
+            //locations.removeIf(l -> l.getName().equals(consumed));
+        }
+        else {
+            throw new SubjectDoesNotExist();
+        }
     }
 
     private String consumeHealth(){
@@ -90,7 +91,7 @@ public class Consume implements Command{
         while (!inventory.isEmpty()) {
             Subject s = inventory.get(0);
             //put each artefact in the location
-            s.setSubject(s.getName(), s.getDescription(),
+            subjectUtility.setSubject(s.getName(), s.getDescription(),
                     s.getType(), playerLocation.getArtefacts(),
                     playerLocation);
             //remove from the player's inventory

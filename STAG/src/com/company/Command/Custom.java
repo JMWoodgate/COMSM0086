@@ -16,7 +16,7 @@ public class Custom implements Command{
     private Location playerLocation;
     private Player player;
     private final ArrayList<Element> locations;
-    private final Subject subjectUtility;
+    private final SubjectUtility subjectUtility;
     private final HashMap<String, Player> players;
 
     public Custom(String command, ArrayList<Action> actions,
@@ -25,7 +25,7 @@ public class Custom implements Command{
         this.actions = actions;
         this.locations = locations;
         this.players = players;
-        subjectUtility = new Subject();
+        subjectUtility = new SubjectUtility();
     }
 
     @Override
