@@ -1,7 +1,5 @@
 package com.company.Element;
 
-import com.company.StagExceptions.SubjectDoesNotExist;
-
 import java.util.ArrayList;
 
 public class Subject implements Element {
@@ -80,21 +78,23 @@ public class Subject implements Element {
             return false;
         }
         Location location = subject.getLocation();
-        if(subject.getType().equals("artefact")){
-            removeSubject(subject, location.getArtefacts());
-            return true;
-        }else if(subject.getType().equals("furniture")){
-            removeSubject(subject, location.getFurniture());
-            return true;
-        }else if(subject.getType().equals("character")){
-            removeSubject(subject, location.getCharacters());
-            return true;
+        switch (subject.getType()) {
+            case "artefact":
+                removeSubject(subject, location.getArtefacts());
+                return true;
+            case "furniture":
+                removeSubject(subject, location.getFurniture());
+                return true;
+            case "character":
+                removeSubject(subject, location.getCharacters());
+                return true;
+            default:
+                //subject is in inventory
+                return false;
         }
-        //subject is in inventory
-        return false;
     }
 
-    public Subject getSubjectFromLocation(String subjectName, Location location) throws SubjectDoesNotExist {
+    public Subject getSubjectFromLocation(String subjectName, Location location) {
         ArrayList<Subject> artefacts = location.getArtefacts();
         ArrayList<Subject> furniture = location.getFurniture();
         ArrayList<Subject> characters = location.getCharacters();
@@ -110,11 +110,8 @@ public class Subject implements Element {
         }
         //look for it in location characters
         subject = getSubject(subjectName, characters);
-        if(subject!=null){
-            return subject;
-        }
-        //subject does not exist here
-        return null;
+        //if subject does not exist in this location, it will be null
+        return subject;
     }
 
     public Subject getSubject(String subjectName,

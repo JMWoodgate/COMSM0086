@@ -37,7 +37,7 @@ public class Consume implements Command{
             return null;
         }
         for(String c : consumed) {
-            //if the item is health, we
+            //if the item is health, we detract from player's health level
             if(c.equals("health")){
                 message = consumeHealth();
             }else {
@@ -47,7 +47,7 @@ public class Consume implements Command{
                     subjectUtility.removeSubjectFromLocation(subject);
                 } //look for subject in player inventory
                 else if (subjectUtility.getSubject(c, player.getInventory()) != null) {
-                    //delete artefact from player inventory
+                    //delete subject from player inventory
                     subjectUtility.removeSubject(c, player.getInventory());
                 } //look for subject in location paths
                 else if (subjectUtility.getElement(c, new ArrayList<>(locations)) == null) {
