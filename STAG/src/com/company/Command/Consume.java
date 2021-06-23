@@ -21,7 +21,6 @@ public class Consume implements Command{
         this.action = action;
         this.locations = locations;
         this.players = players;
-        //this can be used to access the utility functions inside Subject
         subjectUtility = new SubjectUtility();
     }
 
@@ -55,7 +54,7 @@ public class Consume implements Command{
         else if (subjectUtility.getSubject(consumed, player.getInventory()) != null) {
             //delete subject from player inventory
             subjectUtility.removeSubject(consumed, player.getInventory());
-        } //look for subject in location paths
+        } //look for subject in locations
         else if (subjectUtility.getElement(consumed, new ArrayList<>(locations)) == null) {
             //delete paths to location -> not the actual location
             consumePath(consumed);
@@ -71,8 +70,7 @@ public class Consume implements Command{
             Location location = (Location)l;
             //get the paths from each location
             ArrayList<String> paths = location.getPaths();
-            //if a path in that location is equivalent to that consumed,
-            // remove the path to it (not the actual location)
+            //if equivalent to consumed, remove path to it
             paths.removeIf(p -> p.equals(consumed));
         }
     }
@@ -80,11 +78,10 @@ public class Consume implements Command{
     private String consumeHealth(){
         String message = null;
         player.changeHealth(false);
-        //if health is zero, need to drop all items in inventory
+        //if health is zero, drop all items in inventory
         if(player.getHealth()==0){
-            //get player inventory
             ArrayList<Subject> inventory = player.getInventory();
-            //if there are items in inventory, place them in the current location
+            //if items in inventory, place in current location
             emptyInventory(inventory);
             //return player to start
             player.setLocation((Location)locations.get(0));
@@ -102,7 +99,7 @@ public class Consume implements Command{
     private void emptyInventory(ArrayList<Subject> inventory){
         while (!inventory.isEmpty()) {
             Subject s = inventory.get(0);
-            //put each artefact in the location
+            //put each artefact in current location
             subjectUtility.setSubject(s.getName(), s.getDescription(),
                     s.getType(), playerLocation.getArtefacts(),
                     playerLocation);

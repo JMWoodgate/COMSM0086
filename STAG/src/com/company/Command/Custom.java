@@ -38,27 +38,34 @@ public class Custom implements Command{
             ArrayList<String> triggers = a.getTriggers();
             //if the command matches a trigger word of the action, check subjects,
             // consume, produce, then return narration
-            for(String t : triggers) {
-                if (command.contains(t)) {
-                    //check all subjects exist in command and in game
-                    checkCommand(command, a);
-                    checkSubjects(a);
-                    //check if anything to consume, if there is, remove from location/inventory
-                    Consume consume = new Consume(a, locations, players);
-                    String message = consume.run(player);
-                    //check if anything to produce, if there is, add to location
-                    Produce produce = new Produce(a, locations);
-                    produce.run(player);
-                    //return the action's narration - with message if health ran out
-                    if(message!=null){
-                        return a.getNarration()+"\n"+message;
-                    }
-                    return a.getNarration();
-                }
+            String message = runTriggers(triggers, a);
+            if(message!=null){
+                return message;
             }
         }
         //if we get through all the actions and haven't found it, invalid command
         throw new InvalidCommand(command);
+    }
+
+    private String runTriggers(ArrayList<String> triggers, Action a) throws SubjectDoesNotExist {
+        for(String t : triggers) {
+            if (command.contains(t)) {
+                //check all subjects exist in command and in game
+                checkCommand(command, a);
+                checkSubjects(a);
+                //check if anything to consume, if there is, remove from location/inventory
+                Consume consume = new Consume(a, locations, players);
+                String message = consume.run(player);
+                //check if anything to produce, if there is, add to location
+                Produce produce = new Produce(a, locations);
+                produce.run(player);
+                //return the action's narration - with message if health ran out
+                if(message!=null){
+                    return a.getNarration()+"\n"+message;
+                }
+                return a.getNarration();
+            }
+        } return null;
     }
 
     private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
