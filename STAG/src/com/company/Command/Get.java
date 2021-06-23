@@ -24,8 +24,8 @@ public class Get implements Command{
         for(Subject s : locationArtefacts){
             if(command.contains(s.getName())
                     || command.contains(s.getDescription())){
-                subjectUtility.setSubject(
-                        s.getName(), s.getDescription(), player.getInventory());
+                subjectUtility.setSubject(s.getName(), s.getDescription(),
+                        s.getType(), player.getInventory(), null);
                 String message = "You picked up "+(s.getDescription());
                 subjectUtility.removeSubject(s, player.getLocation().getArtefacts());
                 return message;

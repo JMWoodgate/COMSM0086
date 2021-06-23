@@ -34,12 +34,12 @@ public class Produce implements Command{
                 player.changeHealth(true);
             }else{
                 //otherwise we move the item produce to the player's location
-                moveSubject(p);
+                produceSubject(p);
             }
         } return null;
     }
 
-    private void moveSubject(String subject)
+    private void produceSubject(String subject)
             throws SubjectDoesNotExist {
         //need to check all locations for the artefact (not just unplaced)
         Location subjectLocation = (Location) subjectUtility.getElement(
@@ -55,17 +55,17 @@ public class Produce implements Command{
             //check if subject is an artefact & move if so
             Location location = (Location)l;
             if(subjectUtility.moveSubject(subject, location.getArtefacts(),
-                    playerLocation.getArtefacts())) {
+                    playerLocation.getArtefacts(), (Location)l)) {
                 return;
             }
             //check if it is furniture & move if so
             if(subjectUtility.moveSubject(subject, location.getFurniture(),
-                    playerLocation.getFurniture())) {
+                    playerLocation.getFurniture(), (Location)l)) {
                 return;
             }
             //check if it is a character & move if so
             if(subjectUtility.moveSubject(subject, location.getCharacters(),
-                    playerLocation.getCharacters())) {
+                    playerLocation.getCharacters(), (Location)l)) {
                 return;
             }
         }

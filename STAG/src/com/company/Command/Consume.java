@@ -40,30 +40,25 @@ public class Consume implements Command{
             //if the item is health, we
             if(c.equals("health")){
                 message = consumeHealth();
-            }
-            //we need to check if the artefact, furniture or character is there
-            else if (subjectUtility.getSubject(c, new ArrayList<>(playerLocation.getArtefacts()))!=null) {
-                //delete artefact from location
-                //playerLocation.removeArtefact(c);
-                subjectUtility.removeSubject(c, playerLocation.getArtefacts());
-            } else if (subjectUtility.getSubject(c, player.getInventory())!=null){
-                //delete artefact from player inventory
-                subjectUtility.removeSubject(c, player.getInventory());
-            } else if (subjectUtility.getSubject(c, playerLocation.getFurniture())!=null){
-                //delete furniture from location
-                //playerLocation.removeFurniture(c);
-                subjectUtility.removeSubject(c, playerLocation.getFurniture());
-            } else if (subjectUtility.getSubject(c, playerLocation.getCharacters())!=null){
-                //delete character from location
-                //playerLocation.removeCharacter(c);
-                subjectUtility.removeSubject(c, playerLocation.getCharacters());
-            } else if(subjectUtility.getElement(c, new ArrayList<>(locations))==null){
-                //delete paths to location -> not the actual location
-                locations.removeIf(l -> l.getName().equals(c));
-            }else{
-                //should be unreachable as we have already checked for this, but just in case
-                //should we be checking for this twice..?
-                throw new SubjectDoesNotExist();
+            }else {
+                //look for subject in locations
+                Subject subject = subjectUtility.getSubjectFromLocation(c, playerLocation);
+                if (subject != null) {
+                    subjectUtility.removeSubjectFromLocation(subject);
+                } //look for subject in player inventory
+                else if (subjectUtility.getSubject(c, player.getInventory()) != null) {
+                    //delete artefact from player inventory
+                    subjectUtility.removeSubject(c, player.getInventory());
+                } //look for subject in location paths
+                else if (subjectUtility.getElement(c, new ArrayList<>(locations)) == null) {
+                    //delete paths to location -> not the actual location
+                    locations.removeIf(l -> l.getName().equals(c));
+                }
+                else {
+                    //should be unreachable as we have already checked for this, but just in case
+                    //should we be checking for this twice..?
+                    throw new SubjectDoesNotExist();
+                }
             }
         }
         return message;
@@ -96,7 +91,8 @@ public class Consume implements Command{
             Subject s = inventory.get(0);
             //put each artefact in the location
             s.setSubject(s.getName(), s.getDescription(),
-                    playerLocation.getArtefacts());
+                    s.getType(), playerLocation.getArtefacts(),
+                    playerLocation);
             //remove from the player's inventory
             subjectUtility.removeSubject(s, player.getInventory());
         }

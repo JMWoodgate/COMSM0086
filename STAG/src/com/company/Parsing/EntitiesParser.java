@@ -137,16 +137,19 @@ public class EntitiesParser {
             String description, String id) throws UnknownDataType {
         switch(dataType){
             case "artefacts":
-                subjectUtility.setSubject(
-                        id, description, currentLocation.getArtefacts());
+                subjectUtility.setSubject(id, description,
+                        "artefact", currentLocation.getArtefacts(),
+                        currentLocation);
                 break;
             case "furniture":
-                subjectUtility.setSubject(
-                        id, description, currentLocation.getFurniture());
+                subjectUtility.setSubject(id, description,
+                        "furniture", currentLocation.getFurniture(),
+                        currentLocation);
                 break;
             case "characters":
-                subjectUtility.setSubject(
-                        id, description, currentLocation.getCharacters());
+                subjectUtility.setSubject(id, description,
+                        "character", currentLocation.getCharacters(),
+                        currentLocation);
                 break;
             default:
                 throw new UnknownDataType(dataType);

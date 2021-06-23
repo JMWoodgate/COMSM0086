@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72d4637b-eb90-4a1f-980e-a1c978c898b9" name="Default Changelist" comment="created visitor design pattern structure">
-      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Custom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Custom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Consume.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Consume.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Drop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Drop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Command/Get.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Get.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/Command/Produce.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Command/Produce.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Element/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Element/Subject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Parsing/EntitiesParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,16 +201,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="created visitor design pattern structure" />
     <option name="LAST_COMMIT_MESSAGE" value="created visitor design pattern structure" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/company/Element/Subject.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
