@@ -51,7 +51,7 @@ public class Custom implements Command{
                     produce.run(player);
                     //return the action's narration - with message if health ran out
                     if(message!=null){
-                        return message+a.getNarration();
+                        return a.getNarration()+"\n"+message;
                     }
                     return a.getNarration();
                 }

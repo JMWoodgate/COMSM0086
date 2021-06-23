@@ -50,6 +50,7 @@ public class Produce implements Command{
             playerLocation.setPath(subject);
             return;
         }
+        //loop through locations until we find the subject
         for(Element l : locations){
             //check if subject is an artefact & move if so
             Location location = (Location)l;
@@ -69,48 +70,5 @@ public class Produce implements Command{
             }
         }
         throw new SubjectDoesNotExist();
-    }
-
-
-    private boolean moveCharacter(Location locationToCheck, String subject){
-        //get character from location
-        Subject character = subjectUtility.getSubject(
-                subject, locationToCheck.getCharacters());
-        if(character!=null){
-            subjectUtility.setSubject(character.getName(),
-                    character.getDescription(), playerLocation.getCharacters());
-            subjectUtility.removeSubject(character.getName(), locationToCheck.getCharacters());
-            return true;
-        }
-        return false;
-    }
-
-    private boolean moveFurniture(Location locationToCheck, String subject){
-        //get furniture from location
-        Subject furniture = subjectUtility.getSubject(
-                subject, locationToCheck.getFurniture());
-        if(furniture!=null){
-            subjectUtility.setSubject(furniture.getName(),
-                    furniture.getDescription(), playerLocation.getFurniture());
-            subjectUtility.removeSubject(furniture.getName(), locationToCheck.getFurniture());
-            return true;
-        }
-        return false;
-    }
-
-    private boolean moveArtefact(Location locationToCheck, String subject){
-        //get artefact from location
-        Subject artefact = subjectUtility.getSubject(
-                subject, locationToCheck.getArtefacts());
-        //check if the artefact to produce exists in this location
-        if(artefact!=null){
-            //create new artefact in the current location
-            subjectUtility.setSubject(artefact.getName(),
-                    artefact.getDescription(), playerLocation.getArtefacts());
-            //remove artefact from old location
-            subjectUtility.removeSubject(artefact.getName(), locationToCheck.getArtefacts());
-            return true;
-        }
-        return false;
     }
 }
