@@ -9,7 +9,7 @@ public class SubjectUtility {
     public boolean moveSubject(String subject,
                                ArrayList<Subject> subjectListToCheck,
                                ArrayList<Subject> currentLocationSubjectList,
-                               Location location){
+                               Location currentLocation){
         //get subject object from location
         Subject subjectObject = getSubject(subject, subjectListToCheck);
         //check if the subject to produce exists in this location
@@ -19,14 +19,13 @@ public class SubjectUtility {
                     subjectObject.getDescription(),
                     subjectObject.getType(),
                     currentLocationSubjectList,
-                    location);
+                    currentLocation);
             //remove subject from its old location
             removeSubject(subjectObject.getName(), subjectListToCheck);
             return true;
         }
         return false;
     }
-
 
     public void setSubject(String name, String description,
                            String type, ArrayList<Subject> subjectList,

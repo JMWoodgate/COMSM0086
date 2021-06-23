@@ -58,10 +58,22 @@ public class Consume implements Command{
         } //look for subject in location paths
         else if (subjectUtility.getElement(consumed, new ArrayList<>(locations)) == null) {
             //delete paths to location -> not the actual location
-            //locations.removeIf(l -> l.getName().equals(consumed));
+            consumePath(consumed);
         }
         else {
             throw new SubjectDoesNotExist();
+        }
+    }
+
+    private void consumePath(String consumed){
+        //loop through all locations
+        for(Element l : locations){
+            Location location = (Location)l;
+            //get the paths from each location
+            ArrayList<String> paths = location.getPaths();
+            //if a path in that location is equivalent to that consumed,
+            // remove the path to it (not the actual location)
+            paths.removeIf(p -> p.equals(consumed));
         }
     }
 

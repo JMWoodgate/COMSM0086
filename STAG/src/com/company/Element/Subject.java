@@ -11,6 +11,7 @@ public class Subject implements Element {
                    String type, Location location){
         this.name = name;
         this.description = description;
+        //type will be artefact, character, or furniture
         this.type = type;
         //if location is null, it is in the player's inventory
         this.location = location;

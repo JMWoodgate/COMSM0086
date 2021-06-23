@@ -5,13 +5,14 @@ import java.util.ArrayList;
 public class Player implements Element {
 
     private final String name;
-    private final ArrayList<Subject> inventory = new ArrayList<>();
+    private final ArrayList<Subject> inventory;
     private Location location;
     private int health;
 
     public Player(String name){
         this.name = name;
         health = 3;
+        inventory = new ArrayList<>();
     }
 
     public void changeHealth(boolean minusOrPlus){
