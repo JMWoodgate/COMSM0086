@@ -18,6 +18,7 @@ public class Get implements Command{
         subjectUtility = new SubjectUtility();
     }
 
+    //very similar to drop
     @Override
     public String run(Player player) throws ArtefactDoesNotExist {
         Location playerLocation = player.getLocation();

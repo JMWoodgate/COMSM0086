@@ -13,10 +13,8 @@ public class Custom implements Command{
 
     private final String command;
     private final ArrayList<Action> actions;
-    private Location playerLocation;
     private Player player;
     private final ArrayList<Element> locations;
-    private final SubjectUtility subjectUtility;
     private final HashMap<String, Player> players;
 
     public Custom(String command, ArrayList<Action> actions,
@@ -25,12 +23,10 @@ public class Custom implements Command{
         this.actions = actions;
         this.locations = locations;
         this.players = players;
-        subjectUtility = new SubjectUtility();
     }
 
     @Override
     public String run(Player player) throws StagException {
-        playerLocation = player.getLocation();
         this.player = player;
         //loop through all of the actions we have read in from file
         for(Action a : actions){
@@ -52,29 +48,31 @@ public class Custom implements Command{
             if (command.contains(t)) {
                 //check all subjects exist in command and in game
                 checkCommand(command, a);
-                checkSubjects(a);
                 //check if anything to consume, if there is, remove from location/inventory
                 Consume consume = new Consume(a, locations, players);
                 String message = consume.run(player);
                 //check if anything to produce, if there is, add to location
                 Produce produce = new Produce(a, locations);
                 produce.run(player);
-                //return the action's narration - with message if health ran out
-                if(message!=null){
-                    return a.getNarration()+"\n"+message;
-                }
-                return a.getNarration();
+                return getMessage(a, message);
             }
         } return null;
     }
 
+    private String getMessage(Action a, String message){
+        //return the action's narration - with message if health ran out
+        if(message!=null){
+            return a.getNarration()+"\n"+message;
+        }
+        return a.getNarration();
+    }
+
     private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
         //need to check that at least one subject is present in the command (if required)
-        if(action.getSubjects()!=null) {
-            if (!checkCommandSubjects(command, action)) {
-                throw new SubjectDoesNotExist();
-            }
-        }else{
+        if(action.getSubjects()==null) {
+            throw new SubjectDoesNotExist();
+        }
+        if(!checkCommandSubjects(command, action)) {
             throw new SubjectDoesNotExist();
         }
     }
@@ -87,28 +85,5 @@ public class Custom implements Command{
             }
         }
         return false;
-    }
-
-    private void checkSubjects(Action action) throws SubjectDoesNotExist {
-        ArrayList<String> subjects = action.getSubjects();
-        for(String s : subjects){
-            //check in play inventory
-            if(subjectUtility.getElement(s, new ArrayList<>(player.getInventory()))==null){
-                //check in location artefacts
-                if(subjectUtility.getElement(s, new ArrayList<>(playerLocation.getArtefacts()))==null){
-                    //check in location furniture
-                    if(subjectUtility.getElement(s, new ArrayList<>(playerLocation.getFurniture()))==null){
-                        //check in location characters
-                        if(subjectUtility.getElement(s, new ArrayList<>(playerLocation.getCharacters()))==null){
-                            //check in locations
-                            if(subjectUtility.getElement(s, locations)==null){
-                                //if the subject is in none of these, throw error
-                                throw new SubjectDoesNotExist();
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }

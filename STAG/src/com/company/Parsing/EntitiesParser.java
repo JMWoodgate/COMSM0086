@@ -6,7 +6,6 @@ import com.company.Element.SubjectUtility;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
 import com.company.StagExceptions.UnknownDataType;
-import com.company.Element.Subject;
 
 import java.io.FileReader;
 import java.util.ArrayList;
