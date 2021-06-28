@@ -13,32 +13,55 @@ public class DropOrGet implements Command {
 
     private final String command;
     private final SubjectUtility subjectUtility;
-    private final ArrayList<Subject> listToAddTo;
-    private final ArrayList<Subject> listToRemoveFrom;
+    private ArrayList<Subject> listToAddTo;
+    private ArrayList<Subject> listToRemoveFrom;
     private final Location location;
 
-    public DropOrGet(String command, ArrayList<Subject> listToAddTo,
-                     ArrayList<Subject> listToRemoveFrom,Location location){
+    public DropOrGet(String command, Location location){
         this.command = command;
-        subjectUtility = new SubjectUtility();
-        this.listToAddTo = listToAddTo;
-        this.listToRemoveFrom = listToRemoveFrom;
         //if command is get, location will be null
         this.location = location;
+        subjectUtility = new SubjectUtility();
+        listToAddTo = new ArrayList<>();
+        listToRemoveFrom = new ArrayList<>();
     }
 
     @Override
     public String run(Player player) throws StagException {
+        //set which list we are adding to/removing from
+        setLists(player);
         for(Subject s : listToRemoveFrom){
             if(command.contains(s.getName()) ||
                     command.contains(s.getDescription())){
                 subjectUtility.setSubject(s, listToAddTo,
                         //location will be null if command is get
                         location);
-                String message = s.getDescription()+" was moved.";
                 subjectUtility.removeSubject(s, listToRemoveFrom);
-                return message;
+                //get drop or get message
+                return getMessage(s);
             }
         } throw new ArtefactDoesNotExist(command);
+    }
+
+    private void setLists(Player player){
+        //location will be null if command is get
+        if(location == null){
+            listToAddTo = player.getInventory();
+            listToRemoveFrom = player.getLocation().getArtefacts();
+        } else {
+            listToAddTo = player.getLocation().getArtefacts();
+            listToRemoveFrom = player.getInventory();
+        }
+    }
+
+    private String getMessage(Subject subject){
+        String message;
+        if(location == null){
+            message = "You picked up "+(subject.getDescription());
+        }else{
+            message = "You dropped "+subject.getDescription()
+                    +" in "+location.getDescription();
+        }
+        return message;
     }
 }
