@@ -139,9 +139,8 @@ public class EntitiesParser {
         if(dataType.equals("artefacts") ||
                 dataType.equals("furniture") ||
                 dataType.equals("characters")){
-            Subject subject = new Subject(id, description, dataType, currentLocation);
-            subjectUtility.setSubject(subject, currentLocation.getArtefacts(),
-                currentLocation);
+            Subject subject = new Subject(id, description, dataType);
+            subjectUtility.setSubject(subject, currentLocation.getArtefacts());
         }else{
             throw new UnknownDataType(dataType);
         }

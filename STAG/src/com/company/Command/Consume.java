@@ -49,7 +49,7 @@ public class Consume implements Command{
         //look for subject in locations
         Subject subject = subjectUtility.getSubjectFromLocation(consumed, playerLocation);
         if (subject != null) {
-            subjectUtility.removeSubjectFromLocation(subject);
+            subjectUtility.removeSubjectFromLocation(subject, playerLocation);
         } //look for subject in player inventory
         else if (subjectUtility.getSubject(consumed, player.getInventory()) != null) {
             //delete subject from player inventory
@@ -100,8 +100,8 @@ public class Consume implements Command{
         while (!inventory.isEmpty()) {
             Subject s = inventory.get(0);
             //put each artefact in current location
-            subjectUtility.setSubject(s, playerLocation.getArtefacts(),
-                    playerLocation);
+            subjectUtility.setSubject(s, playerLocation.getArtefacts()/*,
+                    playerLocation*/);
             //remove from the player's inventory
             subjectUtility.removeSubject(s, player.getInventory());
         }

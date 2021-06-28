@@ -33,9 +33,7 @@ public class DropOrGet implements Command {
         for(Subject s : listToRemoveFrom){
             if(command.contains(s.getName()) ||
                     command.contains(s.getDescription())){
-                subjectUtility.setSubject(s, listToAddTo,
-                        //location will be null if command is get
-                        location);
+                subjectUtility.setSubject(s, listToAddTo/*, location*/);
                 subjectUtility.removeSubject(s, listToRemoveFrom);
                 //get drop or get message
                 return getMessage(s);

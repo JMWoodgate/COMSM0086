@@ -8,16 +8,14 @@ public class SubjectUtility {
 
     public boolean moveSubject(String subject,
                                ArrayList<Subject> subjectListToCheck,
-                               ArrayList<Subject> currentLocationSubjectList,
-                               Location currentLocation){
+                               ArrayList<Subject> currentLocationSubjectList){
         //get subject object from location
         Subject subjectObject = getSubject(subject, subjectListToCheck);
         //check if the subject to produce exists in this location
         if(subjectObject!=null){
             //create new subject in the current location
             setSubject(subjectObject,
-                    currentLocationSubjectList,
-                    currentLocation);
+                    currentLocationSubjectList);
             //remove subject from its old location
             removeSubject(subjectObject.getName(), subjectListToCheck);
             return true;
@@ -25,12 +23,11 @@ public class SubjectUtility {
         return false;
     }
 
-    public void setSubject(Subject subjectToCopy, ArrayList<Subject> subjectList,
-                           Location location){
+    public void setSubject(Subject subjectToCopy, ArrayList<Subject> subjectList){
         String name = subjectToCopy.getName();
         String description = subjectToCopy.getDescription();
         String type = subjectToCopy.getType();
-        Subject subject = new Subject(name, description, type, location);
+        Subject subject = new Subject(name, description, type);
         subjectList.add(subject);
     }
 
@@ -46,11 +43,10 @@ public class SubjectUtility {
         subjectList.remove(subject);
     }
 
-    public void removeSubjectFromLocation(Subject subject){
+    public void removeSubjectFromLocation(Subject subject, Location location){
         if(subject==null){
             return;
         }
-        Location location = subject.getLocation();
         switch (subject.getType()) {
             case "artefact":
                 removeSubject(subject, location.getArtefacts());
