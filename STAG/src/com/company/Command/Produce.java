@@ -19,7 +19,7 @@ public class Produce implements Command{
     }
 
     @Override
-    public String run(Player player) throws Exception {
+    public String runCommand(Player player) throws Exception {
         playerLocation = player.getLocation();
         ArrayList<String> produced = action.getProduced();
         //if there is nothing to produce by the action, we can skip this

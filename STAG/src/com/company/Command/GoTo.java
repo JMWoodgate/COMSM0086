@@ -21,22 +21,32 @@ public class GoTo implements Command{
     }
 
     @Override
-    public String run(Player player) throws Exception {
+    public String runCommand(Player player) throws Exception {
         String locationName;
-        //get location
+        //get location in command
         for(Element l : locations){
             if(command.contains(l.getName())
                     ||command.contains(l.getDescription())) {
                 locationName = l.getName();
+                //check if there is a path to the new location from the current
+                checkPath(locationName, player);
                 //get the object for new location & set to player's location
                 Location newLocation = (Location) subjectUtility.
                         getElement(locationName, locations);
                 player.setLocation(newLocation);
                 Look look = new Look(players);
                 return "You have moved to " + locationName + "\n"
-                        + look.run(player);
+                        + look.runCommand(player);
             }
         }
         throw new Exception("Location in '"+command+"' does not exist");
+    }
+
+    private void checkPath(String location, Player player) throws Exception {
+        ArrayList<String> paths = player.getLocation().getPaths();
+        if(!paths.contains(location)){
+            throw new Exception("There is not a path to '" +
+                    location+"' from "+player.getLocation().getName());
+        }
     }
 }

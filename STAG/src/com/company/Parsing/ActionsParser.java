@@ -20,7 +20,6 @@ public class ActionsParser {
             for(Object action : actionList){
                 parseAction((JSONObject) action);
             }
-            //printActions();
         } catch (Exception e){
             e.printStackTrace();
         }

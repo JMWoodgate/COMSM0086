@@ -15,7 +15,8 @@ public class Custom implements Command{
     private final HashMap<String, Player> players;
 
     public Custom(String command, ArrayList<Action> actions,
-                  ArrayList<Element> locations, HashMap<String, Player> players){
+                  ArrayList<Element> locations,
+                  HashMap<String, Player> players){
         this.command = command;
         this.actions = actions;
         this.locations = locations;
@@ -23,7 +24,7 @@ public class Custom implements Command{
     }
 
     @Override
-    public String run(Player player) throws Exception {
+    public String runCommand(Player player) throws Exception {
         this.player = player;
         //loop through all of the actions we have read in from file
         for(Action a : actions){
@@ -47,10 +48,10 @@ public class Custom implements Command{
                 checkCommand(command, a);
                 //check if anything to consume, if there is, remove from location/inventory
                 Consume consume = new Consume(a, locations, players);
-                String message = consume.run(player);
+                String message = consume.runCommand(player);
                 //check if anything to produce, if there is, add to location
                 Produce produce = new Produce(a, locations);
-                produce.run(player);
+                produce.runCommand(player);
                 return getMessage(a, message);
             }
         } return null;

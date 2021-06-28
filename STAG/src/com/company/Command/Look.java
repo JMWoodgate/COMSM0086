@@ -17,7 +17,7 @@ public class Look implements Command{
     }
 
     @Override
-    public String run(Player player) {
+    public String runCommand(Player player) {
         this.player = player;
         playerLocation = player.getLocation();
         //need to return a string that describes the whole location
@@ -60,6 +60,7 @@ public class Look implements Command{
             String compareLocation = comparePlayer.getLocation().getName();
             String currentName = player.getName();
             String currentLocation = playerLocation.getName();
+            //make sure we are adding everyone but the current player
             if(compareLocation.equals(currentLocation)&&
                     !compareName.equals(currentName)){
                 stringBuilder.append(comparePlayer.getName()).append("\n");

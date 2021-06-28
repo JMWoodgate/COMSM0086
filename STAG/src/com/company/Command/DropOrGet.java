@@ -22,7 +22,7 @@ public class DropOrGet implements Command {
     }
 
     @Override
-    public String run(Player player) throws Exception {
+    public String runCommand(Player player) throws Exception {
         SubjectUtility subjectUtility = new SubjectUtility();
         //set which list we are adding to/removing from
         setLists(player);
@@ -31,18 +31,20 @@ public class DropOrGet implements Command {
                     command.contains(s.getDescription())){
                 subjectUtility.setSubject(s, listToAddTo);
                 subjectUtility.removeSubject(s, listToRemoveFrom);
-                //get drop or get message
+                //make drop or get message to return
                 return getMessage(s);
             }
-        } throw new Exception("Artefact in "+command+" does not exist");
+        } throw new Exception("Artefact in '"+command+"' does not exist");
     }
 
     private void setLists(Player player){
         //location will be null if command is get
         if(location == null){
+            //if command is get we are adding to inventory and removing from location
             listToAddTo = player.getInventory();
             listToRemoveFrom = player.getLocation().getArtefacts();
         } else {
+            //we do the opposite to get if command is drop
             listToAddTo = player.getLocation().getArtefacts();
             listToRemoveFrom = player.getInventory();
         }

@@ -26,7 +26,7 @@ public class StagEngine {
         //get which type of command it is
         Command command = interpretCommand(commandString);
         //run the command & return the response to print to console
-        return command.run(currentPlayer);
+        return command.runCommand(currentPlayer);
     }
 
     private Command interpretCommand(String command) {

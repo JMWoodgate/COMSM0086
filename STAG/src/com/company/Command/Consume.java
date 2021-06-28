@@ -24,7 +24,7 @@ public class Consume implements Command{
     }
 
     @Override
-    public String run(Player player) throws Exception {
+    public String runCommand(Player player) throws Exception {
         String message = null;
         this.player = player;
         playerLocation = player.getLocation();
@@ -90,7 +90,7 @@ public class Consume implements Command{
             message = "You ran out of health! You have lost your " +
                     "inventory and been returned to the start.\n";
             Look look = new Look(players);
-            message += look.run(player);
+            message += look.runCommand(player);
         }
         return message;
     }
