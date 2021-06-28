@@ -1,7 +1,6 @@
 package com.company.Command;
 
 import com.company.Element.*;
-import com.company.StagExceptions.LocationDoesNotExist;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ public class GoTo implements Command{
     }
 
     @Override
-    public String run(Player player) throws LocationDoesNotExist {
+    public String run(Player player) throws Exception {
         String locationName;
         //get location
         for(Element l : locations){
@@ -38,6 +37,6 @@ public class GoTo implements Command{
                         + look.run(player);
             }
         }
-        throw new LocationDoesNotExist(command);
+        throw new Exception("Location in '"+command+"' does not exist");
     }
 }

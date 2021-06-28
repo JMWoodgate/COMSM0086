@@ -1,5 +1,4 @@
 package com.company;
-import com.company.StagExceptions.StagException;
 import java.io.*;
 import java.net.*;
 
@@ -22,14 +21,12 @@ class StagServer
             System.out.println("Server Listening");
             engine = new StagEngine(entityFilename, actionFilename);
             while(true) acceptNextConnection(ss);
-        } catch(IOException | StagException ioe) {
-            System.err.println(ioe);
-        } catch(NullPointerException npe) {
-            System.out.println("Connection Lost");
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void acceptNextConnection(ServerSocket ss) throws StagException
+    private void acceptNextConnection(ServerSocket ss)
     {
         try {
             // Next line will block until a connection is received
@@ -42,8 +39,8 @@ class StagServer
             out.close();
             in.close();
             socket.close();
-        } catch(IOException ioe) {
-            System.err.println(ioe);
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 

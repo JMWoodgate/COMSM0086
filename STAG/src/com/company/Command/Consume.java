@@ -1,7 +1,6 @@
 package com.company.Command;
 
 import com.company.Action;
-import com.company.StagExceptions.SubjectDoesNotExist;
 import com.company.Element.*;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class Consume implements Command{
     }
 
     @Override
-    public String run(Player player) throws SubjectDoesNotExist {
+    public String run(Player player) throws Exception {
         String message = null;
         this.player = player;
         playerLocation = player.getLocation();
@@ -45,7 +44,7 @@ public class Consume implements Command{
         return message;
     }
 
-    private void consumeSubject(String consumed) throws SubjectDoesNotExist {
+    private void consumeSubject(String consumed) throws Exception {
         //look for subject in locations
         Subject subject = subjectUtility.getSubjectFromLocation(consumed, playerLocation);
         if (subject != null) {
@@ -60,7 +59,7 @@ public class Consume implements Command{
             consumePath(consumed);
         }
         else {
-            throw new SubjectDoesNotExist();
+            throw new Exception("Subject "+consumed+" does not exist.");
         }
     }
 

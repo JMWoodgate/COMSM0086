@@ -4,8 +4,6 @@ import com.company.Element.Location;
 import com.company.Element.Player;
 import com.company.Element.Subject;
 import com.company.Element.SubjectUtility;
-import com.company.StagExceptions.ArtefactDoesNotExist;
-import com.company.StagExceptions.StagException;
 
 import java.util.ArrayList;
 
@@ -18,14 +16,13 @@ public class DropOrGet implements Command {
 
     public DropOrGet(String command, Location location){
         this.command = command;
-        //if command is get, location will be null
         this.location = location;
         listToAddTo = new ArrayList<>();
         listToRemoveFrom = new ArrayList<>();
     }
 
     @Override
-    public String run(Player player) throws StagException {
+    public String run(Player player) throws Exception {
         SubjectUtility subjectUtility = new SubjectUtility();
         //set which list we are adding to/removing from
         setLists(player);
@@ -37,7 +34,7 @@ public class DropOrGet implements Command {
                 //get drop or get message
                 return getMessage(s);
             }
-        } throw new ArtefactDoesNotExist(command);
+        } throw new Exception("Artefact in "+command+" does not exist");
     }
 
     private void setLists(Player player){

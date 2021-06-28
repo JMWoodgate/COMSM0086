@@ -1,9 +1,6 @@
 package com.company.Command;
 
 import com.company.Action;
-import com.company.StagExceptions.InvalidCommand;
-import com.company.StagExceptions.StagException;
-import com.company.StagExceptions.SubjectDoesNotExist;
 import com.company.Element.*;
 
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ public class Custom implements Command{
     }
 
     @Override
-    public String run(Player player) throws StagException {
+    public String run(Player player) throws Exception {
         this.player = player;
         //loop through all of the actions we have read in from file
         for(Action a : actions){
@@ -40,10 +37,10 @@ public class Custom implements Command{
             }
         }
         //if we get through all the actions and haven't found it, invalid command
-        throw new InvalidCommand(command);
+        throw new Exception("Invalid command: "+command);
     }
 
-    private String runTriggers(ArrayList<String> triggers, Action a) throws SubjectDoesNotExist {
+    private String runTriggers(ArrayList<String> triggers, Action a) throws Exception {
         for(String t : triggers) {
             if (command.contains(t)) {
                 //check all subjects exist in command and in game
@@ -67,13 +64,13 @@ public class Custom implements Command{
         return a.getNarration();
     }
 
-    private void checkCommand(String command, Action action) throws SubjectDoesNotExist {
+    private void checkCommand(String command, Action action) throws Exception {
         //need to check that at least one subject is present in the command (if required)
         if(action.getSubjects()==null) {
-            throw new SubjectDoesNotExist();
+            throw new Exception("subject in '"+command+"' does not exist");
         }
         if(!checkCommandSubjects(command, action)) {
-            throw new SubjectDoesNotExist();
+            throw new Exception("subject in '"+command+"' does not exist");
         }
     }
 

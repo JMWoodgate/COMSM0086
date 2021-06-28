@@ -4,7 +4,6 @@ import com.company.Command.*;
 import com.company.Element.*;
 import com.company.Parsing.ActionsParser;
 import com.company.Parsing.EntitiesParser;
-import com.company.StagExceptions.*;
 
 import java.util.*;
 
@@ -23,7 +22,7 @@ public class StagEngine {
         players = new HashMap<>();
     }
 
-    public String execute(String commandString) throws StagException {
+    public String execute(String commandString) throws Exception {
         //get which type of command it is
         Command command = interpretCommand(commandString);
         //run the command & return the response to print to console

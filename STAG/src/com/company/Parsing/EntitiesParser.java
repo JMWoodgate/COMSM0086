@@ -4,9 +4,6 @@ import com.alexmerz.graphviz.objects.*;
 import com.company.Element.Location;
 import com.company.Element.Subject;
 import com.company.Element.SubjectUtility;
-import com.company.StagExceptions.LocationDoesNotExist;
-import com.company.StagExceptions.StagException;
-import com.company.StagExceptions.UnknownDataType;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -33,7 +30,7 @@ public class EntitiesParser {
     }
 
     private void parseGraphs(ArrayList<Graph> subGraphs)
-            throws StagException {
+            throws Exception {
         for(Graph g : subGraphs){
             String elementId = g.getId().getId();
             //if first element id is locations, need to create a new
@@ -43,7 +40,7 @@ public class EntitiesParser {
                 parseLocation(g);
             }
             else if(!elementId.equals("paths")){
-                throw new UnknownDataType(elementId);
+                throw new Exception("Unknown data type: "+elementId);
             }
             ArrayList<Edge> edges = g.getEdges();
             parseEdges(edges);
@@ -56,7 +53,7 @@ public class EntitiesParser {
 
     //parses and stores the edges/paths
     private void parseEdges(ArrayList<Edge> edges)
-            throws LocationDoesNotExist {
+            throws Exception {
         for (Edge e : edges){
             //need to iterate through the stored locations
             //if the location we are on is equal to the source path,
@@ -71,18 +68,18 @@ public class EntitiesParser {
 
     //finds our target location (if it exists) and stores the path details
     private void storePath(String source, String target)
-            throws LocationDoesNotExist {
+            throws Exception {
         for(Location l : locations) {
             if (l.getName().equals(source)) {
                 l.setPath(target);
                 return;
             }
         }
-        throw new LocationDoesNotExist(source);
+        throw new Exception("Location '"+source+"' does not exist");
     }
 
     //loops through graphs and parses each location
-    private void parseLocation(Graph g) throws UnknownDataType {
+    private void parseLocation(Graph g) throws Exception {
         ArrayList<Graph> subGraphs1 = g.getSubgraphs();
         for (Graph g1 : subGraphs1) {
             //create new location and store in array
@@ -110,7 +107,7 @@ public class EntitiesParser {
     //loops through inner graphs to parse
     private void parseInnerGraphs(ArrayList<Graph> subGraphs,
                                   Location currentLocation)
-            throws UnknownDataType {
+            throws Exception {
         for (Graph g2 : subGraphs) {
             String innerElementId = g2.getId().getId();
             ArrayList<Node> nodesEnt = g2.getNodes(false);
@@ -121,7 +118,7 @@ public class EntitiesParser {
     //loop through nodes and parse
     private void parseNodes(ArrayList<Node> nodesEnt,
                             Location currentLocation, String id)
-            throws UnknownDataType {
+            throws Exception {
         for (Node nEnt : nodesEnt) {
             String description = nEnt.getAttribute("description");
             String newId = nEnt.getId().getId();
@@ -135,14 +132,14 @@ public class EntitiesParser {
     //stores description and id of artefact/furniture/characters in current location
     private void storeDetails(
             Location currentLocation, String dataType,
-            String description, String id) throws UnknownDataType {
+            String description, String id) throws Exception {
         if(dataType.equals("artefacts") ||
                 dataType.equals("furniture") ||
                 dataType.equals("characters")){
             Subject subject = new Subject(id, description, dataType);
             subjectUtility.setSubject(subject, currentLocation.getArtefacts());
         }else{
-            throw new UnknownDataType(dataType);
+            throw new Exception("Unknown data type: "+dataType);
         }
     }
 }

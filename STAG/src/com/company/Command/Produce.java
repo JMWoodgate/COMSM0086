@@ -1,7 +1,6 @@
 package com.company.Command;
 
 import com.company.Action;
-import com.company.StagExceptions.SubjectDoesNotExist;
 import com.company.Element.*;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class Produce implements Command{
     }
 
     @Override
-    public String run(Player player) throws SubjectDoesNotExist {
+    public String run(Player player) throws Exception {
         playerLocation = player.getLocation();
         ArrayList<String> produced = action.getProduced();
         //if there is nothing to produce by the action, we can skip this
@@ -40,7 +39,7 @@ public class Produce implements Command{
     }
 
     private void produceSubject(String subject)
-            throws SubjectDoesNotExist {
+            throws Exception {
         //need to check all locations for the artefact (not just unplaced)
         Location subjectLocation = (Location) subjectUtility.getElement(
                 subject, locations);
@@ -69,6 +68,6 @@ public class Produce implements Command{
                 return;
             }
         }
-        throw new SubjectDoesNotExist();
+        throw new Exception("Subject '"+subject+"' does not exist");
     }
 }
