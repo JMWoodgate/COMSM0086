@@ -35,9 +35,13 @@ public class StagEngine {
         if(command.contains("inv")) {
             return new Inventory();
         } else if(command.contains("get")) {
-            return new Get(command);
+            return new DropOrGet(command, currentPlayer.getInventory(),
+                    currentPlayer.getLocation().getArtefacts(),
+                    currentPlayer.getLocation());
         } else if(command.contains("drop")) {
-            return new Drop(command);
+            return new DropOrGet(command, currentPlayer.getLocation().getArtefacts(),
+                    currentPlayer.getInventory(),
+                    currentPlayer.getLocation());
         } else if(command.contains("goto")) {
             return new GoTo(command, locations, players);
         } else if(command.contains("look")) {
