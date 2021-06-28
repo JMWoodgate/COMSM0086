@@ -2,6 +2,7 @@ package com.company.Parsing;
 import com.alexmerz.graphviz.*;
 import com.alexmerz.graphviz.objects.*;
 import com.company.Element.Location;
+import com.company.Element.Subject;
 import com.company.Element.SubjectUtility;
 import com.company.StagExceptions.LocationDoesNotExist;
 import com.company.StagExceptions.StagException;
@@ -135,24 +136,14 @@ public class EntitiesParser {
     private void storeDetails(
             Location currentLocation, String dataType,
             String description, String id) throws UnknownDataType {
-        switch(dataType){
-            case "artefacts":
-                subjectUtility.setSubject(id, description,
-                        "artefact", currentLocation.getArtefacts(),
-                        currentLocation);
-                break;
-            case "furniture":
-                subjectUtility.setSubject(id, description,
-                        "furniture", currentLocation.getFurniture(),
-                        currentLocation);
-                break;
-            case "characters":
-                subjectUtility.setSubject(id, description,
-                        "character", currentLocation.getCharacters(),
-                        currentLocation);
-                break;
-            default:
-                throw new UnknownDataType(dataType);
+        if(dataType.equals("artefacts") ||
+                dataType.equals("furniture") ||
+                dataType.equals("characters")){
+            Subject subject = new Subject(id, description, dataType, currentLocation);
+            subjectUtility.setSubject(subject, currentLocation.getArtefacts(),
+                currentLocation);
+        }else{
+            throw new UnknownDataType(dataType);
         }
     }
 }

@@ -26,8 +26,7 @@ public class Drop implements Command {
         for(Subject s : inventory){
             if(command.contains(s.getName()) ||
                     command.contains(s.getDescription())){
-                subjectUtility.setSubject(s.getName(), s.getDescription(),
-                        s.getType(), playerLocation.getArtefacts(),
+                subjectUtility.setSubject(s, playerLocation.getArtefacts(),
                         playerLocation);
                 String message = "You dropped "+s.getDescription()
                         +" in "+playerLocation.getName();

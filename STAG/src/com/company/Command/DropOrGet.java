@@ -29,15 +29,10 @@ public class DropOrGet implements Command {
 
     @Override
     public String run(Player player) throws StagException {
-        System.out.println("command is "+command);
-        System.out.println("listToAddTo "+listToAddTo);
-        System.out.println("listToRemoveFrom "+listToRemoveFrom);
         for(Subject s : listToRemoveFrom){
-            System.out.println("on subject "+s.getName());
             if(command.contains(s.getName()) ||
                     command.contains(s.getDescription())){
-                subjectUtility.setSubject(s.getName(), s.getDescription(),
-                        s.getType(), listToAddTo,
+                subjectUtility.setSubject(s, listToAddTo,
                         //location will be null if command is get
                         location);
                 String message = s.getDescription()+" was moved.";

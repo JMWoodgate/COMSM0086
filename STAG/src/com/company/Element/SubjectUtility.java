@@ -15,9 +15,7 @@ public class SubjectUtility {
         //check if the subject to produce exists in this location
         if(subjectObject!=null){
             //create new subject in the current location
-            setSubject(subjectObject.getName(),
-                    subjectObject.getDescription(),
-                    subjectObject.getType(),
+            setSubject(subjectObject,
                     currentLocationSubjectList,
                     currentLocation);
             //remove subject from its old location
@@ -27,9 +25,11 @@ public class SubjectUtility {
         return false;
     }
 
-    public void setSubject(String name, String description,
-                           String type, ArrayList<Subject> subjectList,
+    public void setSubject(Subject subjectToCopy, ArrayList<Subject> subjectList,
                            Location location){
+        String name = subjectToCopy.getName();
+        String description = subjectToCopy.getDescription();
+        String type = subjectToCopy.getType();
         Subject subject = new Subject(name, description, type, location);
         subjectList.add(subject);
     }
