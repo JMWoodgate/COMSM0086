@@ -55,17 +55,17 @@ public class Produce implements Command{
             //check if subject is an artefact & move if so
             Location location = (Location)l;
             if(subjectUtility.moveSubject(subject, location.getArtefacts(),
-                    playerLocation.getArtefacts()/*, (Location)l*/)) {
+                    playerLocation.getArtefacts())) {
                 return;
             }
             //check if it is furniture & move if so
             if(subjectUtility.moveSubject(subject, location.getFurniture(),
-                    playerLocation.getFurniture()/*, (Location)l*/)) {
+                    playerLocation.getFurniture())) {
                 return;
             }
             //check if it is a character & move if so
             if(subjectUtility.moveSubject(subject, location.getCharacters(),
-                    playerLocation.getCharacters()/*, (Location)l*/)) {
+                    playerLocation.getCharacters())) {
                 return;
             }
         }

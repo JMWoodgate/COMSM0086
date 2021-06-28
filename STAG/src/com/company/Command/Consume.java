@@ -100,8 +100,7 @@ public class Consume implements Command{
         while (!inventory.isEmpty()) {
             Subject s = inventory.get(0);
             //put each artefact in current location
-            subjectUtility.setSubject(s, playerLocation.getArtefacts()/*,
-                    playerLocation*/);
+            subjectUtility.setSubject(s, playerLocation.getArtefacts());
             //remove from the player's inventory
             subjectUtility.removeSubject(s, player.getInventory());
         }

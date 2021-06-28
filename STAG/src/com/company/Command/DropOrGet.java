@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class DropOrGet implements Command {
 
     private final String command;
-    private final SubjectUtility subjectUtility;
     private ArrayList<Subject> listToAddTo;
     private ArrayList<Subject> listToRemoveFrom;
     private final Location location;
@@ -21,19 +20,19 @@ public class DropOrGet implements Command {
         this.command = command;
         //if command is get, location will be null
         this.location = location;
-        subjectUtility = new SubjectUtility();
         listToAddTo = new ArrayList<>();
         listToRemoveFrom = new ArrayList<>();
     }
 
     @Override
     public String run(Player player) throws StagException {
+        SubjectUtility subjectUtility = new SubjectUtility();
         //set which list we are adding to/removing from
         setLists(player);
         for(Subject s : listToRemoveFrom){
             if(command.contains(s.getName()) ||
                     command.contains(s.getDescription())){
-                subjectUtility.setSubject(s, listToAddTo/*, location*/);
+                subjectUtility.setSubject(s, listToAddTo);
                 subjectUtility.removeSubject(s, listToRemoveFrom);
                 //get drop or get message
                 return getMessage(s);

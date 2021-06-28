@@ -30,7 +30,8 @@ public class GoTo implements Command{
                     ||command.contains(l.getDescription())) {
                 locationName = l.getName();
                 //get the object for new location & set to player's location
-                Location newLocation = (Location) subjectUtility.getElement(locationName, locations);
+                Location newLocation = (Location) subjectUtility.
+                        getElement(locationName, locations);
                 player.setLocation(newLocation);
                 Look look = new Look(players);
                 return "You have moved to " + locationName + "\n"
