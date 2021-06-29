@@ -94,7 +94,8 @@ public class EntitiesParser {
         }
     }
 
-    //stores name and description of current location and stores current location in hashmap
+    //stores name and description of current location
+    // and stores current location in hashmap
     private void storeNameDescription(Location currentLocation, Node nLoc){
         String locationDescription = nLoc.getAttribute("description");
         String locationName = nLoc.getId().getId();

@@ -2,13 +2,13 @@ package com.company.Element;
 
 public class Subject implements Element {
 
-    private final String name;
+    private final String subjectName;
     private final String description;
     private final String type;
 
-    public Subject(String name, String description,
+    public Subject(String subjectName, String description,
                    String type){
-        this.name = name;
+        this.subjectName = subjectName;
         this.description = description;
         //type will be artefact, character, or furniture
         this.type = type;
@@ -17,7 +17,7 @@ public class Subject implements Element {
     public String getType(){ return type; }
 
     public String getName(){
-        return name;
+        return subjectName;
     }
 
     public String getDescription(){

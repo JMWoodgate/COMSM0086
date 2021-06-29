@@ -10,8 +10,8 @@ public class Inventory implements Command{
     public Inventory(){}
 
     @Override
-    public String runCommand(Player player) {
-        ArrayList<Subject> inventory = player.getInventory();
+    public String runCommand(Player currentPlayer) {
+        ArrayList<Subject> inventory = currentPlayer.getInventory();
         StringBuilder message = new StringBuilder();
         for(Subject s : inventory){
             message.append(s.getDescription());

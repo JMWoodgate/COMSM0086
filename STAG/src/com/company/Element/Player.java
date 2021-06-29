@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Player implements Element {
 
-    private final String name;
+    private final String playerName;
     private final ArrayList<Subject> inventory;
     private Location location;
     private int health;
 
-    public Player(String name){
-        this.name = name;
+    public Player(String playerName){
+        this.playerName = playerName;
         health = 3;
         inventory = new ArrayList<>();
     }
@@ -44,7 +44,7 @@ public class Player implements Element {
     }
 
     public String getName() {
-        return name;
+        return playerName;
     }
 
     public String getDescription() {

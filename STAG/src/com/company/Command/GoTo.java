@@ -21,7 +21,7 @@ public class GoTo implements Command{
     }
 
     @Override
-    public String runCommand(Player player) throws Exception {
+    public String runCommand(Player currentPlayer) throws Exception {
         String locationName;
         //get location in command
         for(Element l : locations){
@@ -29,20 +29,21 @@ public class GoTo implements Command{
                     ||command.contains(l.getDescription())) {
                 locationName = l.getName();
                 //check if there is a path to the new location from the current
-                checkPath(locationName, player);
+                checkPath(locationName, currentPlayer);
                 //get the object for new location & set to player's location
                 Location newLocation = (Location) subjectUtility.
                         getElement(locationName, locations);
-                player.setLocation(newLocation);
+                currentPlayer.setLocation(newLocation);
                 Look look = new Look(players);
                 return "You have moved to " + locationName + "\n"
-                        + look.runCommand(player);
+                        + look.runCommand(currentPlayer);
             }
         }
         throw new Exception("Location in '"+command+"' does not exist");
     }
 
-    private void checkPath(String location, Player player) throws Exception {
+    private void checkPath(String location, Player player)
+            throws Exception {
         ArrayList<String> paths = player.getLocation().getPaths();
         if(!paths.contains(location)){
             throw new Exception("There is not a path to '" +

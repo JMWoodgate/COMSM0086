@@ -22,7 +22,7 @@ public class StagEngine {
         players = new HashMap<>();
     }
 
-    public String execute(String commandString) throws Exception {
+    public String executeCommand(String commandString) throws Exception {
         //get which type of command it is
         Command command = interpretCommand(commandString);
         //run the command & return the response to print to console
@@ -67,5 +67,4 @@ public class StagEngine {
         players.put(playerName, newPlayer);
         currentPlayer = newPlayer;
     }
-
 }

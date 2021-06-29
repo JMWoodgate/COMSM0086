@@ -7,8 +7,8 @@ public class Health implements Command{
     public Health(){}
 
     @Override
-    public String runCommand(Player player) {
-        return player.getName() + "'s current health is: "
-                + player.getHealth() + "\n";
+    public String runCommand(Player currentPlayer) {
+        return currentPlayer.getName() + "'s current health is: "
+                + currentPlayer.getHealth() + "\n";
     }
 }

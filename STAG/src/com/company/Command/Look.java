@@ -9,7 +9,7 @@ import java.util.Map;
 public class Look implements Command{
 
     private final HashMap<String, Player> players;
-    private Player player;
+    private Player currentPlayer;
     private Location playerLocation;
 
     public Look(HashMap<String, Player> players){
@@ -17,9 +17,9 @@ public class Look implements Command{
     }
 
     @Override
-    public String runCommand(Player player) {
-        this.player = player;
-        playerLocation = player.getLocation();
+    public String runCommand(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+        playerLocation = currentPlayer.getLocation();
         //need to return a string that describes the whole location
         StringBuilder stringBuilder = new StringBuilder();
         //get location name/description
@@ -58,7 +58,7 @@ public class Look implements Command{
             Player comparePlayer = set.getValue();
             String compareName = comparePlayer.getName();
             String compareLocation = comparePlayer.getLocation().getName();
-            String currentName = player.getName();
+            String currentName = currentPlayer.getName();
             String currentLocation = playerLocation.getName();
             //make sure we are adding everyone but the current player
             if(compareLocation.equals(currentLocation)&&

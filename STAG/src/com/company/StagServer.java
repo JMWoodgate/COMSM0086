@@ -57,7 +57,7 @@ class StagServer
             engine.changePlayer(splitString[0]);
         }
         try {
-            String response = engine.execute(splitString[1]);
+            String response = engine.executeCommand(splitString[1]);
             out.write(response+"\n");
         }catch(Exception e){
             e.printStackTrace();

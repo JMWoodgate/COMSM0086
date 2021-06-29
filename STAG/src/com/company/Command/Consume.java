@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class Consume implements Command{
 
     private final Action action;
-    private Player player;
+    private Player currentPlayer;
     private Location playerLocation;
     private final ArrayList<Element> locations;
     private final SubjectUtility subjectUtility;
@@ -24,10 +24,10 @@ public class Consume implements Command{
     }
 
     @Override
-    public String runCommand(Player player) throws Exception {
+    public String runCommand(Player currentPlayer) throws Exception {
         String message = null;
-        this.player = player;
-        playerLocation = player.getLocation();
+        this.currentPlayer = currentPlayer;
+        playerLocation = currentPlayer.getLocation();
         ArrayList<String> consumed = action.getConsumed();
         //if there is nothing to consume, move on
         if (consumed == null) {
@@ -46,15 +46,20 @@ public class Consume implements Command{
 
     private void consumeSubject(String consumed) throws Exception {
         //look for subject in locations
-        Subject subject = subjectUtility.getSubjectFromLocation(consumed, playerLocation);
+        Subject subject = subjectUtility
+                .getSubjectFromLocation(consumed, playerLocation);
         if (subject != null) {
-            subjectUtility.removeSubjectFromLocation(subject, playerLocation);
+            subjectUtility
+                    .removeSubjectFromLocation(subject, playerLocation);
         } //look for subject in player inventory
-        else if (subjectUtility.getSubject(consumed, player.getInventory()) != null) {
+        else if (subjectUtility
+                .getSubject(consumed, currentPlayer.getInventory()) != null) {
             //delete subject from player inventory
-            subjectUtility.removeSubject(consumed, player.getInventory());
+            subjectUtility
+                    .removeSubject(consumed, currentPlayer.getInventory());
         } //look for subject in locations
-        else if (subjectUtility.getElement(consumed, new ArrayList<>(locations)) == null) {
+        else if (subjectUtility
+                .getElement(consumed, new ArrayList<>(locations)) == null) {
             //delete paths to location -> not the actual location
             consumePath(consumed);
         }
@@ -76,21 +81,21 @@ public class Consume implements Command{
 
     private String consumeHealth(){
         String message = null;
-        player.changeHealth(false);
+        currentPlayer.changeHealth(false);
         //if health is zero, drop all items in inventory
-        if(player.getHealth()==0){
-            ArrayList<Subject> inventory = player.getInventory();
+        if(currentPlayer.getHealth()==0){
+            ArrayList<Subject> inventory = currentPlayer.getInventory();
             //if items in inventory, place in current location
             emptyInventory(inventory);
             //return player to start
-            player.setLocation((Location)locations.get(0));
-            playerLocation = player.getLocation();
-            player.resetHealth();
+            currentPlayer.setLocation((Location)locations.get(0));
+            playerLocation = currentPlayer.getLocation();
+            currentPlayer.resetHealth();
             //return message
             message = "You ran out of health! You have lost your " +
                     "inventory and been returned to the start.\n";
             Look look = new Look(players);
-            message += look.runCommand(player);
+            message += look.runCommand(currentPlayer);
         }
         return message;
     }
@@ -101,7 +106,7 @@ public class Consume implements Command{
             //put each artefact in current location
             subjectUtility.setSubject(s, playerLocation.getArtefacts());
             //remove from the player's inventory
-            subjectUtility.removeSubject(s, player.getInventory());
+            subjectUtility.removeSubject(s, currentPlayer.getInventory());
         }
     }
 }

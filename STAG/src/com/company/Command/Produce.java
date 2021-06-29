@@ -19,8 +19,8 @@ public class Produce implements Command{
     }
 
     @Override
-    public String runCommand(Player player) throws Exception {
-        playerLocation = player.getLocation();
+    public String runCommand(Player currentPlayer) throws Exception {
+        playerLocation = currentPlayer.getLocation();
         ArrayList<String> produced = action.getProduced();
         //if there is nothing to produce by the action, we can skip this
         if(produced == null){
@@ -30,7 +30,7 @@ public class Produce implements Command{
         for(String p : produced){
             //if the item produced is health, we increase the player's health
             if(p.equals("health")){
-                player.changeHealth(true);
+                currentPlayer.changeHealth(true);
             }else{
                 //otherwise we move the item produce to the player's location
                 produceSubject(p);
@@ -49,7 +49,7 @@ public class Produce implements Command{
             playerLocation.setPath(subject);
             return;
         }
-        //loop through locations until we find the subject
+        //loop through locations until we find the subject in the location
         for(Element l : locations){
             //check if subject is an artefact & move if so
             Location location = (Location)l;
