@@ -131,13 +131,20 @@ public class EntitiesParser {
     private void storeDetails(
             Location currentLocation, String dataType,
             String description, String id) throws Exception {
-        if(dataType.equals("artefacts") ||
-                dataType.equals("furniture") ||
-                dataType.equals("characters")){
-            Subject subject = new Subject(id, description, dataType);
-            subjectUtility.setSubject(subject, currentLocation.getArtefacts());
-        }else{
-            throw new Exception("Unknown data type: "+dataType);
+
+        Subject subject = new Subject(id, description, dataType);
+        switch (dataType) {
+            case "artefacts":
+                subjectUtility.setSubject(subject, currentLocation.getArtefacts());
+                break;
+            case "furniture":
+                subjectUtility.setSubject(subject, currentLocation.getFurniture());
+                break;
+            case "characters":
+                subjectUtility.setSubject(subject, currentLocation.getCharacters());
+                break;
+            default:
+                throw new Exception("Unknown data type: " + dataType);
         }
     }
 }

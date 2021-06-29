@@ -49,6 +49,7 @@ public class Consume implements Command{
         Subject subject = subjectUtility
                 .getSubjectFromLocation(consumed, playerLocation);
         if (subject != null) {
+            //delete subject from location
             subjectUtility
                     .removeSubjectFromLocation(subject, playerLocation);
         } //look for subject in player inventory

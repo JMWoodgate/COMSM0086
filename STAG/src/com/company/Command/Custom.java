@@ -79,10 +79,31 @@ public class Custom implements Command{
             throw new Exception(
                     "subject in '"+command+"' does not exist");
         }
+        if(!checkGameSubjects(action)){
+            throw new Exception(
+                    "subject in '"+command+"' is missing from location or inventory");
+        }
     }
 
-    private boolean checkCommandSubjects(String command, Action a){
-        ArrayList<String> subjects = a.getSubjects();
+    //checks that the subjects exist in the game
+    private boolean checkGameSubjects(Action action){
+        ArrayList<String> actionSubjects = action.getSubjects();
+        ArrayList<Subject> playerInventory = currentPlayer.getInventory();
+        Location playerLocation = currentPlayer.getLocation();
+        SubjectUtility subjectUtility = new SubjectUtility();
+
+        //loop through all subjects in the action
+        for(String actionSubject : actionSubjects){
+            //check for subject in player inventory & location
+            if(subjectUtility.getSubject(actionSubject, playerInventory)==null
+            &&subjectUtility.getSubjectFromLocation(actionSubject, playerLocation)==null){
+                return false;
+            }
+        } return true;
+    }
+
+    private boolean checkCommandSubjects(String command, Action action){
+        ArrayList<String> subjects = action.getSubjects();
         for(String s : subjects){
             if(command.contains(s)){
                 return true;
