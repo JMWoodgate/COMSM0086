@@ -131,8 +131,9 @@ public class EntitiesParser {
     private void storeDetails(
             Location currentLocation, String dataType,
             String description, String id) throws Exception {
-
+        //create new subject
         Subject subject = new Subject(id, description, dataType);
+        //store in appropriate place
         switch (dataType) {
             case "artefacts":
                 subjectUtility.setSubject(subject, currentLocation.getArtefacts());

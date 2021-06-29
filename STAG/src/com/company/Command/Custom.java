@@ -94,9 +94,12 @@ public class Custom implements Command{
 
         //loop through all subjects in the action
         for(String actionSubject : actionSubjects){
-            //check for subject in player inventory & location
+            //check for subject in player inventory
             if(subjectUtility.getSubject(actionSubject, playerInventory)==null
-            &&subjectUtility.getSubjectFromLocation(actionSubject, playerLocation)==null){
+            //check for subject in location
+            &&subjectUtility.getSubjectFromLocation(actionSubject, playerLocation)==null
+            //check for subject in location paths
+            &&subjectUtility.getElement(actionSubject, new ArrayList<>(locations))==null){
                 return false;
             }
         } return true;

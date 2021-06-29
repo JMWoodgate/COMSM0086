@@ -60,7 +60,7 @@ public class Consume implements Command{
                     .removeSubject(consumed, currentPlayer.getInventory());
         } //look for subject in locations
         else if (subjectUtility
-                .getElement(consumed, new ArrayList<>(locations)) == null) {
+                .getElement(consumed, new ArrayList<>(locations)) != null) {
             //delete paths to location -> not the actual location
             consumePath(consumed);
         }
