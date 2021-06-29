@@ -33,9 +33,8 @@ public class EntitiesParser {
             throws Exception {
         for(Graph g : subGraphs){
             String elementId = g.getId().getId();
-            //if first element id is locations, need to create a new
-            // instance of locations and store values
-            //if it is paths, need to do something different
+            //if id is locations, create new instance of locations & store values
+            //if it is paths, parse edges
             if(elementId.equals("locations")) {
                 parseLocation(g);
             }
@@ -55,9 +54,8 @@ public class EntitiesParser {
     private void parseEdges(ArrayList<Edge> edges)
             throws Exception {
         for (Edge e : edges){
-            //need to iterate through the stored locations
-            //if the location we are on is equal to the source path,
-            // need to store the target location in the object
+            //iterate through the stored locations if location is equal
+            // to source path, store the target location in the object
             String source = e.getSource().getNode().getId().getId();
             String target = e.getTarget().getNode().getId().getId();
             source = source.toLowerCase(Locale.ROOT);
@@ -94,8 +92,7 @@ public class EntitiesParser {
         }
     }
 
-    //stores name and description of current location
-    // and stores current location in hashmap
+    //stores name & description of current location, then location in hashmap
     private void storeNameDescription(Location currentLocation, Node nLoc){
         String locationDescription = nLoc.getAttribute("description");
         String locationName = nLoc.getId().getId();
@@ -130,7 +127,7 @@ public class EntitiesParser {
         }
     }
 
-    //stores description and id of artefact/furniture/characters in current location
+    //stores description & id of artefact/furniture/characters in current location
     private void storeDetails(
             Location currentLocation, String dataType,
             String description, String id) throws Exception {
